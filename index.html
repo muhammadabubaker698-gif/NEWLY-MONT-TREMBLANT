@@ -1,126 +1,248 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Mont Tremblant Limo Services | Luxury Chauffeur</title>
-<meta name="description" content="Luxury chauffeur service in Mont-Tremblant. Escalade, Suburban, Denali, Tesla & Sprinter. 3-hour minimum. Call or WhatsApp +1 (514) 293-3170.">
-<link rel="canonical" href="https://monttremblantlimoservices.com/">
+<meta name="description" content="Luxury chauffeur service in Mont-Tremblant. Escalade, Suburban, Denali, QX60, Tesla & Sprinter. 3-hour minimum. Call or WhatsApp +1 (514) 293-3170." />
+<link rel="canonical" href="https://monttremblantlimoservices.com/" />
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:#0b0b0b;
-  color:#f5f5f5;
-  line-height:1.6;
-}
-a{text-decoration:none;color:inherit}
-.container{max-width:1100px;margin:auto;padding:20px}
+  :root{
+    --bg:#0b0b0b;
+    --panel:#121212;
+    --panel2:#151515;
+    --line:#242424;
+    --text:#f5f5f5;
+    --muted:#b9b9b9;
+    --muted2:#9a9a9a;
+    --white:#ffffff;
+  }
 
-header{
-  border-bottom:1px solid #222;
-  padding:20px 0;
-}
-.top{
-  display:flex;
-  justify-content:space-between;
-  flex-wrap:wrap;
-  font-size:14px;
-  color:#bbb;
-}
-nav{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  flex-wrap:wrap;
-  margin-top:12px;
-}
-nav a{margin-left:15px;color:#ccc}
-nav a:hover{color:#fff}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family: Arial, Helvetica, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.6;
+  }
+  a{color:inherit;text-decoration:none}
+  .container{max-width:1120px;margin:0 auto;padding:20px}
 
-.logo{
-  width:40px;
-  height:40px;
-  border-radius:14px;
-  background:#1a1a1a;
-  border:1px solid #333;
-  display:grid;
-  place-items:center;
-  font-weight:bold;
-}
+  /* Header */
+  header{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(11,11,11,.82);
+    backdrop-filter:saturate(140%) blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+    font-size:14px;
+    color:var(--muted);
+    padding:14px 0;
+  }
+  .nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    padding:10px 0 16px;
+    flex-wrap:wrap;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:800;
+    letter-spacing:.2px;
+  }
+  .logo{
+    width:40px;height:40px;border-radius:14px;
+    display:grid;place-items:center;
+    background:linear-gradient(180deg,#1a1a1a,#0f0f0f);
+    border:1px solid #2d2d2d;
+  }
+  .links a{
+    margin-left:16px;
+    color:#d0d0d0;
+    font-size:14px;
+  }
+  .links a:hover{color:#fff}
 
-.btn{
-  background:#fff;
-  color:#000;
-  padding:10px 18px;
-  border-radius:25px;
-  font-weight:bold;
-  display:inline-block;
-}
-.btn-outline{
-  border:1px solid #444;
-  padding:10px 18px;
-  border-radius:25px;
-  color:#eee;
-  display:inline-block;
-}
+  .btn{
+    display:inline-block;
+    padding:10px 16px;
+    border-radius:999px;
+    font-weight:800;
+    background:var(--white);
+    color:#000;
+  }
+  .btn-outline{
+    display:inline-block;
+    padding:10px 16px;
+    border-radius:999px;
+    border:1px solid #3b3b3b;
+    color:#f0f0f0;
+  }
 
-.hero{
-  background:linear-gradient(#1a1a1a,#0b0b0b);
-  border:1px solid #222;
-  border-radius:22px;
-  padding:40px;
-  margin-top:30px;
-}
-.hero h1{font-size:38px;margin-bottom:12px}
-.hero p{color:#bbb;max-width:720px}
+  /* Hero with scenery */
+  .hero{
+    margin-top:22px;
+    border-radius:26px;
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:#0f0f0f;
+    position:relative;
+  }
+  .hero-bg{
+    position:absolute; inset:0;
+    background:
+      linear-gradient(180deg, rgba(0,0,0,.15) 0%, rgba(0,0,0,.75) 70%, rgba(0,0,0,.9) 100%),
+      url('tremblant.jpg');
+    background-size:cover;
+    background-position:center;
+    filter:saturate(1.05) contrast(1.05);
+  }
+  .hero-inner{
+    position:relative;
+    padding:42px 34px;
+  }
+  .hero h1{
+    font-size:40px;
+    line-height:1.12;
+    max-width:820px;
+  }
+  .hero p{
+    margin-top:12px;
+    color:#e3e3e3;
+    max-width:780px;
+  }
+  .hero .pillrow{
+    margin-top:18px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .pill{
+    font-size:12px;
+    padding:8px 12px;
+    border-radius:999px;
+    background:rgba(0,0,0,.35);
+    border:1px solid rgba(255,255,255,.14);
+    color:#f1f1f1;
+  }
+  .hero .cta{
+    margin-top:18px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
 
-section{margin-top:60px}
-h2{font-size:32px;margin-bottom:10px}
-.subtitle{color:#aaa;margin-bottom:25px}
+  /* Sections */
+  section{margin-top:54px}
+  h2{font-size:30px;margin-bottom:8px}
+  .subtitle{color:var(--muted);margin-bottom:18px;max-width:860px}
 
-.card{
-  background:#151515;
-  border:1px solid #222;
-  border-radius:20px;
-  padding:25px;
-  margin-bottom:35px;
-}
-.card img{
-  width:100%;
-  height:260px;
-  object-fit:cover;
-  object-position:center;
-  border-radius:16px;
-  margin:15px 0;
-  display:block;
-}
+  /* Fleet grid */
+  .fleet-grid{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0,1fr));
+    gap:18px;
+  }
+  .card{
+    background:linear-gradient(180deg,var(--panel),var(--panel2));
+    border:1px solid var(--line);
+    border-radius:22px;
+    overflow:hidden;
+  }
+  .card-media{
+    position:relative;
+    background:#0e0e0e;
+  }
+  .card-media img{
+    width:100%;
+    aspect-ratio: 16 / 10;
+    height:auto;
+    object-fit:cover;
+    object-position:center;
+    display:block;
+  }
+  .badge{
+    position:absolute;
+    left:14px; top:14px;
+    font-size:12px;
+    font-weight:800;
+    padding:7px 10px;
+    border-radius:999px;
+    background:rgba(0,0,0,.55);
+    border:1px solid rgba(255,255,255,.18);
+  }
+  .card-body{
+    padding:18px 18px 20px;
+  }
+  .card-body h3{font-size:18px;margin-bottom:6px}
+  .meta{
+    color:var(--muted2);
+    font-size:13px;
+    margin-bottom:10px;
+  }
+  .price{
+    margin-top:10px;
+    font-weight:900;
+    font-size:16px;
+  }
+  .min{
+    color:var(--muted2);
+    font-size:12px;
+    margin-top:2px;
+  }
+  .actions{
+    margin-top:14px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
 
-footer{
-  border-top:1px solid #222;
-  margin-top:70px;
-  padding:30px;
-  text-align:center;
-  color:#777;
-  font-size:14px;
-}
+  /* Contact card */
+  .contact-card{
+    background:linear-gradient(180deg,var(--panel),var(--panel2));
+    border:1px solid var(--line);
+    border-radius:22px;
+    padding:20px;
+  }
 
-.whatsapp{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  background:#25D366;
-  color:#000;
-  padding:12px 18px;
-  border-radius:30px;
-  font-weight:bold;
-}
+  footer{
+    border-top:1px solid var(--line);
+    margin-top:70px;
+    padding:28px 0;
+    text-align:center;
+    color:#7b7b7b;
+    font-size:14px;
+  }
 
-@media(max-width:600px){
-  .hero h1{font-size:28px}
-}
+  .whatsapp-float{
+    position:fixed;
+    right:18px;
+    bottom:18px;
+    background:#25D366;
+    color:#000;
+    padding:12px 16px;
+    border-radius:999px;
+    font-weight:900;
+    box-shadow:0 14px 30px rgba(0,0,0,.35);
+  }
+
+  @media (max-width: 860px){
+    .fleet-grid{grid-template-columns:1fr}
+    .hero h1{font-size:30px}
+    .links{display:none}
+  }
 </style>
 </head>
 
@@ -128,123 +250,193 @@ footer{
 
 <header>
   <div class="container">
-    <div class="top">
+    <div class="topbar">
       <div>Mont-Tremblant • Montreal • Ottawa • Airport Transfers</div>
       <div>
         📞 <a href="tel:+15142933170">+1 (514) 293-3170</a> ·
-        <a href="https://wa.me/15142933170" target="_blank">WhatsApp</a>
+        <a href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
       </div>
     </div>
 
-    <nav>
-      <div style="display:flex;align-items:center;gap:10px;">
+    <div class="nav">
+      <div class="brand">
         <div class="logo">MT</div>
-        <strong>Mont Tremblant Limo Services</strong>
+        <div>
+          Mont Tremblant Limo Services<br>
+          <span style="font-size:12px;color:#a8a8a8;font-weight:600;">monttremblantlimoservices.com</span>
+        </div>
       </div>
 
-      <div>
-        <a href="#fleet">Fleet</a>
+      <div class="links">
+        <a href="#fleet">Fleet & Rates</a>
         <a href="#contact">Contact</a>
       </div>
 
       <a class="btn" href="#contact">Book Now</a>
-    </nav>
+    </div>
   </div>
 </header>
 
 <div class="container">
 
   <div class="hero">
-    <h1>Luxury Chauffeur Service in Mont-Tremblant</h1>
-    <p>
-      Premium black vehicles for airport transfers, hourly bookings,
-      ski trips, corporate travel, and special events.
-    </p>
-    <p><b>All vehicles require a 3-hour minimum.</b></p>
-    <br>
-    <a class="btn" href="tel:+15142933170">Call Now</a>
-    &nbsp;
-    <a class="btn-outline" href="https://wa.me/15142933170" target="_blank">WhatsApp Booking</a>
+    <div class="hero-bg"></div>
+    <div class="hero-inner">
+      <h1>Luxury Chauffeur Service in Mont-Tremblant</h1>
+      <p>
+        Premium black vehicles for airport transfers, hourly bookings, ski trips, corporate travel, and special events.
+        <b>Minimum 3 hours on all vehicles.</b>
+      </p>
+
+      <div class="pillrow">
+        <div class="pill">24/7 Booking</div>
+        <div class="pill">Professional Chauffeurs</div>
+        <div class="pill">Clean Premium Vehicles</div>
+        <div class="pill">Mont-Tremblant • Montreal • Ottawa</div>
+      </div>
+
+      <div class="cta">
+        <a class="btn" href="tel:+15142933170">Call Now</a>
+        <a class="btn-outline" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp Booking</a>
+        <a class="btn-outline" href="#fleet">View Fleet</a>
+      </div>
+    </div>
   </div>
 
   <section id="fleet">
-    <h2>Our Fleet & Rates</h2>
-    <p class="subtitle">Professional chauffeur service • 3-hour minimum on all vehicles</p>
+    <h2>Fleet & Rates</h2>
+    <p class="subtitle">
+      Hourly chauffeur rates below. <b>Minimum 3 hours</b> applies to all vehicles.
+      For airport transfers and long-distance trips, message us for a quick quote.
+    </p>
 
-    <div class="card">
-      <h3>2026 Cadillac Escalade ESV</h3>
-      <img src="escalade.jpg" alt="2026 Cadillac Escalade ESV black">
-      <p>Ultra-luxury SUV ideal for VIP airport transfers and Mont-Tremblant ski trips.</p>
-      <p><b>$150 / hour</b> • 3-hour minimum</p>
-      <a class="btn" href="tel:+15142933170">Book Now</a>
-      <a class="btn-outline" href="https://wa.me/15142933170" target="_blank">WhatsApp</a>
-    </div>
+    <div class="fleet-grid">
 
-    <div class="card">
-      <h3>2025 Chevrolet Suburban</h3>
-      <img src="suburban.jpg" alt="2025 Chevrolet Suburban black">
-      <p>Spacious executive SUV with excellent luggage capacity.</p>
-      <p><b>$120 / hour</b> • 3-hour minimum</p>
-      <a class="btn" href="tel:+15142933170">Book Now</a>
-      <a class="btn-outline" href="https://wa.me/15142933170" target="_blank">WhatsApp</a>
-    </div>
+      <div class="card">
+        <div class="card-media">
+          <span class="badge">VIP</span>
+          <img src="escalade.jpg" alt="2026 Cadillac Escalade ESV black">
+        </div>
+        <div class="card-body">
+          <h3>2026 Cadillac Escalade ESV</h3>
+          <div class="meta">Ultra-luxury • VIP airport transfers • ski trips</div>
+          <div class="price">$150 / hour</div>
+          <div class="min">3-hour minimum</div>
+          <div class="actions">
+            <a class="btn" href="tel:+15142933170">Book (Call)</a>
+            <a class="btn-outline" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">Book (WhatsApp)</a>
+          </div>
+        </div>
+      </div>
 
-    <div class="card">
-      <h3>2026 GMC Yukon Denali</h3>
-      <img src="denali.jpg" alt="2026 GMC Yukon Denali black">
-      <p>Luxury executive SUV with smooth ride and premium interior.</p>
-      <p><b>$120 / hour</b> • 3-hour minimum</p>
-      <a class="btn" href="tel:+15142933170">Book Now</a>
-      <a class="btn-outline" href="https://wa.me/15142933170" target="_blank">WhatsApp</a>
-    </div>
+      <div class="card">
+        <div class="card-media">
+          <span class="badge">Executive SUV</span>
+          <img src="suburban.jpg" alt="2025 Chevrolet Suburban black">
+        </div>
+        <div class="card-body">
+          <h3>2025 Chevrolet Suburban</h3>
+          <div class="meta">Spacious • luggage friendly • long rides</div>
+          <div class="price">$120 / hour</div>
+          <div class="min">3-hour minimum</div>
+          <div class="actions">
+            <a class="btn" href="tel:+15142933170">Book (Call)</a>
+            <a class="btn-outline" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">Book (WhatsApp)</a>
+          </div>
+        </div>
+      </div>
 
-    <div class="card">
-      <h3>2024 Infiniti QX60</h3>
-      <img src="qx60.jpg" alt="2024 Infiniti QX60 black">
-      <p>Comfortable premium SUV offering excellent value.</p>
-      <p><b>$99 / hour</b> • 3-hour minimum</p>
-      <a class="btn" href="tel:+15142933170">Book Now</a>
-      <a class="btn-outline" href="https://wa.me/15142933170" target="_blank">WhatsApp</a>
-    </div>
+      <div class="card">
+        <div class="card-media">
+          <span class="badge">Luxury SUV</span>
+          <img src="denali.jpg" alt="2026 GMC Yukon Denali black">
+        </div>
+        <div class="card-body">
+          <h3>2026 GMC Yukon Denali</h3>
+          <div class="meta">Premium comfort • smooth ride • executive travel</div>
+          <div class="price">$120 / hour</div>
+          <div class="min">3-hour minimum</div>
+          <div class="actions">
+            <a class="btn" href="tel:+15142933170">Book (Call)</a>
+            <a class="btn-outline" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">Book (WhatsApp)</a>
+          </div>
+        </div>
+      </div>
 
-    <div class="card">
-      <h3>2023 Tesla Model Y</h3>
-      <img src="tesla.jpg" alt="2023 Tesla Model Y black">
-      <p>Quiet, modern, eco-friendly luxury ride.</p>
-      <p><b>$75 / hour</b> • 3-hour minimum</p>
-      <a class="btn" href="tel:+15142933170">Book Now</a>
-      <a class="btn-outline" href="https://wa.me/15142933170" target="_blank">WhatsApp</a>
-    </div>
+      <div class="card">
+        <div class="card-media">
+          <span class="badge">Premium</span>
+          <img src="qx60.jpg" alt="2024 Infiniti QX60 black">
+        </div>
+        <div class="card-body">
+          <h3>2024 Infiniti QX60</h3>
+          <div class="meta">Comfort + value • airport transfers • city rides</div>
+          <div class="price">$99 / hour</div>
+          <div class="min">3-hour minimum</div>
+          <div class="actions">
+            <a class="btn" href="tel:+15142933170">Book (Call)</a>
+            <a class="btn-outline" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">Book (WhatsApp)</a>
+          </div>
+        </div>
+      </div>
 
-    <div class="card">
-      <h3>Mercedes Sprinter (Group Van)</h3>
-      <img src="sprinter.jpg" alt="Black Mercedes Sprinter van">
-      <p>Ideal for groups, events, and ski luggage.</p>
-      <p><b>$250 / hour</b> • 3-hour minimum</p>
-      <a class="btn" href="tel:+15142933170">Book Now</a>
-      <a class="btn-outline" href="https://wa.me/15142933170" target="_blank">WhatsApp</a>
+      <div class="card">
+        <div class="card-media">
+          <span class="badge">EV</span>
+          <img src="tesla.jpg" alt="2023 Tesla Model Y black">
+        </div>
+        <div class="card-body">
+          <h3>2023 Tesla Model Y</h3>
+          <div class="meta">Quiet • modern • eco-friendly</div>
+          <div class="price">$75 / hour</div>
+          <div class="min">3-hour minimum</div>
+          <div class="actions">
+            <a class="btn" href="tel:+15142933170">Book (Call)</a>
+            <a class="btn-outline" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">Book (WhatsApp)</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-media">
+          <span class="badge">Group</span>
+          <img src="sprinter.jpg" alt="Black Mercedes Sprinter van">
+        </div>
+        <div class="card-body">
+          <h3>Mercedes Sprinter (Group Van)</h3>
+          <div class="meta">Groups • events • ski luggage</div>
+          <div class="price">$250 / hour</div>
+          <div class="min">3-hour minimum</div>
+          <div class="actions">
+            <a class="btn" href="tel:+15142933170">Book (Call)</a>
+            <a class="btn-outline" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">Book (WhatsApp)</a>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
   <section id="contact">
     <h2>Contact & Booking</h2>
-    <p class="subtitle">Fastest booking by phone or WhatsApp</p>
-    <div class="card">
+    <p class="subtitle">Fastest booking is by phone or WhatsApp.</p>
+
+    <div class="contact-card">
       <p>
         <b>Phone:</b> <a href="tel:+15142933170">+1 (514) 293-3170</a><br><br>
-        <b>WhatsApp:</b> <a href="https://wa.me/15142933170" target="_blank">Chat on WhatsApp</a><br><br>
+        <b>WhatsApp:</b> <a href="https://wa.me/15142933170" target="_blank" rel="noreferrer">Chat on WhatsApp</a><br><br>
         <b>Service Area:</b> Mont-Tremblant, Montreal, Ottawa, Quebec City & surrounding areas
       </p>
     </div>
   </section>
 
+  <footer>
+    © 2026 Mont Tremblant Limo Services • All rights reserved
+  </footer>
+
 </div>
 
-<footer>
-  © 2026 Mont Tremblant Limo Services • All rights reserved
-</footer>
-
-<a class="whatsapp" href="https://wa.me/15142933170" target="_blank">WhatsApp</a>
+<a class="whatsapp-float" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
 
 </body>
 </html>
