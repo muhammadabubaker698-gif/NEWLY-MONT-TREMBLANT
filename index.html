@@ -1,4 +1,3 @@
-<!-- ✅ PASTE THIS WHOLE FILE (Updated header colors + stronger Book Now button) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
+<!-- SEO: LocalBusiness + Service schema -->
 <script type="application/ld+json">
 {
   "@context":"https://schema.org",
@@ -62,11 +62,13 @@
     --bg2:#0b1220;
 
     --panel:#0e1626;
+
     --ink: rgba(255,255,255,.94);
     --muted: rgba(255,255,255,.78);
     --muted2: rgba(255,255,255,.66);
     --line: rgba(255,255,255,.12);
 
+    /* Luxury gold */
     --gold:#e4c36a;
     --gold2:#c79a35;
 
@@ -75,13 +77,19 @@
 
     --radius: 18px;
     --max: 1140px;
+    --headerH: 92px;
 
-    --headerH: 86px;
+    /* Header text */
+    --headerText: rgba(228,195,106,.98);
+    --headerTextSoft: rgba(228,195,106,.86);
+    --headerBorder: rgba(228,195,106,.26);
 
-    /* ✅ Header color controls */
-    --headerText: rgba(228,195,106,.98);     /* gold */
-    --headerTextSoft: rgba(228,195,106,.86); /* softer gold */
-    --headerBorder: rgba(228,195,106,.20);
+    /* ✅ MORE VISIBLE HEADER BACKGROUND (lighter) */
+    --headerBg: rgba(28, 38, 56, .94);
+    --headerStripGradientA: rgba(0,0,0,.16);
+    --headerStripGradientB: rgba(0,0,0,.05);
+    --headerStripOverlayTop: rgba(0,0,0,.14);
+    --headerStripOverlayBottom: rgba(0,0,0,.34);
   }
 
   *{box-sizing:border-box;margin:0;padding:0}
@@ -100,10 +108,9 @@
   a{color:inherit;text-decoration:none}
   .container{max-width:var(--max);margin:0 auto;padding: 18px}
   main{position:relative;z-index:1}
-
   section{ scroll-margin-top: calc(var(--headerH) + 18px); }
 
-  /* Background */
+  /* Rotating scenic background */
   .bg-wrap{ position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
   .bg-layer{
     position:absolute; inset:0;
@@ -122,31 +129,31 @@
       linear-gradient(180deg, rgba(0,0,0,.20), rgba(0,0,0,.62));
   }
 
-  /* ✅ HEADER: gold text + gold borders */
+  /* ✅ Header (more visible) */
   header{
     position: sticky;
     top: 0;
     z-index: 50;
     border-bottom: 1px solid var(--headerBorder);
-    background: rgba(9,12,18,.70);
-    backdrop-filter: blur(14px);
+    background: var(--headerBg);
+    backdrop-filter: blur(8px);
   }
 
   .header-strip{
     position: relative;
-    border-bottom: 1px solid rgba(255,255,255,.08);
+    border-bottom: 1px solid rgba(228,195,106,.16);
     background:
-      linear-gradient(90deg, rgba(0,0,0,.52), rgba(0,0,0,.22), rgba(0,0,0,.52)),
+      linear-gradient(90deg, var(--headerStripGradientA), var(--headerStripGradientB), var(--headerStripGradientA)),
       url("scenic4.jpg") center/cover no-repeat;
   }
   .header-strip:after{
     content:"";
     position:absolute; inset:0;
-    background: linear-gradient(180deg, rgba(0,0,0,.38), rgba(0,0,0,.72));
+    background: linear-gradient(180deg, var(--headerStripOverlayTop), var(--headerStripOverlayBottom));
     pointer-events:none;
   }
 
-  .topbar, .nav{ position:relative; text-shadow: 0 2px 10px rgba(0,0,0,.60); }
+  .topbar, .nav{ position:relative; text-shadow: 0 2px 10px rgba(0,0,0,.45); }
 
   .topbar{
     display:flex;
@@ -184,21 +191,9 @@
     font-weight: 950;
     letter-spacing:.2px;
   }
-  .brand-title{
-    font-weight:950;
-    letter-spacing:.2px;
-    line-height:1.1;
-    color: var(--headerText);
-  }
-  .brand-sub{
-    display:block;
-    margin-top:4px;
-    color: var(--headerTextSoft);
-    font-weight:700;
-    font-size:12.8px
-  }
+  .brand-title{ font-weight:950; letter-spacing:.2px; line-height:1.1; color: var(--headerText); }
+  .brand-sub{ display:block; margin-top:4px; color: var(--headerTextSoft); font-weight:700; font-size:12.8px }
 
-  /* ✅ Nav links gold text (not white) */
   .links{
     display:flex;
     align-items:center;
@@ -213,20 +208,15 @@
     padding: 10px 12px;
     border-radius: 12px;
     transition: .2s ease;
-    background: rgba(0,0,0,.44);
-    border: 1px solid rgba(228,195,106,.22);
+    background: rgba(0,0,0,.32);
+    border: 1px solid rgba(228,195,106,.28);
   }
   .links a:hover{
-    background: rgba(0,0,0,.60);
-    border-color: rgba(228,195,106,.38);
+    background: rgba(0,0,0,.48);
+    border-color: rgba(228,195,106,.44);
     transform: translateY(-1px);
   }
-  .links a:focus-visible{
-    outline: 3px solid rgba(228,195,106,.55);
-    outline-offset: 2px;
-  }
 
-  /* Buttons */
   .btn{
     display:inline-flex;
     align-items:center;
@@ -243,40 +233,33 @@
     white-space: nowrap;
   }
   .btn:hover{ transform: translateY(-1px); background: rgba(0,0,0,.18); border-color: rgba(255,255,255,.24); }
-  .btn:focus-visible{ outline: 3px solid rgba(228,195,106,.55); outline-offset: 2px; }
-
-  .btn-ghost{
-    border: 1px solid rgba(255,255,255,.16);
-    background: rgba(0,0,0,.12);
-    box-shadow:none;
-  }
+  .btn-ghost{ border: 1px solid rgba(255,255,255,.16); background: rgba(0,0,0,.12); box-shadow:none; }
   .btn-gold{
-    border: 1px solid rgba(228,195,106,.70);
-    background: linear-gradient(180deg, rgba(228,195,106,.30), rgba(199,154,53,.18));
+    border: 1px solid rgba(228,195,106,.80);
+    background: linear-gradient(180deg, rgba(228,195,106,.38), rgba(199,154,53,.22));
     color: rgba(255,255,255,.98);
   }
 
-  /* ✅ Make Book Now SUPER visible */
+  /* ✅ Book Now super visible */
   .btn-book{
     padding: 12px 18px;
-    font-size: 14.5px;
+    font-size: 14.6px;
     letter-spacing: .2px;
-    border: 1px solid rgba(228,195,106,.85);
+    border: 1px solid rgba(228,195,106,.95);
     background:
-      linear-gradient(180deg, rgba(228,195,106,.52), rgba(199,154,53,.30));
+      linear-gradient(180deg, rgba(228,195,106,.66), rgba(199,154,53,.34));
     box-shadow:
-      0 14px 34px rgba(228,195,106,.18),
+      0 18px 40px rgba(228,195,106,.18),
       0 18px 60px rgba(0,0,0,.40);
   }
   .btn-book:hover{
     transform: translateY(-2px);
-    border-color: rgba(228,195,106,.95);
     box-shadow:
-      0 16px 40px rgba(228,195,106,.22),
+      0 22px 48px rgba(228,195,106,.22),
       0 22px 70px rgba(0,0,0,.45);
   }
 
-  /* Hero (kept same) */
+  /* Hero */
   .hero{
     position: relative;
     z-index: 1;
@@ -359,11 +342,12 @@
   .quick-card p{ margin:0; font-size: 13.5px; color: rgba(255,255,255,.76); line-height: 1.5; }
   .quick-actions{ margin-top: 12px; display:flex; flex-direction: column; gap: 10px; }
 
-  /* Sections / Cards / Rest of your styles kept minimal to save space */
+  /* Sections */
   section{margin-top: 52px}
   h2{ font-size: 30px; letter-spacing: -0.2px; margin-bottom: 4px; }
   .subtitle{ color: rgba(255,255,255,.78); max-width: 920px; margin-bottom: 14px; }
 
+  /* Fleet cards */
   .fleet-grid{
     display:grid;
     grid-template-columns: repeat(3, minmax(0,1fr));
@@ -397,6 +381,7 @@
   .min{color: rgba(255,255,255,.68); font-size: 12.5px; margin-top: 2px}
   .actions{margin-top: 12px; display:flex; gap: 10px; flex-wrap:wrap}
 
+  /* Routes + testimonials */
   .panel{
     border-radius: var(--radius);
     border: 1px solid rgba(255,255,255,.10);
@@ -421,25 +406,7 @@
   .qtext{ margin-top: 8px; color: rgba(255,255,255,.86); line-height: 1.6; }
   .qname{ margin-top: 10px; color: rgba(255,255,255,.72); font-size: 13.5px; font-weight: 800; }
 
-  .book-card{ border-radius: var(--radius); border: 1px solid rgba(255,255,255,.12); background: linear-gradient(180deg, rgba(16,26,47,.96), rgba(13,20,36,.96)); box-shadow: 0 18px 60px rgba(0,0,0,.35); overflow:hidden; }
-  .book-head{ padding: 16px 18px 14px; border-bottom: 1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.03); }
-  .book-head b{display:block;font-size:15px;letter-spacing:.2px}
-  .book-head small{display:block;color:rgba(255,255,255,.76);margin-top:5px;line-height:1.45}
-  .book-body{padding: 16px 18px 18px}
-  .row{display:grid;grid-template-columns: 1fr 1fr;gap:12px}
-  label{ display:block; font-size: 12.5px; font-weight: 900; color: rgba(255,255,255,.82); margin: 10px 0 6px; letter-spacing: .18px; }
-  input, select, textarea{ width:100%; padding: 12px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,.16); background: rgba(6,10,16,.60); color: rgba(255,255,255,.94); outline:none; }
-  input::placeholder, textarea::placeholder{ color: rgba(255,255,255,.60); }
-  input:focus, select:focus, textarea:focus{ border-color: rgba(228,195,106,.65); box-shadow: 0 0 0 4px rgba(228,195,106,.14); }
-  textarea{min-height: 88px; resize: vertical}
-  .tinyhint{font-size:12.5px;color:rgba(255,255,255,.70);margin-top:6px}
-  .estimate-box{ margin-top: 12px; border: 1px solid rgba(228,195,106,.26); background: rgba(228,195,106,.10); border-radius: 12px; padding: 12px; }
-  .estimate-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
-  .estimate-top b{font-size:13.5px}
-  .estimate-value{font-weight:950;letter-spacing:.2px}
-  .estimate-sub{margin-top:6px;color:rgba(255,255,255,.80);font-size:12.8px;line-height:1.5}
-  .book-actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
-
+  /* FAQ */
   details{ border-top: 1px solid rgba(255,255,255,.12); padding: 14px 0; }
   details:first-child{ border-top:none; }
   summary{ cursor:pointer; list-style:none; font-weight: 900; color: rgba(255,255,255,.94); display:flex; align-items:center; justify-content:space-between; gap:10px; }
@@ -448,9 +415,25 @@
   details[open] .chev{ transform: rotate(180deg); }
   details p{ margin-top:10px; color: rgba(255,255,255,.78); line-height:1.6; max-width: 90ch; }
 
+  /* Footer */
   footer{ border-top: 1px solid rgba(255,255,255,.12); margin-top: 64px; padding: 28px 0; text-align:center; color: rgba(255,255,255,.66); font-size: 14px; position:relative; z-index:1; }
-  .whatsapp-float{ position:fixed; right:16px; bottom:16px; background:#25D366; color:#0b0b0b; padding:12px 16px; border-radius:999px; font-weight:950; box-shadow: 0 16px 38px rgba(0,0,0,.30); z-index:60; border: 1px solid rgba(0,0,0,.18); }
 
+  /* WhatsApp float */
+  .whatsapp-float{
+    position:fixed;
+    right:16px;
+    bottom:16px;
+    background:#25D366;
+    color:#0b0b0b;
+    padding:12px 16px;
+    border-radius:999px;
+    font-weight:950;
+    box-shadow: 0 16px 38px rgba(0,0,0,.30);
+    z-index:60;
+    border: 1px solid rgba(0,0,0,.18);
+  }
+
+  /* Responsive */
   @media (max-width: 1080px){
     .hero-inner{ grid-template-columns: 1fr; }
     .quick-actions{ flex-direction: row; flex-wrap: wrap; }
@@ -473,6 +456,7 @@
 </head>
 
 <body>
+<!-- Rotating background -->
 <div class="bg-wrap" aria-hidden="true">
   <div id="bgA" class="bg-layer"></div>
   <div id="bgB" class="bg-layer"></div>
@@ -507,7 +491,6 @@
           <a href="#contact">Contact</a>
         </div>
 
-        <!-- ✅ Book Now more visible -->
         <a class="btn btn-gold btn-book" href="#contact">Book Now</a>
       </div>
     </div>
@@ -521,6 +504,7 @@
     <div class="hero-inner">
       <div>
         <div class="kicker"><span class="dot"></span> Premium rides inspired by Mont-Tremblant scenery</div>
+
         <h1>Luxury chauffeur service for mountains, lakes, and long-distance destinations.</h1>
         <p>
           Premium vehicles for airport transfers, hourly bookings, ski trips, corporate travel, and special events.
@@ -553,12 +537,6 @@
       </aside>
     </div>
   </div>
-
-  <!-- ✅ REST OF YOUR PAGE CONTENT -->
-  <!-- For brevity, keep the rest of the HTML the same as your last working version -->
-  <!-- IMPORTANT: Do NOT change your IDs (#fleet, #contact, #routes, #faq) -->
-
-  <!-- =================== YOUR EXISTING CONTENT BELOW =================== -->
 
   <!-- OUR FLEET -->
   <section id="fleet">
@@ -673,7 +651,7 @@
     </div>
   </section>
 
-  <!-- BOOKING -->
+  <!-- Booking -->
   <section id="contact">
     <h2>Instant Booking Request</h2>
     <p class="subtitle">Send your trip details and get a quick estimate. Airport transfers & long-distance are confirmed by message.</p>
@@ -778,27 +756,151 @@
             <a class="btn btn-ghost" href="#" onclick="return sendEmail()">Send by Email</a>
             <a class="btn btn-ghost" href="tel:+15142933170">Call</a>
           </div>
+
+          <div class="note" style="margin-top:10px;color:rgba(255,255,255,.72);font-size:12.8px;line-height:1.5">
+            Background rotation uses: <b>scenic1.jpg</b> to <b>scenic4.jpg</b>.
+            If one image is missing, the page will still work.
+          </div>
         </form>
       </div>
     </div>
   </section>
 
-  <!-- ✅ Keep your Destinations / Testimonials / FAQ / Footer exactly as before -->
-  <!-- Paste them here from your previous file -->
+  <!-- Destinations -->
+  <section id="routes">
+    <h2>Destinations</h2>
+    <p class="subtitle">Common trips. Long-distance routes are confirmed by message.</p>
+
+    <div class="grid2">
+      <div class="panel route">
+        <div><b>Montréal (YUL) ↔ Mont-Tremblant</b><br><span>Airport pickups • ski luggage • hotel drops</span></div>
+        <div class="tag">Most booked</div>
+      </div>
+
+      <div class="panel route">
+        <div><b>Montréal Downtown ↔ Mont-Tremblant</b><br><span>Business travel • weekends • events</span></div>
+        <div class="tag">Fast quote</div>
+      </div>
+
+      <div class="panel route">
+        <div><b>Québec City ↔ Mont-Tremblant</b><br><span>Private long-distance • comfort ride</span></div>
+        <div class="tag">By request</div>
+      </div>
+
+      <div class="panel route">
+        <div><b>Ottawa ↔ Mont-Tremblant</b><br><span>Long-distance comfort • family trips</span></div>
+        <div class="tag">By request</div>
+      </div>
+
+      <div class="panel route">
+        <div><b>New York ↔ Mont-Tremblant</b><br><span>Cross-border long distance • VIP travel</span></div>
+        <div class="tag">Quote</div>
+      </div>
+
+      <div class="panel route">
+        <div><b>Boston ↔ Mont-Tremblant</b><br><span>Cross-border long distance • premium ride</span></div>
+        <div class="tag">Quote</div>
+      </div>
+
+      <div class="panel route">
+        <div><b>New Jersey ↔ Mont-Tremblant</b><br><span>Cross-border long distance • flexible stops</span></div>
+        <div class="tag">Quote</div>
+      </div>
+
+      <div class="panel route">
+        <div><b>Hourly Chauffeur (Mont-Tremblant)</b><br><span>Resort • restaurants • private tours</span></div>
+        <div class="tag">3-hour min</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section id="testimonials">
+    <h2>What Clients Say</h2>
+    <p class="subtitle">Professional, punctual, and premium — built for Mont-Tremblant travel.</p>
+
+    <div class="grid3">
+      <div class="panel quote">
+        <div class="stars">★★★★★</div>
+        <div class="qtext">“On time, clean SUV, very smooth ride to Tremblant. Professional chauffeur and easy booking.”</div>
+        <div class="qname">— Private client (Montréal → Tremblant)</div>
+      </div>
+
+      <div class="panel quote">
+        <div class="stars">★★★★★</div>
+        <div class="qtext">“Great for ski trip with luggage. Comfortable and stress-free pickup and drop-off.”</div>
+        <div class="qname">— Family booking (YUL airport)</div>
+      </div>
+
+      <div class="panel quote">
+        <div class="stars">★★★★★</div>
+        <div class="qtext">“Excellent service for our event. Communication was clear and the Sprinter was perfect for the group.”</div>
+        <div class="qname">— Group booking (Event transfer)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <h2>FAQ</h2>
+    <p class="subtitle">Quick answers to the most common questions.</p>
+
+    <div class="panel" style="padding: 0 18px;">
+      <details>
+        <summary>What is the minimum booking time? <span class="chev">⌄</span></summary>
+        <p>All vehicles have a <b>3-hour minimum</b>. For airport transfers and long-distance trips, we provide a quick quote based on location, time, and stops.</p>
+      </details>
+
+      <details>
+        <summary>Do you do airport transfers (YUL)? <span class="chev">⌄</span></summary>
+        <p>Yes. We provide transfers between <b>Montréal–Trudeau (YUL)</b> and Mont-Tremblant, plus surrounding areas. Send your flight number and pickup time for a fast quote.</p>
+      </details>
+
+      <details>
+        <summary>Do you do New York / Boston / New Jersey? <span class="chev">⌄</span></summary>
+        <p>Yes, long-distance and cross-border trips are available <b>by quote</b>. Share pickup, drop-off, date/time, passengers, and any stops.</p>
+      </details>
+
+      <details>
+        <summary>How do I book the fastest? <span class="chev">⌄</span></summary>
+        <p>The fastest way is <b>WhatsApp</b> or phone. Use the booking form to send details instantly and we’ll confirm availability quickly.</p>
+      </details>
+    </div>
+  </section>
+
+  <section id="contact2">
+    <h2>Contact & Booking</h2>
+    <p class="subtitle">Fastest booking is by phone, WhatsApp, or the booking form above.</p>
+
+    <div class="panel" style="padding:20px;">
+      <p>
+        <b>Phone:</b> <a href="tel:+15142933170">+1 (514) 293-3170</a><br><br>
+        <b>WhatsApp:</b> <a href="https://wa.me/15142933170" target="_blank" rel="noreferrer">Chat on WhatsApp</a><br><br>
+        <b>Service Area:</b> Mont-Tremblant, Montréal, Ottawa, Québec City, New York, Boston, New Jersey & surrounding areas
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    © <span id="year"></span> Mont Tremblant Limo Services • All rights reserved
+  </footer>
 </main>
 
 <a class="whatsapp-float" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
 
 <script>
-  document.getElementById("year") && (document.getElementById("year").textContent = new Date().getFullYear());
+  document.getElementById("year").textContent = new Date().getFullYear();
 
+  // ===== Rotating scenic background =====
   const scenicImages = ["scenic1.jpg","scenic2.jpg","scenic3.jpg","scenic4.jpg"];
   const bgA = document.getElementById("bgA");
   const bgB = document.getElementById("bgB");
   let useA = true;
   let idx = 0;
 
-  function setLayer(layer, img){ layer.style.backgroundImage = `url("${img}")`; }
+  function setLayer(layer, img){
+    layer.style.backgroundImage = `url("${img}")`;
+  }
 
   function rotateBackground(){
     const nextImg = scenicImages[idx % scenicImages.length];
@@ -808,8 +910,10 @@
     const offLayer = useA ? bgB : bgA;
 
     setLayer(offLayer, nextImg);
+
     offLayer.classList.add("is-on");
     onLayer.classList.remove("is-on");
+
     useA = !useA;
   }
 
@@ -818,9 +922,11 @@
   setLayer(bgB, scenicImages[1]);
   setInterval(rotateBackground, 8000);
 
+  // Business config
   const BUSINESS_WA = "15142933170";
   const BUSINESS_EMAIL = "monttremblantlimoservices@gmail.com";
 
+  // Hourly rates (CAD)
   const RATES = {
     "2026 Cadillac Escalade ESV": 150,
     "2025 Chevrolet Suburban": 120,
@@ -849,8 +955,6 @@
     const estimateValueEl = document.getElementById("estimateValue");
     const estimateSubEl = document.getElementById("estimateSub");
 
-    if (!estimateValueEl || !estimateSubEl) return { mode:"hourly", total:null, text:"—" };
-
     if (triptype === "airport"){
       estimateValueEl.textContent = "Quote required";
       estimateSubEl.textContent = "Airport transfers depend on pickup time, exact locations, traffic, and stops. Send request for fast pricing.";
@@ -867,14 +971,23 @@
     }
 
     let total = rate * hours;
-    if (roundtrip === "yes"){ total = Math.round(total * 1.7); }
+    if (roundtrip === "yes"){
+      total = Math.round(total * 1.7);
+    }
 
     estimateValueEl.textContent = formatMoney(total);
     estimateSubEl.textContent =
       `${formatMoney(rate)}/hr × ${hours} hour(s)` + (roundtrip === "yes" ? " • round trip included (estimate)" : "") +
       " • Final price confirmed by message.";
 
-    return { mode:"hourly", total, rate, hours, roundtrip, text: `${formatMoney(rate)}/hr × ${hours}h` + (roundtrip === "yes" ? " (round trip estimate)" : "") };
+    return {
+      mode:"hourly",
+      total,
+      rate,
+      hours,
+      roundtrip,
+      text: `${formatMoney(rate)}/hr × ${hours}h` + (roundtrip === "yes" ? " (round trip estimate)" : "")
+    };
   }
 
   ["triptype","vehicle","hours","roundtrip"].forEach(id=>{
@@ -933,14 +1046,19 @@
     return false;
   }
 
+  // Google Maps Places Autocomplete
   function initAutocomplete(){
     try{
       if (!window.google || !google.maps || !google.maps.places) return;
-      const options = { fields: ["formatted_address", "name", "place_id"], componentRestrictions: { country: "ca" } };
+      const options = {
+        fields: ["formatted_address", "name", "place_id"],
+        componentRestrictions: { country: "ca" }
+      };
       const pickupEl = document.getElementById("pickup");
       const dropoffEl = document.getElementById("dropoff");
       if (pickupEl) new google.maps.places.Autocomplete(pickupEl, options);
       if (dropoffEl) new google.maps.places.Autocomplete(dropoffEl, options);
+
       const hint = document.getElementById("gmapsHint");
       if (hint) hint.textContent = "Pickup/Drop-off autocomplete is active.";
     }catch(e){}
@@ -948,6 +1066,7 @@
   window.initAutocomplete = initAutocomplete;
 </script>
 
+<!-- Google Maps Places API (Autocomplete) -->
 <script async defer
   src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initAutocomplete">
 </script>
