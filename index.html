@@ -886,7 +886,7 @@
     <div class="panel" style="padding: 0 18px;">
       <details>
         <summary>What is the minimum booking time? <span class="chev">⌄</span></summary>
-        <p>All vehicles have a <b>3-hour minimum</b>. Point-to-point and airport estimates include a 3-hour minimum equivalent and may adjust for stops/wait time.</p>
+        <p>All vehicles have a <b>3-hour minimum</b>. Point-to-point and airport estimates include a 3-hour minimum equivalent and may adjust for stops/wait time/tolls.</p>
       </details>
       <details>
         <summary>Do you do airport transfers (YUL)? <span class="chev">⌄</span></summary>
@@ -1114,11 +1114,39 @@
     return false;
   }
 
-  // Stripe Checkout: full payment required
+  // ✅ Improved: tells exactly what's missing + highlights fields
   function collectBookingPayload(){
-    const required = ["name","date","time","pickup","dropoff","vehicle"];
-    for (const id of required){
-      if (!v(id)) return { ok:false, error:"Please fill Name, Date, Time, Pickup, Drop-off, and select a vehicle." };
+    const requiredMap = {
+      name: "Name",
+      date: "Date",
+      time: "Time",
+      pickup: "Pickup",
+      dropoff: "Drop-off",
+      vehicle: "Vehicle"
+    };
+
+    // Clear old highlights
+    Object.keys(requiredMap).forEach(id=>{
+      const el = document.getElementById(id);
+      if (el) el.style.borderColor = "rgba(255,255,255,.16)";
+    });
+
+    // Find missing fields
+    const missing = [];
+    for (const id of Object.keys(requiredMap)){
+      if (!v(id)) missing.push(id);
+    }
+
+    if (missing.length){
+      missing.forEach(id=>{
+        const el = document.getElementById(id);
+        if (el) el.style.borderColor = "rgba(255,120,120,.85)";
+      });
+      const first = document.getElementById(missing[0]);
+      if (first) first.focus();
+
+      const names = missing.map(id => requiredMap[id]).join(", ");
+      return { ok:false, error:`Missing: ${names}.` };
     }
 
     const est = computeEstimate();
@@ -1154,7 +1182,8 @@
 
     const payload = collectBookingPayload();
     if (!payload.ok){
-      alert(payload.error);
+      if (statusEl) statusEl.textContent = payload.error; // shows on page
+      alert(payload.error); // also popup so beginners notice
       return;
     }
 
@@ -1173,8 +1202,9 @@
       window.location.href = data.url;
     }catch(err){
       console.error(err);
-      alert("Payment could not be started. " + (err.message || ""));
-      if (statusEl) statusEl.textContent = "Payment error: " + (err.message || "Unknown error");
+      const msg = "Payment could not be started. " + (err.message || "");
+      alert(msg);
+      if (statusEl) statusEl.textContent = msg;
     }
   }
 
