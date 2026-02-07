@@ -1,0 +1,7 @@
+{
+  "name": "monttremblant-limo",
+  "private": true,
+  "dependencies": {
+    "stripe": "^16.0.0"
+  }
+}
