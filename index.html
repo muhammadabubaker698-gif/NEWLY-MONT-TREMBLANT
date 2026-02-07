@@ -119,47 +119,47 @@
       linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.55));
   }
 
-  /* Header: more visible text */
+  /* Header: more visible text + stronger overlay */
   header{
     position: sticky;
     top: 0;
     z-index: 50;
     border-bottom: 1px solid rgba(255,255,255,.18);
-    background: rgba(10,14,22,.55);
+    background: rgba(10,14,22,.72);
     backdrop-filter: blur(12px);
   }
   .header-strip{
     position: relative;
     border-bottom: 1px solid rgba(255,255,255,.12);
     background:
-      linear-gradient(90deg, rgba(0,0,0,.38), rgba(0,0,0,.18), rgba(0,0,0,.38)),
+      linear-gradient(90deg, rgba(0,0,0,.30), rgba(0,0,0,.18), rgba(0,0,0,.30)),
       url("scenic4.jpg") center/cover no-repeat; /* CHANGED TO scenic4.jpg */
   }
   .header-strip:after{
     content:"";
     position:absolute; inset:0;
     background:
-      linear-gradient(180deg, rgba(0,0,0,.30), rgba(0,0,0,.62)); /* darker overlay for readability */
+      linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.56));
     pointer-events:none;
   }
-
+  /* Ensure header content sits above overlay */
+  .header-strip .container,
   .topbar,
-  .nav{ text-shadow: 0 2px 10px rgba(0,0,0,.55); } /* improves readability on photo */
+  .nav{ position: relative; z-index: 1; }
 
   .topbar{
-    position: relative;
     display:flex;
     justify-content:space-between;
     gap:12px;
     flex-wrap:wrap;
     font-size: 13px;
-    color: rgba(255,255,255,.98);
+    color: rgba(255,255,255,.98);           /* brighter */
+    text-shadow: 0 2px 10px rgba(0,0,0,.55); /* more readable */
     padding: 12px 0 10px;
   }
-  .topbar a{ color: rgba(255,255,255,.98); font-weight: 900; }
+  .topbar a{ color: rgba(255,255,255,.98); }
 
   .nav{
-    position: relative;
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -178,8 +178,18 @@
     font-weight: 950;
     letter-spacing:.2px;
   }
-  .brand-title{font-weight:950; letter-spacing:.2px; line-height:1.1; color: rgba(255,255,255,.98);}
-  .brand-sub{display:block;margin-top:3px;color:rgba(255,255,255,.92);font-weight:750;font-size:12.5px}
+  .brand-title{
+    font-weight:950; letter-spacing:.2px; line-height:1.1;
+    color: rgba(255,255,255,.98);
+    text-shadow: 0 2px 12px rgba(0,0,0,.55);
+  }
+  .brand-sub{
+    display:block;margin-top:3px;
+    color:rgba(255,255,255,.90);
+    font-weight:750;
+    font-size:12.5px;
+    text-shadow: 0 2px 12px rgba(0,0,0,.55);
+  }
 
   .links{
     display:flex;
@@ -189,42 +199,43 @@
     gap: 6px;
   }
   .links a{
-    margin-left: 0;
-    color: rgba(255,255,255,.98);
+    color: rgba(255,255,255,.98); /* brighter */
     font-size: 14px;
     font-weight: 950;
-    padding: 9px 10px;
+    padding: 9px 11px;
     border-radius: 12px;
     transition: .2s ease;
-    background: rgba(0,0,0,.40); /* darker pill for contrast */
+    background: rgba(0,0,0,.36);            /* darker pill for contrast */
     border: 1px solid rgba(255,255,255,.18);
+    text-shadow: 0 2px 10px rgba(0,0,0,.55);
   }
   .links a:hover{
-    background: rgba(0,0,0,.52);
-    border-color: rgba(255,255,255,.28);
+    background: rgba(0,0,0,.46);
+    border-color: rgba(255,255,255,.26);
   }
 
   .btn{
     display:inline-block;
     padding: 10px 16px;
     border-radius: 999px;
-    font-weight: 900;
-    border: 1px solid rgba(255,255,255,.14);
-    background: rgba(0,0,0,.14);
+    font-weight: 950;
+    border: 1px solid rgba(255,255,255,.16);
+    background: rgba(0,0,0,.22);
     box-shadow: var(--shadow2);
-    color: rgba(255,255,255,.92);
+    color: rgba(255,255,255,.96);
     transition: transform .2s ease, background .2s ease, border-color .2s ease;
     white-space: nowrap;
+    text-shadow: 0 2px 10px rgba(0,0,0,.55);
   }
-  .btn:hover{ transform: translateY(-1px); background: rgba(0,0,0,.18); border-color: rgba(255,255,255,.22); }
+  .btn:hover{ transform: translateY(-1px); background: rgba(0,0,0,.28); border-color: rgba(255,255,255,.26); }
   .btn-gold{
-    border: 1px solid rgba(210,177,90,.65);
+    border: 1px solid rgba(210,177,90,.62);
     background: linear-gradient(180deg, rgba(210,177,90,.30), rgba(185,138,43,.16));
     color: rgba(255,255,255,.98);
   }
   .btn-ghost{
-    border: 1px solid rgba(255,255,255,.16);
-    background: rgba(0,0,0,.12);
+    border: 1px solid rgba(255,255,255,.18);
+    background: rgba(0,0,0,.16);
     box-shadow:none;
   }
 
@@ -256,7 +267,7 @@
     position:relative;
     padding: 42px 34px;
     display:grid;
-    grid-template-columns: 1fr; /* CHANGED: booking moved below fleet */
+    grid-template-columns: 1fr; /* CHANGED: booking moved out, hero becomes single column */
     gap: 18px;
     align-items: end;
   }
@@ -524,6 +535,7 @@
           <a href="#contact">Contact</a>
         </div>
 
+        <!-- Keep Book Now button on top -->
         <a class="btn btn-gold" href="#contact">Book Now</a>
       </div>
     </div>
@@ -555,7 +567,6 @@
           <a class="btn" href="tel:+15142933170">Call Now</a>
           <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp Booking</a>
           <a class="btn btn-ghost" href="#fleet">View Fleet</a>
-          <a class="btn btn-gold" href="#contact">Estimate & Book</a>
         </div>
       </div>
     </div>
@@ -674,15 +685,15 @@
     </div>
   </section>
 
-  <!-- MOVED Booking + Estimator here (after fleet) -->
+  <!-- Booking moved AFTER fleet -->
   <section id="contact">
     <h2>Instant Booking Request</h2>
-    <p class="subtitle">Send your trip details and get a quick estimate. Airport transfers & long-distance are confirmed by message.</p>
+    <p class="subtitle">Includes a quick estimate. For airport transfers & long-distance, we confirm final pricing by message.</p>
 
     <div class="book-card">
       <div class="book-head">
-        <b>Instant booking request</b>
-        <small>Includes a quick estimate. For airport transfers & long-distance, we confirm final pricing by message.</small>
+        <b>Send your trip details</b>
+        <small>Fastest response by WhatsApp. You can also send by email.</small>
       </div>
 
       <div class="book-body">
