@@ -28,25 +28,11 @@
     "addressRegion":"QC",
     "addressCountry":"CA"
   },
-  "image":[
-    "https://monttremblantlimoservices.com/Tremblant.jpg"
-  ],
-  "sameAs":[
-    "https://wa.me/15142933170"
-  ],
+  "image":[ "https://monttremblantlimoservices.com/Tremblant.jpg" ],
+  "sameAs":[ "https://wa.me/15142933170" ],
   "makesOffer":[
-    {
-      "@type":"Offer",
-      "name":"Hourly Chauffeur Service",
-      "priceCurrency":"CAD",
-      "description":"Hourly luxury chauffeur service (minimum 3 hours)."
-    },
-    {
-      "@type":"Offer",
-      "name":"Airport Transfers",
-      "priceCurrency":"CAD",
-      "description":"Airport transfers by quote (WhatsApp/phone)."
-    }
+    { "@type":"Offer", "name":"Hourly Chauffeur Service", "priceCurrency":"CAD", "description":"Hourly luxury chauffeur service (minimum 3 hours)." },
+    { "@type":"Offer", "name":"Airport Transfers", "priceCurrency":"CAD", "description":"Airport transfers by quote (WhatsApp/phone)." }
   ]
 }
 </script>
@@ -69,22 +55,22 @@
 
 <style>
   :root{
-    /* Professional light palette */
-    --page:#f6f7fb;
-    --surface:#ffffff;
-    --surface2:#fbfcff;
-    --ink:#0e1320;
-    --muted:#5b667a;
-    --muted2:#76829a;
-    --line:rgba(14,19,32,.10);
+    /* Scenic professional palette (not too white) */
+    --page: #0b1220;            /* deep slate */
+    --page2:#0a0f1b;
+    --surface: rgba(255,255,255,.08);    /* glass surface */
+    --surface2: rgba(255,255,255,.06);
+    --ink: rgba(255,255,255,.92);
+    --muted: rgba(255,255,255,.72);
+    --muted2: rgba(255,255,255,.58);
+    --line: rgba(255,255,255,.14);
 
     /* Luxury accent */
-    --gold:#c8a04a;
-    --gold2:#b3882c;
+    --gold:#d2b15a;
+    --gold2:#b98a2b;
 
-    /* Effects */
-    --shadow: 0 18px 60px rgba(18, 26, 42, .12);
-    --shadow2: 0 10px 30px rgba(18, 26, 42, .10);
+    --shadow: 0 18px 60px rgba(0,0,0,.45);
+    --shadow2: 0 12px 30px rgba(0,0,0,.30);
     --radius: 20px;
     --max: 1180px;
   }
@@ -92,48 +78,67 @@
   *{box-sizing:border-box;margin:0;padding:0}
   body{
     font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-    background: var(--page);
+    background:
+      radial-gradient(1200px 600px at 30% -10%, rgba(210,177,90,.18), transparent 60%),
+      radial-gradient(900px 500px at 90% 10%, rgba(255,255,255,.06), transparent 55%),
+      linear-gradient(180deg, var(--page), var(--page2));
     color: var(--ink);
     line-height: 1.6;
     overflow-x: hidden;
   }
   a{color:inherit;text-decoration:none}
   .container{max-width:var(--max);margin:0 auto;padding: 18px}
+  main{position:relative;z-index:1}
 
-  /* Soft background texture (very subtle) */
-  .texture{
+  /* Subtle moving mist */
+  .mist{
     position: fixed;
-    inset: -40%;
+    inset: -35%;
     background:
-      radial-gradient(closest-side, rgba(200,160,74,.10), transparent 60%) 0 0 / 520px 520px,
-      radial-gradient(closest-side, rgba(14,19,32,.07), transparent 62%) 240px 120px / 640px 640px;
-    filter: blur(10px);
-    opacity: .35;
+      radial-gradient(closest-side, rgba(255,255,255,.06), transparent 65%) 0 0 / 320px 320px,
+      radial-gradient(closest-side, rgba(255,255,255,.04), transparent 60%) 160px 120px / 380px 380px,
+      radial-gradient(closest-side, rgba(255,255,255,.03), transparent 55%) 80px 260px / 460px 460px;
+    filter: blur(8px);
+    opacity: .45;
     pointer-events: none;
     z-index: 0;
-    animation: drift 28s linear infinite;
+    animation: drift 30s linear infinite;
   }
   @keyframes drift{
-    0%{ transform: translate3d(-1.5%, -1.5%, 0) }
-    100%{ transform: translate3d(1.5%, 2%, 0) }
+    0%{ transform: translate3d(-2%, -2%, 0) }
+    100%{ transform: translate3d(2%, 3%, 0) }
   }
 
-  /* Header */
+  /* Header with scenic strip */
   header{
     position: sticky;
     top: 0;
     z-index: 50;
-    background: rgba(246,247,251,.78);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(14,19,32,.10);
+    border-bottom: 1px solid var(--line);
+    background: rgba(9, 13, 22, .55);
+    backdrop-filter: blur(14px);
+  }
+  .header-strip{
+    position: relative;
+    border-bottom: 1px solid rgba(255,255,255,.10);
+    background:
+      linear-gradient(90deg, rgba(9,13,22,.90), rgba(9,13,22,.55), rgba(9,13,22,.90)),
+      url("scenic2.jpg") center/cover no-repeat;
+  }
+  .header-strip:after{
+    content:"";
+    position:absolute; inset:0;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,.10), rgba(0,0,0,.55) 75%);
+    pointer-events:none;
   }
   .topbar{
+    position: relative;
     display:flex;
     justify-content:space-between;
     gap:12px;
     flex-wrap:wrap;
     font-size: 13px;
-    color: var(--muted);
+    color: rgba(255,255,255,.80);
     padding: 12px 0 10px;
   }
   .nav{
@@ -143,6 +148,7 @@
     gap: 14px;
     padding: 10px 0 14px;
     flex-wrap:wrap;
+    position: relative;
   }
   .brand{
     display:flex;
@@ -152,36 +158,36 @@
   .logo{
     width:40px;height:40px;border-radius:14px;
     display:grid;place-items:center;
-    background: linear-gradient(145deg, rgba(200,160,74,.95), rgba(179,136,44,.85));
-    box-shadow: 0 10px 24px rgba(200,160,74,.20);
-    color: #0c0f15;
-    font-weight: 900;
+    background: linear-gradient(145deg, rgba(210,177,90,.95), rgba(185,138,43,.85));
+    box-shadow: 0 10px 24px rgba(210,177,90,.20);
+    color: #0b0f16;
+    font-weight: 950;
     letter-spacing: .2px;
   }
   .brand-title{
-    font-weight: 900;
+    font-weight: 950;
     letter-spacing: .2px;
     line-height: 1.1;
   }
   .brand-sub{
     display:block;
     margin-top: 3px;
-    color: var(--muted);
+    color: rgba(255,255,255,.72);
     font-weight: 650;
     font-size: 12.5px;
   }
   .links a{
     margin-left: 16px;
-    color: rgba(14,19,32,.74);
+    color: rgba(255,255,255,.82);
     font-size: 14px;
-    font-weight: 750;
+    font-weight: 800;
     padding: 9px 10px;
     border-radius: 12px;
     transition: .2s ease;
   }
   .links a:hover{
-    background: rgba(14,19,32,.06);
-    color: rgba(14,19,32,.92);
+    background: rgba(255,255,255,.08);
+    color: rgba(255,255,255,.95);
   }
 
   .btn{
@@ -189,25 +195,25 @@
     padding: 10px 16px;
     border-radius: 999px;
     font-weight: 900;
-    border: 1px solid rgba(14,19,32,.10);
-    background: var(--surface);
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.08);
     box-shadow: var(--shadow2);
-    color: rgba(14,19,32,.92);
-    transition: transform .2s ease, box-shadow .2s ease;
+    color: rgba(255,255,255,.92);
+    transition: transform .2s ease, background .2s ease, border-color .2s ease;
     white-space: nowrap;
   }
-  .btn:hover{ transform: translateY(-1px); box-shadow: 0 14px 36px rgba(18,26,42,.12); }
+  .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.22); }
   .btn-gold{
-    border: 1px solid rgba(200,160,74,.55);
-    background: linear-gradient(180deg, rgba(200,160,74,.28), rgba(179,136,44,.18));
-    color: rgba(14,19,32,.92);
-    box-shadow: 0 16px 40px rgba(200,160,74,.18);
+    border: 1px solid rgba(210,177,90,.55);
+    background: linear-gradient(180deg, rgba(210,177,90,.22), rgba(185,138,43,.12));
+    color: rgba(255,255,255,.95);
+    box-shadow: 0 16px 40px rgba(0,0,0,.28);
   }
   .btn-ghost{
-    border: 1px solid rgba(14,19,32,.14);
-    background: rgba(255,255,255,.55);
+    border: 1px solid rgba(255,255,255,.16);
+    background: rgba(255,255,255,.06);
     box-shadow: none;
-    color: rgba(14,19,32,.84);
+    color: rgba(255,255,255,.86);
   }
 
   /* Hero */
@@ -218,27 +224,24 @@
     border-radius: 26px;
     overflow: hidden;
     box-shadow: var(--shadow);
-    border: 1px solid rgba(14,19,32,.10);
-    background: var(--surface);
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,.06);
   }
   .hero-bg{
     position:absolute;
     inset:0;
     background:
-      linear-gradient(180deg, rgba(255,255,255,.06) 0%, rgba(246,247,251,.70) 55%, rgba(246,247,251,1) 100%),
+      linear-gradient(180deg, rgba(0,0,0,.05) 0%, rgba(11,18,32,.70) 55%, rgba(11,18,32,1) 100%),
       url("Tremblant.jpg") center/cover no-repeat;
     transform: scale(1.02);
-    filter: saturate(1.06) contrast(1.03);
+    filter: saturate(1.06) contrast(1.05);
   }
-  /* readable overlay */
   .hero-bg:after{
     content:"";
     position:absolute; inset:0;
-    background:
-      radial-gradient(ellipse at center, rgba(255,255,255,.02), rgba(246,247,251,.88) 70%, rgba(246,247,251,1));
+    background: radial-gradient(ellipse at center, rgba(0,0,0,.05), rgba(0,0,0,.55) 75%);
     pointer-events:none;
   }
-
   .hero-inner{
     position:relative;
     padding: 44px 34px;
@@ -253,17 +256,18 @@
     gap: 10px;
     padding: 9px 12px;
     border-radius: 999px;
-    border: 1px solid rgba(14,19,32,.10);
-    background: rgba(255,255,255,.62);
-    color: rgba(14,19,32,.78);
-    font-weight: 800;
+    border: 1px solid rgba(255,255,255,.18);
+    background: rgba(255,255,255,.08);
+    color: rgba(255,255,255,.86);
+    font-weight: 850;
     font-size: 13px;
+    backdrop-filter: blur(10px);
   }
   .dot{
     width: 9px; height: 9px;
     border-radius: 999px;
     background: var(--gold);
-    box-shadow: 0 0 0 6px rgba(200,160,74,.16);
+    box-shadow: 0 0 0 6px rgba(210,177,90,.16);
   }
   .hero h1{
     margin-top: 14px;
@@ -273,7 +277,7 @@
   }
   .hero p{
     margin-top: 12px;
-    color: rgba(14,19,32,.72);
+    color: rgba(255,255,255,.82);
     max-width: 78ch;
     font-size: 16px;
   }
@@ -287,10 +291,11 @@
     font-size: 12.5px;
     padding: 8px 12px;
     border-radius: 999px;
-    border: 1px solid rgba(14,19,32,.10);
-    background: rgba(255,255,255,.62);
-    color: rgba(14,19,32,.72);
-    font-weight: 800;
+    border: 1px solid rgba(255,255,255,.18);
+    background: rgba(255,255,255,.08);
+    color: rgba(255,255,255,.86);
+    font-weight: 850;
+    backdrop-filter: blur(10px);
   }
   .cta{
     margin-top: 18px;
@@ -300,30 +305,41 @@
     align-items:center;
   }
 
-  /* Booking */
-  .book-card{
-    border-radius: var(--radius);
-    border: 1px solid rgba(14,19,32,.10);
-    background: rgba(255,255,255,.72);
-    backdrop-filter: blur(14px);
-    box-shadow: 0 16px 50px rgba(18,26,42,.12);
+  /* Cards / sections */
+  section{margin-top: 52px}
+  h2{
+    font-size: 30px;
+    letter-spacing: -0.2px;
+    margin-bottom: 8px;
+  }
+  .subtitle{
+    color: rgba(255,255,255,.74);
+    margin-bottom: 18px;
+    max-width: 900px;
+  }
+
+  .panel{
+    border-radius: 22px;
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.07);
+    box-shadow: var(--shadow2);
     overflow:hidden;
+    backdrop-filter: blur(12px);
   }
-  .book-head{
-    padding: 14px 16px 12px;
-    border-bottom: 1px solid rgba(14,19,32,.08);
-    background: rgba(255,255,255,.58);
-  }
+
+  /* Booking */
+  .book-card{ border-radius: var(--radius); border: 1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.08); box-shadow: 0 18px 60px rgba(0,0,0,.35); overflow:hidden; backdrop-filter: blur(14px); }
+  .book-head{ padding: 14px 16px 12px; border-bottom: 1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.06); }
   .book-head b{display:block;font-size:14px;letter-spacing:.2px}
-  .book-head small{display:block;color:rgba(14,19,32,.62);margin-top:4px;line-height:1.35}
+  .book-head small{display:block;color:rgba(255,255,255,.72);margin-top:4px;line-height:1.35}
   .book-body{padding: 14px 16px 16px}
 
   .row{display:grid;grid-template-columns: 1fr 1fr;gap:10px}
   label{
     display:block;
     font-size: 12px;
-    font-weight: 900;
-    color: rgba(14,19,32,.70);
+    font-weight: 950;
+    color: rgba(255,255,255,.80);
     margin: 10px 0 6px;
     letter-spacing: .18px;
   }
@@ -331,15 +347,15 @@
     width:100%;
     padding: 11px 12px;
     border-radius: 14px;
-    border: 1px solid rgba(14,19,32,.14);
-    background: rgba(255,255,255,.86);
-    color: rgba(14,19,32,.92);
+    border: 1px solid rgba(255,255,255,.16);
+    background: rgba(10,14,22,.55);
+    color: rgba(255,255,255,.92);
     outline:none;
     transition: box-shadow .2s ease, border-color .2s ease;
   }
   input:focus, select:focus, textarea:focus{
-    border-color: rgba(200,160,74,.60);
-    box-shadow: 0 0 0 4px rgba(200,160,74,.16);
+    border-color: rgba(210,177,90,.60);
+    box-shadow: 0 0 0 4px rgba(210,177,90,.14);
   }
   textarea{min-height: 78px; resize: vertical}
 
@@ -352,8 +368,8 @@
 
   .estimate-box{
     margin-top: 12px;
-    border: 1px solid rgba(200,160,74,.24);
-    background: rgba(200,160,74,.10);
+    border: 1px solid rgba(210,177,90,.26);
+    background: rgba(210,177,90,.10);
     border-radius: 14px;
     padding: 12px;
   }
@@ -368,44 +384,23 @@
   .estimate-value{font-weight: 950; letter-spacing:.2px}
   .estimate-sub{
     margin-top: 6px;
-    color: rgba(14,19,32,.70);
+    color: rgba(255,255,255,.78);
     font-size: 12.5px;
     line-height: 1.45;
   }
   .note{
     margin-top: 10px;
-    color: rgba(14,19,32,.60);
+    color: rgba(255,255,255,.70);
     font-size: 12.5px;
     line-height: 1.45;
   }
   .tinyhint{
     font-size: 12px;
-    color: rgba(14,19,32,.58);
+    color: rgba(255,255,255,.68);
     margin-top: 6px;
   }
 
-  /* Sections */
-  main{position:relative;z-index:1}
-  section{margin-top: 52px}
-  h2{
-    font-size: 30px;
-    letter-spacing: -0.2px;
-    margin-bottom: 8px;
-  }
-  .subtitle{
-    color: rgba(14,19,32,.66);
-    margin-bottom: 18px;
-    max-width: 900px;
-  }
-
   /* Scenic gallery */
-  .scenic{
-    border-radius: 26px;
-    border: 1px solid rgba(14,19,32,.10);
-    overflow:hidden;
-    background: var(--surface);
-    box-shadow: var(--shadow2);
-  }
   .scenic-top{
     padding: 18px 20px 14px;
     display:flex;
@@ -413,11 +408,11 @@
     justify-content:space-between;
     gap: 14px;
     flex-wrap:wrap;
-    border-bottom: 1px solid rgba(14,19,32,.08);
-    background: rgba(255,255,255,.78);
+    border-bottom: 1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.05);
   }
   .scenic-top b{font-size:16px;letter-spacing:.2px}
-  .scenic-top span{color: rgba(14,19,32,.62);font-size:13px}
+  .scenic-top span{color: rgba(255,255,255,.70);font-size:13px}
   .scenic-grid{
     display:grid;
     grid-template-columns: repeat(4, 1fr);
@@ -428,7 +423,7 @@
     height: 190px;
     object-fit: cover;
     display:block;
-    filter: saturate(1.05) contrast(1.03);
+    filter: saturate(1.05) contrast(1.04);
     transition: transform .2s ease;
   }
   .scenic-grid img:hover{ transform: scale(1.01); }
@@ -440,17 +435,17 @@
     gap: 18px;
   }
   .card{
-    background: var(--surface);
-    border: 1px solid rgba(14,19,32,.10);
     border-radius: 22px;
     overflow:hidden;
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.06);
     box-shadow: var(--shadow2);
+    backdrop-filter: blur(12px);
   }
-  .card-media{position:relative;background:#f1f3f8}
+  .card-media{position:relative;background:#0d1322}
   .card-media img{
     width:100%;
     aspect-ratio: 16 / 10;
-    height:auto;
     object-fit:cover;
     display:block;
   }
@@ -461,38 +456,111 @@
     font-weight:950;
     padding: 7px 10px;
     border-radius: 999px;
-    background: rgba(255,255,255,.72);
-    border: 1px solid rgba(14,19,32,.12);
-    color: rgba(14,19,32,.84);
+    background: rgba(0,0,0,.45);
+    border: 1px solid rgba(255,255,255,.18);
+    color: rgba(255,255,255,.92);
     backdrop-filter: blur(10px);
   }
   .card-body{padding: 18px 18px 20px}
   .card-body h3{font-size:18px;margin-bottom:6px}
-  .meta{color: rgba(14,19,32,.62); font-size: 13px; margin-bottom: 10px}
+  .meta{color: rgba(255,255,255,.70); font-size: 13px; margin-bottom: 10px}
   .price{margin-top: 10px; font-weight: 950; font-size: 16px}
-  .min{color: rgba(14,19,32,.58); font-size: 12px; margin-top: 2px}
+  .min{color: rgba(255,255,255,.64); font-size: 12px; margin-top: 2px}
   .actions{margin-top: 14px; display:flex; gap: 10px; flex-wrap:wrap}
 
-  /* Contact */
-  .contact-card{
-    background: var(--surface);
-    border: 1px solid rgba(14,19,32,.10);
-    border-radius: 22px;
-    padding: 20px;
-    box-shadow: var(--shadow2);
+  /* Testimonials + routes */
+  .grid3{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
+  .grid2{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
+
+  .quote{
+    padding: 16px;
+  }
+  .stars{
+    letter-spacing: 1px;
+    color: rgba(210,177,90,.95);
+    font-weight: 950;
+  }
+  .qtext{
+    margin-top: 8px;
+    color: rgba(255,255,255,.82);
+    line-height: 1.55;
+  }
+  .qname{
+    margin-top: 10px;
+    color: rgba(255,255,255,.70);
+    font-size: 13px;
+    font-weight: 800;
   }
 
+  .route{
+    padding: 16px;
+    display:flex;
+    justify-content:space-between;
+    gap: 10px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  .route b{ font-size: 14px; }
+  .route span{ color: rgba(255,255,255,.72); font-size: 13px; }
+  .route .tag{
+    padding: 7px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(210,177,90,.25);
+    background: rgba(210,177,90,.10);
+    color: rgba(255,255,255,.88);
+    font-weight: 900;
+    font-size: 12px;
+  }
+
+  /* FAQ */
+  .faq{
+    padding: 8px 0;
+  }
+  details{
+    border-top: 1px solid rgba(255,255,255,.12);
+    padding: 14px 0;
+  }
+  details:first-child{ border-top: none; }
+  summary{
+    cursor:pointer;
+    list-style:none;
+    font-weight: 900;
+    color: rgba(255,255,255,.92);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+  }
+  summary::-webkit-details-marker{ display:none; }
+  .chev{
+    width: 26px; height: 26px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.06);
+    display:grid;
+    place-items:center;
+    color: rgba(255,255,255,.86);
+    flex: 0 0 auto;
+  }
+  details[open] .chev{ transform: rotate(180deg); }
+  details p{
+    margin-top: 10px;
+    color: rgba(255,255,255,.74);
+    line-height: 1.55;
+    max-width: 90ch;
+  }
+
+  /* Footer + WhatsApp */
   footer{
-    border-top: 1px solid rgba(14,19,32,.10);
+    border-top: 1px solid rgba(255,255,255,.12);
     margin-top: 70px;
     padding: 28px 0;
     text-align:center;
-    color: rgba(14,19,32,.58);
+    color: rgba(255,255,255,.62);
     font-size: 14px;
     position:relative;
     z-index:1;
   }
-
   .whatsapp-float{
     position:fixed;
     right: 18px;
@@ -502,7 +570,7 @@
     padding: 12px 16px;
     border-radius: 999px;
     font-weight: 950;
-    box-shadow: 0 16px 38px rgba(18,26,42,.16);
+    box-shadow: 0 16px 38px rgba(0,0,0,.30);
     z-index: 60;
   }
 
@@ -510,6 +578,8 @@
     .hero-inner{ grid-template-columns: 1fr; }
     .scenic-grid{ grid-template-columns: repeat(2,1fr); }
     .scenic-grid img{ height: 160px; }
+    .grid3{ grid-template-columns: 1fr; }
+    .grid2{ grid-template-columns: 1fr; }
   }
   @media (max-width: 860px){
     .fleet-grid{ grid-template-columns: 1fr; }
@@ -520,39 +590,42 @@
 </head>
 
 <body>
-<div class="texture" aria-hidden="true"></div>
+<div class="mist" aria-hidden="true"></div>
 
 <header>
-  <div class="container">
-    <div class="topbar">
-      <div>Mont-Tremblant • Montréal • Ottawa • Airport Transfers</div>
-      <div>
-        📞 <a href="tel:+15142933170"><b>+1 (514) 293-3170</b></a> &nbsp;·&nbsp;
-        <a href="https://wa.me/15142933170" target="_blank" rel="noreferrer"><b>WhatsApp</b></a>
-      </div>
-    </div>
-
-    <div class="nav">
-      <div class="brand">
-        <div class="logo">MT</div>
+  <div class="header-strip">
+    <div class="container">
+      <div class="topbar">
+        <div>Mont-Tremblant • Montréal • Ottawa • Airport Transfers</div>
         <div>
-          <div class="brand-title">Mont Tremblant Limo Services</div>
-          <span class="brand-sub">Luxury chauffeur service • Mont-Tremblant, Québec</span>
+          📞 <a href="tel:+15142933170"><b>+1 (514) 293-3170</b></a> &nbsp;·&nbsp;
+          <a href="https://wa.me/15142933170" target="_blank" rel="noreferrer"><b>WhatsApp</b></a>
         </div>
       </div>
 
-      <div class="links">
-        <a href="#fleet">Fleet & Rates</a>
-        <a href="#scenic">Mont-Tremblant</a>
-        <a href="#contact">Contact</a>
-      </div>
+      <div class="nav">
+        <div class="brand">
+          <div class="logo">MT</div>
+          <div>
+            <div class="brand-title">Mont Tremblant Limo Services</div>
+            <span class="brand-sub">Luxury chauffeur service • Mont-Tremblant, Québec</span>
+          </div>
+        </div>
 
-      <a class="btn btn-gold" href="#contact">Book Now</a>
+        <div class="links">
+          <a href="#fleet">Fleet & Rates</a>
+          <a href="#routes">Popular Routes</a>
+          <a href="#faq">FAQ</a>
+          <a href="#contact">Contact</a>
+        </div>
+
+        <a class="btn btn-gold" href="#contact">Book Now</a>
+      </div>
     </div>
   </div>
 </header>
 
-<div class="container">
+<main class="container">
   <div class="hero">
     <div class="hero-bg" aria-hidden="true"></div>
 
@@ -691,14 +764,12 @@
     </div>
   </div>
 
-  <!-- Scenic -->
+  <!-- Scenic Gallery -->
   <section id="scenic">
     <h2>Mont-Tremblant Scenic Rides</h2>
-    <p class="subtitle">
-      Mountain views, lakeside roads, ski-season evenings — your luxury ride should match the scenery.
-    </p>
+    <p class="subtitle">A luxury ride that matches the Laurentians — calm, clean, and unforgettable.</p>
 
-    <div class="scenic">
+    <div class="panel">
       <div class="scenic-top">
         <div>
           <b>Scenic Gallery</b><br>
@@ -713,6 +784,81 @@
         <img src="scenic3.jpg" alt="Mont-Tremblant scenic view 3" onerror="this.src='Tremblant.jpg'">
         <img src="scenic4.jpg" alt="Mont-Tremblant scenic view 4" onerror="this.src='Tremblant.jpg'">
       </div>
+    </div>
+  </section>
+
+  <!-- Popular Routes -->
+  <section id="routes">
+    <h2>Popular Routes</h2>
+    <p class="subtitle">Quick booking for the most common trips. Airport transfers and long-distance routes are confirmed by message.</p>
+
+    <div class="grid2">
+      <div class="panel route">
+        <div>
+          <b>Montréal (YUL) ↔ Mont-Tremblant</b><br>
+          <span>Airport pickups • ski luggage • hotel drops</span>
+        </div>
+        <div class="tag">Most booked</div>
+      </div>
+
+      <div class="panel route">
+        <div>
+          <b>Montréal Downtown ↔ Mont-Tremblant</b><br>
+          <span>Business travel • weekends • events</span>
+        </div>
+        <div class="tag">Fast quote</div>
+      </div>
+
+      <div class="panel route">
+        <div>
+          <b>Ottawa ↔ Mont-Tremblant</b><br>
+          <span>Long-distance comfort • family trips</span>
+        </div>
+        <div class="tag">By request</div>
+      </div>
+
+      <div class="panel route">
+        <div>
+          <b>Hourly Chauffeur (Mont-Tremblant)</b><br>
+          <span>Resort • restaurants • private tours</span>
+        </div>
+        <div class="tag">3-hour min</div>
+      </div>
+    </div>
+
+    <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+      <a class="btn btn-gold" href="#contact">Get a Quote</a>
+      <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section id="testimonials">
+    <h2>What Clients Say</h2>
+    <p class="subtitle">Professional, punctual, and premium — built for Mont-Tremblant travel.</p>
+
+    <div class="grid3">
+      <div class="panel quote">
+        <div class="stars">★★★★★</div>
+        <div class="qtext">“On time, clean SUV, very smooth ride to Tremblant. Professional chauffeur and easy booking.”</div>
+        <div class="qname">— Private client (Montréal → Tremblant)</div>
+      </div>
+
+      <div class="panel quote">
+        <div class="stars">★★★★★</div>
+        <div class="qtext">“Great for ski trip with luggage. Comfortable and stress-free pickup and drop-off.”</div>
+        <div class="qname">— Family booking (YUL airport)</div>
+      </div>
+
+      <div class="panel quote">
+        <div class="stars">★★★★★</div>
+        <div class="qtext">“Excellent service for our event. Communication was clear and the Sprinter was perfect for the group.”</div>
+        <div class="qname">— Group booking (Event transfer)</div>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:12px;">
+      Want to use real reviews? Replace the text above with your Google reviews (short quotes).
     </div>
   </section>
 
@@ -737,7 +883,7 @@
           <div class="price">$150 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions">
-            <a class="btn" href="#contact">Estimate & Book</a>
+            <a class="btn btn-gold" href="#contact">Estimate & Book</a>
             <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
@@ -754,7 +900,7 @@
           <div class="price">$120 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions">
-            <a class="btn" href="#contact">Estimate & Book</a>
+            <a class="btn btn-gold" href="#contact">Estimate & Book</a>
             <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
@@ -771,7 +917,7 @@
           <div class="price">$120 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions">
-            <a class="btn" href="#contact">Estimate & Book</a>
+            <a class="btn btn-gold" href="#contact">Estimate & Book</a>
             <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
@@ -788,7 +934,7 @@
           <div class="price">$99 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions">
-            <a class="btn" href="#contact">Estimate & Book</a>
+            <a class="btn btn-gold" href="#contact">Estimate & Book</a>
             <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
@@ -805,7 +951,7 @@
           <div class="price">$75 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions">
-            <a class="btn" href="#contact">Estimate & Book</a>
+            <a class="btn btn-gold" href="#contact">Estimate & Book</a>
             <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
@@ -822,7 +968,7 @@
           <div class="price">$250 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions">
-            <a class="btn" href="#contact">Estimate & Book</a>
+            <a class="btn btn-gold" href="#contact">Estimate & Book</a>
             <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
@@ -831,11 +977,52 @@
     </div>
   </section>
 
-  <section>
+  <!-- FAQ -->
+  <section id="faq">
+    <h2>FAQ</h2>
+    <p class="subtitle">Quick answers to the most common questions.</p>
+
+    <div class="panel faq">
+      <details>
+        <summary>
+          What is the minimum booking time?
+          <span class="chev">⌄</span>
+        </summary>
+        <p>All vehicles have a <b>3-hour minimum</b>. For airport transfers, we provide a quick quote based on location, time, and stops.</p>
+      </details>
+
+      <details>
+        <summary>
+          Do you do airport transfers (YUL)?
+          <span class="chev">⌄</span>
+        </summary>
+        <p>Yes. We provide transfers between <b>Montréal–Trudeau (YUL)</b> and Mont-Tremblant, plus surrounding areas. Send your flight number and pickup time for a fast quote.</p>
+      </details>
+
+      <details>
+        <summary>
+          Can you handle ski luggage and groups?
+          <span class="chev">⌄</span>
+        </summary>
+        <p>Yes. SUVs are great for luggage and skis, and our <b>Mercedes Sprinter</b> is ideal for groups and events.</p>
+      </details>
+
+      <details>
+        <summary>
+          How do I book the fastest?
+          <span class="chev">⌄</span>
+        </summary>
+        <p>The fastest way is <b>WhatsApp</b> or phone. Use the booking form to send details instantly and we’ll confirm availability quickly.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact2">
     <h2>Contact & Booking</h2>
     <p class="subtitle">Fastest booking is by phone, WhatsApp, or the booking form above.</p>
 
-    <div class="contact-card">
+    <div class="panel" style="padding:20px;">
       <p>
         <b>Phone:</b> <a href="tel:+15142933170">+1 (514) 293-3170</a><br><br>
         <b>WhatsApp:</b> <a href="https://wa.me/15142933170" target="_blank" rel="noreferrer">Chat on WhatsApp</a><br><br>
@@ -847,7 +1034,7 @@
   <footer>
     © <span id="year"></span> Mont Tremblant Limo Services • All rights reserved
   </footer>
-</div>
+</main>
 
 <a class="whatsapp-float" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
 
@@ -857,7 +1044,6 @@
   const BUSINESS_WA = "15142933170";
   const BUSINESS_EMAIL = "monttremblantlimoservices@gmail.com"; // change if you want
 
-  // Hourly rates (CAD)
   const RATES = {
     "2026 Cadillac Escalade ESV": 150,
     "2025 Chevrolet Suburban": 120,
@@ -902,8 +1088,6 @@
     }
 
     let total = rate * hours;
-
-    // Simple round trip estimate
     if (roundtrip === "yes"){
       total = Math.round(total * 1.7);
     }
