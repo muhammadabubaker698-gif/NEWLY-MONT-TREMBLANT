@@ -119,29 +119,32 @@
       linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.55));
   }
 
-  /* Header: lighter / more visible */
+  /* Header: more visible text */
   header{
     position: sticky;
     top: 0;
     z-index: 50;
-    border-bottom: 1px solid rgba(255,255,255,.16);
-    background: rgba(255,255,255,.10);
-    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,.18);
+    background: rgba(10,14,22,.55);
+    backdrop-filter: blur(12px);
   }
   .header-strip{
     position: relative;
-    border-bottom: 1px solid rgba(255,255,255,.10);
+    border-bottom: 1px solid rgba(255,255,255,.12);
     background:
-      linear-gradient(90deg, rgba(255,255,255,.14), rgba(255,255,255,.08), rgba(255,255,255,.14)),
-      url("scenic1.jpg") center/cover no-repeat; /* CHANGED HERE */
+      linear-gradient(90deg, rgba(0,0,0,.38), rgba(0,0,0,.18), rgba(0,0,0,.38)),
+      url("scenic4.jpg") center/cover no-repeat; /* CHANGED TO scenic4.jpg */
   }
   .header-strip:after{
     content:"";
     position:absolute; inset:0;
     background:
-      linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.38));
+      linear-gradient(180deg, rgba(0,0,0,.30), rgba(0,0,0,.62)); /* darker overlay for readability */
     pointer-events:none;
   }
+
+  .topbar,
+  .nav{ text-shadow: 0 2px 10px rgba(0,0,0,.55); } /* improves readability on photo */
 
   .topbar{
     position: relative;
@@ -150,9 +153,11 @@
     gap:12px;
     flex-wrap:wrap;
     font-size: 13px;
-    color: rgba(255,255,255,.92);
+    color: rgba(255,255,255,.98);
     padding: 12px 0 10px;
   }
+  .topbar a{ color: rgba(255,255,255,.98); font-weight: 900; }
+
   .nav{
     position: relative;
     display:flex;
@@ -173,8 +178,8 @@
     font-weight: 950;
     letter-spacing:.2px;
   }
-  .brand-title{font-weight:950; letter-spacing:.2px; line-height:1.1}
-  .brand-sub{display:block;margin-top:3px;color:rgba(255,255,255,.80);font-weight:650;font-size:12.5px}
+  .brand-title{font-weight:950; letter-spacing:.2px; line-height:1.1; color: rgba(255,255,255,.98);}
+  .brand-sub{display:block;margin-top:3px;color:rgba(255,255,255,.92);font-weight:750;font-size:12.5px}
 
   .links{
     display:flex;
@@ -185,18 +190,18 @@
   }
   .links a{
     margin-left: 0;
-    color: rgba(255,255,255,.94);
+    color: rgba(255,255,255,.98);
     font-size: 14px;
-    font-weight: 900;
+    font-weight: 950;
     padding: 9px 10px;
     border-radius: 12px;
     transition: .2s ease;
-    background: rgba(0,0,0,.10);
-    border: 1px solid rgba(255,255,255,.10);
+    background: rgba(0,0,0,.40); /* darker pill for contrast */
+    border: 1px solid rgba(255,255,255,.18);
   }
   .links a:hover{
-    background: rgba(255,255,255,.12);
-    border-color: rgba(255,255,255,.16);
+    background: rgba(0,0,0,.52);
+    border-color: rgba(255,255,255,.28);
   }
 
   .btn{
@@ -213,9 +218,9 @@
   }
   .btn:hover{ transform: translateY(-1px); background: rgba(0,0,0,.18); border-color: rgba(255,255,255,.22); }
   .btn-gold{
-    border: 1px solid rgba(210,177,90,.55);
-    background: linear-gradient(180deg, rgba(210,177,90,.26), rgba(185,138,43,.14));
-    color: rgba(255,255,255,.95);
+    border: 1px solid rgba(210,177,90,.65);
+    background: linear-gradient(180deg, rgba(210,177,90,.30), rgba(185,138,43,.16));
+    color: rgba(255,255,255,.98);
   }
   .btn-ghost{
     border: 1px solid rgba(255,255,255,.16);
@@ -251,7 +256,7 @@
     position:relative;
     padding: 42px 34px;
     display:grid;
-    grid-template-columns: 1.12fr .88fr;
+    grid-template-columns: 1fr; /* CHANGED: booking moved below fleet */
     gap: 18px;
     align-items: end;
   }
@@ -550,116 +555,7 @@
           <a class="btn" href="tel:+15142933170">Call Now</a>
           <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp Booking</a>
           <a class="btn btn-ghost" href="#fleet">View Fleet</a>
-        </div>
-      </div>
-
-      <!-- Booking + Estimator -->
-      <div class="book-card" id="contact">
-        <div class="book-head">
-          <b>Instant booking request</b>
-          <small>Includes a quick estimate. For airport transfers & long-distance, we confirm final pricing by message.</small>
-        </div>
-
-        <div class="book-body">
-          <form onsubmit="return sendBooking(event)">
-            <div class="row">
-              <div>
-                <label for="name">Name</label>
-                <input id="name" placeholder="Your name" required />
-              </div>
-              <div>
-                <label for="phone">Phone</label>
-                <input id="phone" placeholder="+1 ..." />
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label for="date">Date</label>
-                <input id="date" type="date" required />
-              </div>
-              <div>
-                <label for="time">Time</label>
-                <input id="time" type="time" required />
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label for="pickup">Pickup</label>
-                <input id="pickup" placeholder="Hotel / Airport / Address" required />
-                <div class="tinyhint" id="gmapsHint">Autocomplete works when Google Maps key is added.</div>
-              </div>
-              <div>
-                <label for="dropoff">Drop-off</label>
-                <input id="dropoff" placeholder="Destination" required />
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label for="triptype">Trip type</label>
-                <select id="triptype">
-                  <option value="hourly" selected>Hourly (3-hour minimum)</option>
-                  <option value="airport">Airport transfer (quote)</option>
-                </select>
-              </div>
-              <div>
-                <label for="vehicle">Vehicle</label>
-                <select id="vehicle">
-                  <option value="Not sure (recommend)">Not sure (recommend)</option>
-                  <option value="2026 Cadillac Escalade ESV">2026 Cadillac Escalade ESV</option>
-                  <option value="2025 Chevrolet Suburban">2025 Chevrolet Suburban</option>
-                  <option value="2026 GMC Yukon Denali">2026 GMC Yukon Denali</option>
-                  <option value="2024 Infiniti QX60">2024 Infiniti QX60</option>
-                  <option value="2023 Tesla Model Y">2023 Tesla Model Y</option>
-                  <option value="Mercedes Sprinter (Group Van)">Mercedes Sprinter (Group Van)</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label for="hours">Hours</label>
-                <select id="hours">
-                  <option value="3">3 (minimum)</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="8">8</option>
-                </select>
-              </div>
-              <div>
-                <label for="roundtrip">Round trip?</label>
-                <select id="roundtrip">
-                  <option value="no" selected>No</option>
-                  <option value="yes">Yes (return included)</option>
-                </select>
-              </div>
-            </div>
-
-            <label for="notes">Notes (passengers, luggage, flight #, stops…)</label>
-            <textarea id="notes" placeholder="Example: 4 passengers + skis, YUL flight AC123 arriving 6:15pm"></textarea>
-
-            <div class="estimate-box" aria-live="polite">
-              <div class="estimate-top">
-                <b>Estimated total</b>
-                <div class="estimate-value" id="estimateValue">—</div>
-              </div>
-              <div class="estimate-sub" id="estimateSub">Select trip type + vehicle + hours to calculate.</div>
-            </div>
-
-            <div class="book-actions">
-              <button class="btn btn-gold" type="submit">Send Request (WhatsApp)</button>
-              <a class="btn btn-ghost" href="#" onclick="return sendEmail()">Send by Email</a>
-              <a class="btn btn-ghost" href="tel:+15142933170">Call</a>
-            </div>
-
-            <div class="note">
-              Background rotation uses: <b>scenic1.jpg</b> to <b>scenic4.jpg</b>.
-              If one image is missing, the page will still work.
-            </div>
-          </form>
+          <a class="btn btn-gold" href="#contact">Estimate & Book</a>
         </div>
       </div>
     </div>
@@ -774,6 +670,121 @@
             <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MOVED Booking + Estimator here (after fleet) -->
+  <section id="contact">
+    <h2>Instant Booking Request</h2>
+    <p class="subtitle">Send your trip details and get a quick estimate. Airport transfers & long-distance are confirmed by message.</p>
+
+    <div class="book-card">
+      <div class="book-head">
+        <b>Instant booking request</b>
+        <small>Includes a quick estimate. For airport transfers & long-distance, we confirm final pricing by message.</small>
+      </div>
+
+      <div class="book-body">
+        <form onsubmit="return sendBooking(event)">
+          <div class="row">
+            <div>
+              <label for="name">Name</label>
+              <input id="name" placeholder="Your name" required />
+            </div>
+            <div>
+              <label for="phone">Phone</label>
+              <input id="phone" placeholder="+1 ..." />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="date">Date</label>
+              <input id="date" type="date" required />
+            </div>
+            <div>
+              <label for="time">Time</label>
+              <input id="time" type="time" required />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="pickup">Pickup</label>
+              <input id="pickup" placeholder="Hotel / Airport / Address" required />
+              <div class="tinyhint" id="gmapsHint">Autocomplete works when Google Maps key is added.</div>
+            </div>
+            <div>
+              <label for="dropoff">Drop-off</label>
+              <input id="dropoff" placeholder="Destination" required />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="triptype">Trip type</label>
+              <select id="triptype">
+                <option value="hourly" selected>Hourly (3-hour minimum)</option>
+                <option value="airport">Airport transfer (quote)</option>
+              </select>
+            </div>
+            <div>
+              <label for="vehicle">Vehicle</label>
+              <select id="vehicle">
+                <option value="Not sure (recommend)">Not sure (recommend)</option>
+                <option value="2026 Cadillac Escalade ESV">2026 Cadillac Escalade ESV</option>
+                <option value="2025 Chevrolet Suburban">2025 Chevrolet Suburban</option>
+                <option value="2026 GMC Yukon Denali">2026 GMC Yukon Denali</option>
+                <option value="2024 Infiniti QX60">2024 Infiniti QX60</option>
+                <option value="2023 Tesla Model Y">2023 Tesla Model Y</option>
+                <option value="Mercedes Sprinter (Group Van)">Mercedes Sprinter (Group Van)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="hours">Hours</label>
+              <select id="hours">
+                <option value="3">3 (minimum)</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="8">8</option>
+              </select>
+            </div>
+            <div>
+              <label for="roundtrip">Round trip?</label>
+              <select id="roundtrip">
+                <option value="no" selected>No</option>
+                <option value="yes">Yes (return included)</option>
+              </select>
+            </div>
+          </div>
+
+          <label for="notes">Notes (passengers, luggage, flight #, stops…)</label>
+          <textarea id="notes" placeholder="Example: 4 passengers + skis, YUL flight AC123 arriving 6:15pm"></textarea>
+
+          <div class="estimate-box" aria-live="polite">
+            <div class="estimate-top">
+              <b>Estimated total</b>
+              <div class="estimate-value" id="estimateValue">—</div>
+            </div>
+            <div class="estimate-sub" id="estimateSub">Select trip type + vehicle + hours to calculate.</div>
+          </div>
+
+          <div class="book-actions">
+            <button class="btn btn-gold" type="submit">Send Request (WhatsApp)</button>
+            <a class="btn btn-ghost" href="#" onclick="return sendEmail()">Send by Email</a>
+            <a class="btn btn-ghost" href="tel:+15142933170">Call</a>
+          </div>
+
+          <div class="note">
+            Background rotation uses: <b>scenic1.jpg</b> to <b>scenic4.jpg</b>.
+            If one image is missing, the page will still work.
+          </div>
+        </form>
       </div>
     </div>
   </section>
