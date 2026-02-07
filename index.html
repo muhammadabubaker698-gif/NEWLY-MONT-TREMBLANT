@@ -58,9 +58,9 @@
     --bg:#0b1220;
     --bg2:#070c16;
 
-    --panel:#0f1627;       /* solid panel */
-    --panel2:#101a2f;      /* elevated */
-    --card:#0f182e;        /* cards */
+    --panel:#0f1627;
+    --panel2:#101a2f;
+    --card:#0f182e;
 
     --ink:rgba(255,255,255,.92);
     --muted:rgba(255,255,255,.74);
@@ -116,30 +116,33 @@
     background:
       radial-gradient(1100px 650px at 18% 75%, rgba(0,0,0,.62), transparent 60%),
       radial-gradient(1100px 650px at 85% 15%, rgba(0,0,0,.62), transparent 60%),
-      linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.58));
+      linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.55));
   }
 
-  /* Header with scenic strip */
+  /* Header: lighter / more visible */
   header{
     position: sticky;
     top: 0;
     z-index: 50;
-    border-bottom: 1px solid var(--line);
-    background: rgba(9, 13, 22, .88);
+    border-bottom: 1px solid rgba(255,255,255,.16);
+    background: rgba(255,255,255,.10);
+    backdrop-filter: blur(10px);
   }
   .header-strip{
     position: relative;
-    border-bottom: 1px solid rgba(255,255,255,.08);
+    border-bottom: 1px solid rgba(255,255,255,.10);
     background:
-      linear-gradient(90deg, rgba(9,13,22,.94), rgba(9,13,22,.55), rgba(9,13,22,.94)),
+      linear-gradient(90deg, rgba(255,255,255,.14), rgba(255,255,255,.08), rgba(255,255,255,.14)),
       url("scenic2.jpg") center/cover no-repeat;
   }
   .header-strip:after{
     content:"";
     position:absolute; inset:0;
-    background: radial-gradient(ellipse at center, rgba(0,0,0,.10), rgba(0,0,0,.70) 80%);
+    background:
+      linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.38));
     pointer-events:none;
   }
+
   .topbar{
     position: relative;
     display:flex;
@@ -147,7 +150,7 @@
     gap:12px;
     flex-wrap:wrap;
     font-size: 13px;
-    color: rgba(255,255,255,.84);
+    color: rgba(255,255,255,.92);
     padding: 12px 0 10px;
   }
   .nav{
@@ -159,6 +162,7 @@
     padding: 10px 0 14px;
     flex-wrap:wrap;
   }
+
   .brand{display:flex;align-items:center;gap:12px}
   .logo{
     width:40px;height:40px;border-radius:14px;
@@ -170,19 +174,30 @@
     letter-spacing:.2px;
   }
   .brand-title{font-weight:950; letter-spacing:.2px; line-height:1.1}
-  .brand-sub{display:block;margin-top:3px;color:rgba(255,255,255,.72);font-weight:650;font-size:12.5px}
+  .brand-sub{display:block;margin-top:3px;color:rgba(255,255,255,.80);font-weight:650;font-size:12.5px}
 
-  .links{display:flex;align-items:center;flex-wrap:wrap}
+  .links{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap: 6px;
+  }
   .links a{
-    margin-left: 10px;
-    color: rgba(255,255,255,.84);
+    margin-left: 0;
+    color: rgba(255,255,255,.94);
     font-size: 14px;
-    font-weight: 820;
+    font-weight: 900;
     padding: 9px 10px;
     border-radius: 12px;
     transition: .2s ease;
+    background: rgba(0,0,0,.10);
+    border: 1px solid rgba(255,255,255,.10);
   }
-  .links a:hover{background: rgba(255,255,255,.08);}
+  .links a:hover{
+    background: rgba(255,255,255,.12);
+    border-color: rgba(255,255,255,.16);
+  }
 
   .btn{
     display:inline-block;
@@ -190,33 +205,22 @@
     border-radius: 999px;
     font-weight: 900;
     border: 1px solid rgba(255,255,255,.14);
-    background: rgba(255,255,255,.06);
+    background: rgba(0,0,0,.14);
     box-shadow: var(--shadow2);
     color: rgba(255,255,255,.92);
     transition: transform .2s ease, background .2s ease, border-color .2s ease;
     white-space: nowrap;
   }
-  .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.22); }
+  .btn:hover{ transform: translateY(-1px); background: rgba(0,0,0,.18); border-color: rgba(255,255,255,.22); }
   .btn-gold{
     border: 1px solid rgba(210,177,90,.55);
-    background: linear-gradient(180deg, rgba(210,177,90,.22), rgba(185,138,43,.12));
+    background: linear-gradient(180deg, rgba(210,177,90,.26), rgba(185,138,43,.14));
     color: rgba(255,255,255,.95);
   }
   .btn-ghost{
     border: 1px solid rgba(255,255,255,.16);
-    background: rgba(255,255,255,.05);
+    background: rgba(0,0,0,.12);
     box-shadow:none;
-  }
-
-  /* Mobile menu button */
-  .menu-btn{
-    display:none;
-    border:1px solid rgba(255,255,255,.14);
-    background: rgba(255,255,255,.06);
-    color: rgba(255,255,255,.92);
-    padding: 9px 12px;
-    border-radius: 12px;
-    font-weight: 900;
   }
 
   /* Hero */
@@ -469,10 +473,10 @@
   @media (max-width: 860px){
     .container{ padding: 14px; }
     .topbar{ font-size: 12.5px; }
-    .links{ display:none; width:100%; }
-    .menu-btn{ display:inline-block; }
-    .links.open{ display:flex; gap:6px; padding-top:10px; }
-    .links a{ margin-left:0; }
+    .links{
+      width:100%;
+      justify-content:center;
+    }
     .row{ grid-template-columns: 1fr; }
     .btn{ width: 100%; text-align:center; }
     .cta .btn{ width:auto; }
@@ -507,8 +511,6 @@
             <span class="brand-sub">Luxury chauffeur service • Mont-Tremblant, Québec</span>
           </div>
         </div>
-
-        <button class="menu-btn" type="button" onclick="toggleMenu()">Menu</button>
 
         <div id="navLinks" class="links">
           <a href="#fleet">Fleet & Rates</a>
@@ -905,12 +907,6 @@
 
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
-
-  // Mobile menu
-  function toggleMenu(){
-    const el = document.getElementById("navLinks");
-    el.classList.toggle("open");
-  }
 
   // ===== Rotating scenic background =====
   const scenicImages = ["scenic1.jpg","scenic2.jpg","scenic3.jpg","scenic4.jpg"];
