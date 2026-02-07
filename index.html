@@ -94,4 +94,140 @@ footer{margin-top:80px;padding:30px 0;border-top:1px solid var(--line);text-alig
   <div class="hero-bg"></div>
   <div class="hero-inner">
     <div>
-      <h1>Luxury Chauffeur Service in Mont-Tremblant</
+      <h1>Luxury Chauffeur Service in Mont-Tremblant</h1>
+      <p>Airport transfers, ski trips, hourly bookings & VIP travel.</p>
+      <div class="pills">
+        <div class="pill">24/7 Service</div>
+        <div class="pill">Luxury Fleet</div>
+        <div class="pill">Professional Chauffeurs</div>
+      </div>
+    </div>
+
+    <!-- BOOKING -->
+    <div class="book" id="contact">
+      <form onsubmit="return sendBooking(event)">
+        <label>Name</label>
+        <input id="name" required>
+
+        <label>Phone</label>
+        <input id="phone">
+
+        <div class="row">
+          <div>
+            <label>Date</label>
+            <input type="date" id="date" required>
+          </div>
+          <div>
+            <label>Time</label>
+            <input type="time" id="time" required>
+          </div>
+        </div>
+
+        <label>Pickup</label>
+        <input id="pickup" required>
+
+        <label>Drop-off</label>
+        <input id="dropoff" required>
+
+        <label>Notes</label>
+        <textarea id="notes"></textarea>
+
+        <br>
+        <button class="btn" type="submit">Send via WhatsApp</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- SCENIC -->
+<section id="scenic">
+  <h2>Mont-Tremblant Scenic Views</h2>
+  <div class="scenic">
+    <div class="scenic-grid">
+      <img src="scenic1.jpg">
+      <img src="scenic2.jpg">
+      <img src="scenic3.jpg">
+      <img src="scenic4.jpg">
+    </div>
+  </div>
+</section>
+
+<!-- FLEET -->
+<section id="fleet">
+<h2>Fleet & Rates</h2>
+<div class="fleet-grid">
+
+<div class="card">
+<img src="escalade.jpg">
+<div class="card-body">
+<h3>Cadillac Escalade ESV</h3>
+<div class="price">$150 / hour</div>
+<div class="min">3-hour minimum</div>
+</div>
+</div>
+
+<div class="card">
+<img src="suburban.jpg">
+<div class="card-body">
+<h3>Chevrolet Suburban</h3>
+<div class="price">$120 / hour</div>
+<div class="min">3-hour minimum</div>
+</div>
+</div>
+
+<div class="card">
+<img src="denali.jpg">
+<div class="card-body">
+<h3>GMC Yukon Denali</h3>
+<div class="price">$120 / hour</div>
+<div class="min">3-hour minimum</div>
+</div>
+</div>
+
+<div class="card">
+<img src="qx60.jpg">
+<div class="card-body">
+<h3>Infiniti QX60</h3>
+<div class="price">$99 / hour</div>
+<div class="min">3-hour minimum</div>
+</div>
+</div>
+
+<div class="card">
+<img src="tesla.jpg">
+<div class="card-body">
+<h3>Tesla Model Y</h3>
+<div class="price">$75 / hour</div>
+<div class="min">3-hour minimum</div>
+</div>
+</div>
+
+<div class="card">
+<img src="sprinter.jpg">
+<div class="card-body">
+<h3>Mercedes Sprinter Van</h3>
+<div class="price">$250 / hour</div>
+<div class="min">3-hour minimum</div>
+</div>
+</div>
+
+</div>
+</section>
+
+</div>
+
+<footer>
+© 2026 Mont Tremblant Limo Services
+</footer>
+
+<script>
+const WA="15142933170";
+function sendBooking(e){
+e.preventDefault();
+let msg=`Booking Request%0AName: ${name.value}%0APhone: ${phone.value}%0ADate: ${date.value}%0ATime: ${time.value}%0APickup: ${pickup.value}%0ADrop-off: ${dropoff.value}%0ANotes: ${notes.value}`;
+window.open(`https://wa.me/${WA}?text=${msg}`,"_blank");
+}
+</script>
+
+</body>
+</html>
