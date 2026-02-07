@@ -7,6 +7,11 @@
 <meta name="description" content="Luxury chauffeur service in Mont-Tremblant. Escalade, Suburban, Denali, QX60, Tesla & Sprinter. Minimum 3 hours. Call or WhatsApp +1 (514) 293-3170." />
 <link rel="canonical" href="https://monttremblantlimoservices.com/" />
 
+<!-- More visible font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
 <!-- SEO: LocalBusiness + Service schema -->
 <script type="application/ld+json">
 {
@@ -54,109 +59,120 @@
 
 <style>
   :root{
-    --bg:#0b1220;
-    --bg2:#070c16;
+    /* More readable + higher contrast */
+    --bg:#070b12;
+    --bg2:#0b1220;
 
-    --panel:#0f1627;
-    --panel2:#101a2f;
-    --card:#0f182e;
+    --panel:#0e1626;
+    --panel2:#101b30;
 
-    --ink:rgba(255,255,255,.92);
-    --muted:rgba(255,255,255,.74);
-    --muted2:rgba(255,255,255,.60);
-    --line:rgba(255,255,255,.10);
+    --ink: rgba(255,255,255,.94);
+    --muted: rgba(255,255,255,.78);
+    --muted2: rgba(255,255,255,.66);
 
-    --gold:#d2b15a;
-    --gold2:#b98a2b;
+    --line: rgba(255,255,255,.12);
 
-    --shadow: 0 18px 60px rgba(0,0,0,.48);
-    --shadow2: 0 12px 30px rgba(0,0,0,.32);
+    /* Brighter luxury gold */
+    --gold:#e4c36a;
+    --gold2:#c79a35;
+
+    --shadow: 0 18px 60px rgba(0,0,0,.55);
+    --shadow2: 0 12px 30px rgba(0,0,0,.38);
+
     --radius: 18px;
-    --max: 1180px;
+    --max: 1140px;
+
+    --headerH: 86px; /* used for smooth scrolling offsets */
   }
 
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{
-    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
     color: var(--ink);
-    line-height: 1.6;
+    line-height: 1.7; /* more readable */
     overflow-x: hidden;
+    font-size: 16.5px; /* more visible */
     background:
-      radial-gradient(900px 500px at 20% -10%, rgba(210,177,90,.12), transparent 60%),
+      radial-gradient(900px 520px at 18% -10%, rgba(228,195,106,.14), transparent 60%),
       radial-gradient(900px 520px at 90% 10%, rgba(255,255,255,.06), transparent 55%),
       linear-gradient(180deg, var(--bg), var(--bg2));
   }
+
   a{color:inherit;text-decoration:none}
   .container{max-width:var(--max);margin:0 auto;padding: 18px}
   main{position:relative;z-index:1}
 
-  /* Rotating scenic background */
-  .bg-wrap{
-    position:fixed;
-    inset:0;
-    z-index:0;
-    pointer-events:none;
-    overflow:hidden;
+  /* Accessibility: skip link */
+  .skip-link{
+    position:absolute; left:-999px; top:10px;
+    background:#000; color:#fff;
+    padding:10px 12px; border-radius:12px;
+    border:1px solid rgba(255,255,255,.25);
+    z-index: 9999;
   }
+  .skip-link:focus{ left: 14px; }
+
+  /* Make anchor scrolling not hide under sticky header */
+  section{ scroll-margin-top: calc(var(--headerH) + 18px); }
+
+  /* Rotating scenic background */
+  .bg-wrap{ position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
   .bg-layer{
-    position:absolute;
-    inset:0;
-    background-size:cover;
-    background-position:center;
-    transform: scale(1.03);
+    position:absolute; inset:0;
+    background-size:cover; background-position:center;
+    transform: scale(1.05);
     opacity: 0;
     transition: opacity 1.2s ease;
-    filter: saturate(1.05) contrast(1.06);
+    filter: saturate(1.06) contrast(1.06);
   }
-  .bg-layer.is-on{opacity: .16;}
+  .bg-layer.is-on{opacity: .14;}
   .bg-vignette{
     position:absolute; inset:0;
     background:
       radial-gradient(1100px 650px at 18% 75%, rgba(0,0,0,.62), transparent 60%),
       radial-gradient(1100px 650px at 85% 15%, rgba(0,0,0,.62), transparent 60%),
-      linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.55));
+      linear-gradient(180deg, rgba(0,0,0,.20), rgba(0,0,0,.62));
   }
 
-  /* Header: more visible text */
+  /* Header */
   header{
     position: sticky;
     top: 0;
     z-index: 50;
     border-bottom: 1px solid rgba(255,255,255,.18);
-    background: rgba(10,14,22,.55);
-    backdrop-filter: blur(12px);
+    background: rgba(9,12,18,.62);
+    backdrop-filter: blur(14px);
   }
+
   .header-strip{
     position: relative;
-    border-bottom: 1px solid rgba(255,255,255,.12);
+    border-bottom: 1px solid rgba(255,255,255,.10);
     background:
-      linear-gradient(90deg, rgba(0,0,0,.38), rgba(0,0,0,.18), rgba(0,0,0,.38)),
+      linear-gradient(90deg, rgba(0,0,0,.44), rgba(0,0,0,.18), rgba(0,0,0,.44)),
       url("scenic4.jpg") center/cover no-repeat;
   }
   .header-strip:after{
     content:"";
     position:absolute; inset:0;
-    background: linear-gradient(180deg, rgba(0,0,0,.30), rgba(0,0,0,.62));
+    background: linear-gradient(180deg, rgba(0,0,0,.34), rgba(0,0,0,.66));
     pointer-events:none;
   }
 
-  .topbar, .nav{ text-shadow: 0 2px 10px rgba(0,0,0,.55); }
+  .topbar, .nav{ position:relative; text-shadow: 0 2px 10px rgba(0,0,0,.55); }
 
   .topbar{
-    position: relative;
     display:flex;
     justify-content:space-between;
     gap:12px;
     flex-wrap:wrap;
-    font-size: 13px;
-    color: rgba(255,255,255,.98);
+    font-size: 13.5px;
+    color: rgba(255,255,255,.96);
     padding: 12px 0 10px;
   }
   .topbar a{ color: rgba(255,255,255,.98); font-weight: 900; }
 
   .nav{
-    position: relative;
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -167,55 +183,67 @@
 
   .brand{display:flex;align-items:center;gap:12px}
   .logo{
-    width:40px;height:40px;border-radius:14px;
+    width:42px;height:42px;border-radius:14px;
     display:grid;place-items:center;
-    background: linear-gradient(145deg, rgba(210,177,90,.95), rgba(185,138,43,.85));
-    box-shadow: 0 10px 24px rgba(210,177,90,.16);
+    background: linear-gradient(145deg, rgba(228,195,106,.98), rgba(199,154,53,.86));
+    box-shadow: 0 12px 26px rgba(228,195,106,.16);
     color:#0b0f16;
     font-weight: 950;
     letter-spacing:.2px;
   }
   .brand-title{font-weight:950; letter-spacing:.2px; line-height:1.1; color: rgba(255,255,255,.98);}
-  .brand-sub{display:block;margin-top:3px;color:rgba(255,255,255,.92);font-weight:750;font-size:12.5px}
+  .brand-sub{display:block;margin-top:4px;color:rgba(255,255,255,.90);font-weight:700;font-size:12.8px}
 
+  /* Nav links: clearer & easier to tap */
   .links{
     display:flex;
     align-items:center;
     justify-content:center;
     flex-wrap:wrap;
-    gap: 6px;
+    gap: 8px;
   }
   .links a{
     color: rgba(255,255,255,.98);
-    font-size: 14px;
-    font-weight: 950;
-    padding: 9px 10px;
+    font-size: 14.2px;
+    font-weight: 900;
+    padding: 10px 12px;
     border-radius: 12px;
     transition: .2s ease;
     background: rgba(0,0,0,.40);
     border: 1px solid rgba(255,255,255,.18);
   }
   .links a:hover{
-    background: rgba(0,0,0,.52);
-    border-color: rgba(255,255,255,.28);
+    background: rgba(0,0,0,.54);
+    border-color: rgba(255,255,255,.30);
+  }
+  .links a:focus-visible{
+    outline: 3px solid rgba(228,195,106,.55);
+    outline-offset: 2px;
   }
 
   .btn{
-    display:inline-block;
-    padding: 10px 16px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    padding: 11px 16px;
     border-radius: 999px;
     font-weight: 900;
-    border: 1px solid rgba(255,255,255,.14);
+    border: 1px solid rgba(255,255,255,.16);
     background: rgba(0,0,0,.14);
     box-shadow: var(--shadow2);
-    color: rgba(255,255,255,.92);
-    transition: transform .2s ease, background .2s ease, border-color .2s ease;
+    color: rgba(255,255,255,.94);
+    transition: transform .18s ease, background .18s ease, border-color .18s ease;
     white-space: nowrap;
   }
-  .btn:hover{ transform: translateY(-1px); background: rgba(0,0,0,.18); border-color: rgba(255,255,255,.22); }
+  .btn:hover{ transform: translateY(-1px); background: rgba(0,0,0,.18); border-color: rgba(255,255,255,.24); }
+  .btn:focus-visible{
+    outline: 3px solid rgba(228,195,106,.55);
+    outline-offset: 2px;
+  }
   .btn-gold{
-    border: 1px solid rgba(210,177,90,.65);
-    background: linear-gradient(180deg, rgba(210,177,90,.30), rgba(185,138,43,.16));
+    border: 1px solid rgba(228,195,106,.70);
+    background: linear-gradient(180deg, rgba(228,195,106,.30), rgba(199,154,53,.18));
     color: rgba(255,255,255,.98);
   }
   .btn-ghost{
@@ -224,12 +252,12 @@
     box-shadow:none;
   }
 
-  /* Hero */
+  /* Hero: more user-friendly layout */
   .hero{
     position: relative;
     z-index: 1;
     margin-top: 18px;
-    border-radius: 24px;
+    border-radius: 26px;
     overflow: hidden;
     box-shadow: var(--shadow);
     border: 1px solid var(--line);
@@ -238,24 +266,26 @@
   .hero-bg{
     position:absolute; inset:0;
     background:
-      linear-gradient(180deg, rgba(0,0,0,.05) 0%, rgba(11,18,32,.78) 55%, rgba(11,18,32,1) 100%),
+      linear-gradient(180deg, rgba(0,0,0,.06) 0%, rgba(11,18,32,.82) 58%, rgba(11,18,32,1) 100%),
       url("Tremblant.jpg") center/cover no-repeat;
-    transform: scale(1.02);
+    transform: scale(1.03);
   }
   .hero-bg:after{
     content:"";
     position:absolute; inset:0;
-    background: radial-gradient(ellipse at center, rgba(0,0,0,.10), rgba(0,0,0,.72) 80%);
+    background: radial-gradient(ellipse at center, rgba(0,0,0,.08), rgba(0,0,0,.70) 82%);
     pointer-events:none;
   }
+
   .hero-inner{
     position:relative;
     padding: 42px 34px;
     display:grid;
-    grid-template-columns: 1fr;
-    gap: 18px;
-    align-items: end;
+    grid-template-columns: 1.2fr .8fr;
+    gap: 22px;
+    align-items: start;
   }
+
   .kicker{
     display:inline-flex;
     align-items:center;
@@ -263,8 +293,8 @@
     padding: 9px 12px;
     border-radius: 999px;
     border: 1px solid rgba(255,255,255,.16);
-    background: rgba(0,0,0,.20);
-    color: rgba(255,255,255,.90);
+    background: rgba(0,0,0,.22);
+    color: rgba(255,255,255,.92);
     font-weight: 850;
     font-size: 13px;
   }
@@ -272,28 +302,60 @@
     width: 9px; height: 9px;
     border-radius: 999px;
     background: var(--gold);
-    box-shadow: 0 0 0 6px rgba(210,177,90,.16);
+    box-shadow: 0 0 0 6px rgba(228,195,106,.16);
   }
   .hero h1{
     margin-top: 14px;
-    font-size: clamp(28px, 3.6vw, 52px);
-    line-height: 1.08;
-    letter-spacing: -0.5px;
+    font-size: clamp(30px, 3.6vw, 54px);
+    line-height: 1.06;
+    letter-spacing: -0.6px;
   }
-  .hero p{margin-top:12px;color:rgba(255,255,255,.82);max-width:78ch;font-size:16px}
+  .hero p{
+    margin-top:12px;
+    color: rgba(255,255,255,.86);
+    max-width: 70ch;
+    font-size: 16.5px;
+  }
   .pillrow{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
   .pill{
-    font-size: 12.5px;
+    font-size: 12.8px;
     padding: 8px 12px;
     border-radius: 999px;
-    border: 1px solid rgba(255,255,255,.16);
-    background: rgba(0,0,0,.18);
-    color: rgba(255,255,255,.86);
+    border: 1px solid rgba(255,255,255,.18);
+    background: rgba(0,0,0,.20);
+    color: rgba(255,255,255,.88);
     font-weight: 850;
   }
   .cta{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 
-  /* Solid professional panels */
+  /* Quick contact card inside hero (more user friendly) */
+  .quick-card{
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,.14);
+    background: linear-gradient(180deg, rgba(16,26,47,.92), rgba(13,20,36,.92));
+    box-shadow: 0 16px 42px rgba(0,0,0,.35);
+    padding: 16px;
+  }
+  .quick-card h3{
+    font-size: 14px;
+    letter-spacing: .2px;
+    color: rgba(255,255,255,.92);
+    margin-bottom: 6px;
+  }
+  .quick-card p{
+    margin: 0;
+    font-size: 13.5px;
+    color: rgba(255,255,255,.76);
+    line-height: 1.5;
+  }
+  .quick-actions{
+    margin-top: 12px;
+    display:flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Panels */
   .panel{
     border-radius: var(--radius);
     border: 1px solid rgba(255,255,255,.10);
@@ -310,60 +372,73 @@
     box-shadow: 0 18px 60px rgba(0,0,0,.35);
     overflow:hidden;
   }
-  .book-head{ padding: 14px 16px 12px; border-bottom: 1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.03); }
-  .book-head b{display:block;font-size:14px;letter-spacing:.2px}
-  .book-head small{display:block;color:rgba(255,255,255,.72);margin-top:4px;line-height:1.35}
-  .book-body{padding: 14px 16px 16px}
+  .book-head{
+    padding: 16px 18px 14px;
+    border-bottom: 1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.03);
+  }
+  .book-head b{display:block;font-size:15px;letter-spacing:.2px}
+  .book-head small{display:block;color:rgba(255,255,255,.76);margin-top:5px;line-height:1.45}
+  .book-body{padding: 16px 18px 18px}
 
-  .row{display:grid;grid-template-columns: 1fr 1fr;gap:10px}
+  .row{display:grid;grid-template-columns: 1fr 1fr;gap:12px}
   label{
     display:block;
-    font-size: 12px;
-    font-weight: 950;
-    color: rgba(255,255,255,.80);
+    font-size: 12.5px;
+    font-weight: 900;
+    color: rgba(255,255,255,.82);
     margin: 10px 0 6px;
     letter-spacing: .18px;
   }
   input, select, textarea{
     width:100%;
-    padding: 11px 12px;
+    padding: 12px 12px;
     border-radius: 12px;
-    border: 1px solid rgba(255,255,255,.14);
-    background: rgba(6,10,16,.55);
-    color: rgba(255,255,255,.92);
+    border: 1px solid rgba(255,255,255,.16);
+    background: rgba(6,10,16,.60);
+    color: rgba(255,255,255,.94);
     outline:none;
   }
+  input::placeholder, textarea::placeholder{ color: rgba(255,255,255,.60); }
   input:focus, select:focus, textarea:focus{
-    border-color: rgba(210,177,90,.60);
-    box-shadow: 0 0 0 4px rgba(210,177,90,.14);
+    border-color: rgba(228,195,106,.65);
+    box-shadow: 0 0 0 4px rgba(228,195,106,.14);
   }
-  textarea{min-height: 78px; resize: vertical}
-  .tinyhint{font-size:12px;color:rgba(255,255,255,.68);margin-top:6px}
+  textarea{min-height: 88px; resize: vertical}
+  .tinyhint{font-size:12.5px;color:rgba(255,255,255,.70);margin-top:6px}
 
   .estimate-box{
     margin-top: 12px;
-    border: 1px solid rgba(210,177,90,.24);
-    background: rgba(210,177,90,.10);
+    border: 1px solid rgba(228,195,106,.26);
+    background: rgba(228,195,106,.10);
     border-radius: 12px;
     padding: 12px;
   }
   .estimate-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
-  .estimate-top b{font-size:13px}
+  .estimate-top b{font-size:13.5px}
   .estimate-value{font-weight:950;letter-spacing:.2px}
-  .estimate-sub{margin-top:6px;color:rgba(255,255,255,.78);font-size:12.5px;line-height:1.45}
+  .estimate-sub{margin-top:6px;color:rgba(255,255,255,.80);font-size:12.8px;line-height:1.5}
 
   .book-actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
-  .note{margin-top:10px;color:rgba(255,255,255,.70);font-size:12.5px;line-height:1.45}
+  .note{margin-top:10px;color:rgba(255,255,255,.72);font-size:12.8px;line-height:1.5}
 
   /* Sections */
-  section{margin-top: 46px}
-  h2{ font-size: 28px; letter-spacing: -0.2px; margin-bottom: 8px; }
-  .subtitle{ color: rgba(255,255,255,.74); margin-bottom: 16px; max-width: 900px; }
+  section{margin-top: 52px}
+  .section-head{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:14px;
+    flex-wrap:wrap;
+    margin-bottom: 14px;
+  }
+  h2{ font-size: 30px; letter-spacing: -0.2px; margin-bottom: 4px; }
+  .subtitle{ color: rgba(255,255,255,.78); max-width: 920px; }
 
-  /* Fleet cards */
+  /* Fleet cards: more modern + easier scan */
   .fleet-grid{
     display:grid;
-    grid-template-columns: repeat(2, minmax(0,1fr));
+    grid-template-columns: repeat(3, minmax(0,1fr));
     gap: 16px;
   }
   .card{
@@ -372,6 +447,12 @@
     border: 1px solid rgba(255,255,255,.10);
     background: linear-gradient(180deg, rgba(16,26,47,.96), rgba(13,20,36,.96));
     box-shadow: var(--shadow2);
+    transform: translateZ(0);
+    transition: transform .18s ease, border-color .18s ease;
+  }
+  .card:hover{
+    transform: translateY(-2px);
+    border-color: rgba(228,195,106,.22);
   }
   .card-media{position:relative;background:#0b1020}
   .card-media img{
@@ -379,21 +460,28 @@
     aspect-ratio: 16 / 10;
     object-fit:cover;
     display:block;
+    filter: contrast(1.03) saturate(1.05);
   }
   .badge{
     position:absolute; left:14px; top:14px;
     font-size:12px; font-weight:950;
     padding: 7px 10px;
     border-radius: 999px;
-    background: rgba(0,0,0,.50);
+    background: rgba(0,0,0,.55);
     border: 1px solid rgba(255,255,255,.18);
-    color: rgba(255,255,255,.92);
+    color: rgba(255,255,255,.94);
+    backdrop-filter: blur(8px);
   }
   .card-body{padding: 16px 16px 18px}
   .card-body h3{font-size:18px;margin-bottom:6px}
-  .meta{color: rgba(255,255,255,.70); font-size: 13px; margin-bottom: 10px}
-  .price{margin-top: 10px; font-weight: 950; font-size: 16px}
-  .min{color: rgba(255,255,255,.64); font-size: 12px; margin-top: 2px}
+  .meta{color: rgba(255,255,255,.74); font-size: 13.2px; margin-bottom: 10px}
+  .price{
+    margin-top: 10px;
+    font-weight: 950;
+    font-size: 16.5px;
+    color: rgba(255,255,255,.96);
+  }
+  .min{color: rgba(255,255,255,.68); font-size: 12.5px; margin-top: 2px}
   .actions{margin-top: 12px; display:flex; gap: 10px; flex-wrap:wrap}
 
   /* Routes + testimonials */
@@ -401,22 +489,22 @@
   .grid2{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
 
   .route{padding: 16px; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center;}
-  .route b{font-size: 14px;}
-  .route span{color: rgba(255,255,255,.72); font-size: 13px;}
+  .route b{font-size: 14.5px;}
+  .route span{color: rgba(255,255,255,.74); font-size: 13.5px;}
   .tag{
     padding: 7px 10px;
     border-radius: 999px;
-    border: 1px solid rgba(210,177,90,.24);
-    background: rgba(210,177,90,.10);
-    color: rgba(255,255,255,.88);
+    border: 1px solid rgba(228,195,106,.26);
+    background: rgba(228,195,106,.10);
+    color: rgba(255,255,255,.92);
     font-weight: 900;
     font-size: 12px;
   }
 
   .quote{ padding: 16px; }
-  .stars{ letter-spacing: 1px; color: rgba(210,177,90,.95); font-weight: 950; }
-  .qtext{ margin-top: 8px; color: rgba(255,255,255,.84); line-height: 1.55; }
-  .qname{ margin-top: 10px; color: rgba(255,255,255,.70); font-size: 13px; font-weight: 800; }
+  .stars{ letter-spacing: 1px; color: rgba(228,195,106,.98); font-weight: 950; }
+  .qtext{ margin-top: 8px; color: rgba(255,255,255,.86); line-height: 1.6; }
+  .qname{ margin-top: 10px; color: rgba(255,255,255,.72); font-size: 13.5px; font-weight: 800; }
 
   /* FAQ */
   .faq{ padding: 8px 0; }
@@ -424,33 +512,35 @@
   details:first-child{ border-top: none; }
   summary{
     cursor:pointer; list-style:none;
-    font-weight: 900; color: rgba(255,255,255,.92);
+    font-weight: 900; color: rgba(255,255,255,.94);
     display:flex; align-items:center; justify-content:space-between; gap: 10px;
   }
   summary::-webkit-details-marker{ display:none; }
   .chev{
-    width: 26px; height: 26px;
+    width: 28px; height: 28px;
     border-radius: 10px;
     border: 1px solid rgba(255,255,255,.14);
     background: rgba(255,255,255,.06);
     display:grid; place-items:center;
-    color: rgba(255,255,255,.86);
+    color: rgba(255,255,255,.88);
     transition: transform .2s ease;
     flex:0 0 auto;
   }
   details[open] .chev{ transform: rotate(180deg); }
-  details p{ margin-top:10px; color: rgba(255,255,255,.74); line-height:1.55; max-width: 90ch; }
+  details p{ margin-top:10px; color: rgba(255,255,255,.78); line-height:1.6; max-width: 90ch; }
 
   footer{
     border-top: 1px solid rgba(255,255,255,.12);
-    margin-top: 60px;
-    padding: 26px 0;
+    margin-top: 64px;
+    padding: 28px 0;
     text-align:center;
-    color: rgba(255,255,255,.62);
+    color: rgba(255,255,255,.66);
     font-size: 14px;
     position:relative;
     z-index:1;
   }
+
+  /* WhatsApp floating button: more visible */
   .whatsapp-float{
     position:fixed;
     right: 16px;
@@ -462,17 +552,23 @@
     font-weight: 950;
     box-shadow: 0 16px 38px rgba(0,0,0,.30);
     z-index: 60;
+    border: 1px solid rgba(0,0,0,.18);
   }
 
+  /* Responsive */
+  @media (max-width: 1080px){
+    .hero-inner{ grid-template-columns: 1fr; }
+    .quick-actions{ flex-direction: row; flex-wrap: wrap; }
+    .fleet-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+  }
   @media (max-width: 980px){
-    .hero-inner{ grid-template-columns: 1fr; padding: 26px 18px; }
     .grid3{ grid-template-columns: 1fr; }
     .grid2{ grid-template-columns: 1fr; }
     .fleet-grid{ grid-template-columns: 1fr; }
   }
   @media (max-width: 860px){
     .container{ padding: 14px; }
-    .topbar{ font-size: 12.5px; }
+    .topbar{ font-size: 12.8px; }
     .links{ width:100%; justify-content:center; }
     .row{ grid-template-columns: 1fr; }
     .btn{ width: 100%; text-align:center; }
@@ -482,6 +578,8 @@
 </head>
 
 <body>
+<a class="skip-link" href="#fleet">Skip to fleet</a>
+
 <!-- Rotating background -->
 <div class="bg-wrap" aria-hidden="true">
   <div id="bgA" class="bg-layer"></div>
@@ -551,16 +649,35 @@
           <a class="btn btn-gold" href="#fleet">View Pricing</a>
         </div>
       </div>
+
+      <!-- New: quick contact card -->
+      <aside class="quick-card" aria-label="Quick booking">
+        <h3>Fast booking</h3>
+        <p>Call or WhatsApp for fastest response. Use the form to send details instantly.</p>
+        <div class="quick-actions">
+          <a class="btn btn-gold" href="#contact">Instant Request</a>
+          <a class="btn btn-ghost" href="tel:+15142933170">Call</a>
+          <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
+        </div>
+      </aside>
     </div>
   </div>
 
   <!-- OUR FLEET (pictures + rates together) -->
   <section id="fleet">
-    <h2>Our Fleet</h2>
-    <p class="subtitle">
-      Premium vehicles for Mont-Tremblant travel. Each card shows the vehicle photo and hourly rate.
-      <b>Minimum 3 hours</b> applies to all vehicles.
-    </p>
+    <div class="section-head">
+      <div>
+        <h2>Our Fleet</h2>
+        <p class="subtitle">
+          Premium vehicles for Mont-Tremblant travel. Each card shows the vehicle photo and hourly rate.
+          <b>Minimum 3 hours</b> applies to all vehicles.
+        </p>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a class="btn btn-gold" href="#contact">Get an Estimate</a>
+        <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
+      </div>
+    </div>
 
     <div class="fleet-grid">
       <div class="card">
@@ -667,10 +784,14 @@
     </div>
   </section>
 
-  <!-- Booking after fleet -->
+  <!-- Booking -->
   <section id="contact">
-    <h2>Instant Booking Request</h2>
-    <p class="subtitle">Send your trip details and get a quick estimate. Airport transfers & long-distance are confirmed by message.</p>
+    <div class="section-head">
+      <div>
+        <h2>Instant Booking Request</h2>
+        <p class="subtitle">Send your trip details and get a quick estimate. Airport transfers & long-distance are confirmed by message.</p>
+      </div>
+    </div>
 
     <div class="book-card">
       <div class="book-head">
@@ -784,8 +905,16 @@
 
   <!-- Destinations / Routes -->
   <section id="routes">
-    <h2>Destinations</h2>
-    <p class="subtitle">Common trips. Long-distance routes are confirmed by message.</p>
+    <div class="section-head">
+      <div>
+        <h2>Destinations</h2>
+        <p class="subtitle">Common trips. Long-distance routes are confirmed by message.</p>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a class="btn btn-gold" href="#contact">Get a Quote</a>
+        <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
+      </div>
+    </div>
 
     <div class="grid2">
       <div class="panel route">
@@ -828,17 +957,16 @@
         <div class="tag">3-hour min</div>
       </div>
     </div>
-
-    <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
-      <a class="btn btn-gold" href="#contact">Get a Quote</a>
-      <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
-    </div>
   </section>
 
   <!-- Testimonials -->
   <section id="testimonials">
-    <h2>What Clients Say</h2>
-    <p class="subtitle">Professional, punctual, and premium — built for Mont-Tremblant travel.</p>
+    <div class="section-head">
+      <div>
+        <h2>What Clients Say</h2>
+        <p class="subtitle">Professional, punctual, and premium — built for Mont-Tremblant travel.</p>
+      </div>
+    </div>
 
     <div class="grid3">
       <div class="panel quote">
@@ -863,8 +991,12 @@
 
   <!-- FAQ -->
   <section id="faq">
-    <h2>FAQ</h2>
-    <p class="subtitle">Quick answers to the most common questions.</p>
+    <div class="section-head">
+      <div>
+        <h2>FAQ</h2>
+        <p class="subtitle">Quick answers to the most common questions.</p>
+      </div>
+    </div>
 
     <div class="panel faq" style="padding: 0 18px;">
       <details>
@@ -890,8 +1022,12 @@
   </section>
 
   <section id="contact2">
-    <h2>Contact & Booking</h2>
-    <p class="subtitle">Fastest booking is by phone, WhatsApp, or the booking form above.</p>
+    <div class="section-head">
+      <div>
+        <h2>Contact & Booking</h2>
+        <p class="subtitle">Fastest booking is by phone, WhatsApp, or the booking form above.</p>
+      </div>
+    </div>
 
     <div class="panel" style="padding:20px;">
       <p>
