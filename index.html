@@ -67,7 +67,6 @@
     --muted2: rgba(255,255,255,.66);
     --line: rgba(255,255,255,.12);
 
-    /* Luxury gold */
     --gold:#e4c36a;
     --gold2:#c79a35;
 
@@ -80,7 +79,6 @@
 
     --headerText: rgba(255,255,255,.98);
     --headerTextSoft: rgba(255,255,255,.86);
-
     --headerBorder: rgba(228,195,106,.26);
 
     --headerBg: rgba(28, 38, 56, .94);
@@ -136,7 +134,6 @@
     background: var(--headerBg);
     backdrop-filter: blur(8px);
   }
-
   .header-strip{
     position: relative;
     border-bottom: 1px solid rgba(228,195,106,.16);
@@ -150,9 +147,7 @@
     background: linear-gradient(180deg, var(--headerStripOverlayTop), var(--headerStripOverlayBottom));
     pointer-events:none;
   }
-
   .topbar, .nav{ position:relative; text-shadow: 0 2px 10px rgba(0,0,0,.45); }
-
   .topbar{
     display:flex;
     justify-content:space-between;
@@ -169,7 +164,6 @@
     text-decoration-color: rgba(255,255,255,.35);
     text-underline-offset: 3px;
   }
-
   .nav{
     display:flex;
     align-items:center;
@@ -178,7 +172,6 @@
     padding: 10px 0 14px;
     flex-wrap:wrap;
   }
-
   .brand{display:flex;align-items:center;gap:12px}
   .logo{
     width:42px;height:42px;border-radius:14px;
@@ -238,7 +231,6 @@
     background: linear-gradient(180deg, rgba(228,195,106,.38), rgba(199,154,53,.22));
     color: rgba(255,255,255,.98);
   }
-
   .btn-book{
     padding: 12px 18px;
     font-size: 14.6px;
@@ -431,7 +423,6 @@
   .estimate-sub{margin-top:6px;color:rgba(255,255,255,.80);font-size:12.8px;line-height:1.5}
   .book-actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
 
-  /* Payment banner */
   .banner{
     margin-top: 12px;
     border-radius: 14px;
@@ -493,7 +484,6 @@
 </head>
 
 <body>
-<!-- Rotating background -->
 <div class="bg-wrap" aria-hidden="true">
   <div id="bgA" class="bg-layer"></div>
   <div id="bgB" class="bg-layer"></div>
@@ -691,7 +681,7 @@
   <!-- Booking -->
   <section id="contact">
     <h2>Instant Estimate & Reserve</h2>
-    <p class="subtitle">Type your pickup and drop-off (no autocomplete). Reserve online with full payment via Stripe Checkout.</p>
+    <p class="subtitle">Type your pickup and drop-off (no autocomplete). Select time from a dropdown (5-minute steps). Reserve online with full payment via Stripe Checkout.</p>
 
     <div id="paymentBanner" style="display:none;"></div>
 
@@ -719,9 +709,12 @@
               <label for="date">Date</label>
               <input id="date" type="date" required />
             </div>
+
+            <!-- ✅ Time dropdown (5-minute steps) -->
             <div>
               <label for="time">Time</label>
-              <input id="time" type="time" required />
+              <select id="time" required></select>
+              <div class="tinyhint">Select a time (5-minute steps).</div>
             </div>
           </div>
 
@@ -974,6 +967,51 @@
     }
   }
 
+  // ✅ Build time dropdown options (5-minute steps)
+  function buildTimeOptions(stepMinutes = 5){
+    const timeEl = document.getElementById("time");
+    if (!timeEl || timeEl.tagName !== "SELECT") return;
+
+    timeEl.innerHTML = "";
+
+    // placeholder
+    const ph = document.createElement("option");
+    ph.value = "";
+    ph.textContent = "Select time";
+    ph.selected = true;
+    ph.disabled = true;
+    timeEl.appendChild(ph);
+
+    const pad = (n)=> String(n).padStart(2,"0");
+
+    // 00:00 to 23:55
+    for (let minutes = 0; minutes < 24 * 60; minutes += stepMinutes){
+      const hh = Math.floor(minutes / 60);
+      const mm = minutes % 60;
+
+      const value = `${pad(hh)}:${pad(mm)}`; // IMPORTANT: stable value for backend
+      // Display as 12-hour AM/PM
+      const hour12 = ((hh + 11) % 12) + 1;
+      const ampm = hh < 12 ? "AM" : "PM";
+      const label = `${hour12}:${pad(mm)} ${ampm}`;
+
+      const opt = document.createElement("option");
+      opt.value = value;
+      opt.textContent = label;
+      timeEl.appendChild(opt);
+    }
+
+    // Optional: default next 5-minute time
+    const now = new Date();
+    let mins = now.getHours() * 60 + now.getMinutes();
+    mins = Math.ceil(mins / stepMinutes) * stepMinutes;
+    if (mins >= 24*60) mins = 0;
+    const hh = Math.floor(mins / 60);
+    const mm = mins % 60;
+    const defaultValue = `${pad(hh)}:${pad(mm)}`;
+    timeEl.value = defaultValue;
+  }
+
   // Hide hours unless hourly
   function syncTriptypeUI(){
     const triptype = v("triptype");
@@ -1001,7 +1039,7 @@
     }
   }
 
-  // Instant estimate (Hourly + rule-based Point/Airport)
+  // Instant estimate
   function computeEstimate(){
     const triptype = v("triptype");
     const vehicle = v("vehicle");
@@ -1020,7 +1058,6 @@
       return { mode: triptype, total: null, text: "Select vehicle to estimate" };
     }
 
-    // HOURLY
     if (triptype === "hourly"){
       if (!rate) return needVehicle();
 
@@ -1036,10 +1073,9 @@
       return { mode:"hourly", total, text: `${formatMoney(rate)}/hr × ${hours}h` + (roundtrip === "yes" ? " (round trip)" : "") };
     }
 
-    // POINT-TO-POINT / AIRPORT
     if (!rate) return needVehicle();
 
-    const base = rate * 3; // 3-hour minimum equivalent
+    const base = rate * 3;
     const tripFee = (triptype === "airport") ? 60 : 40;
     let total = base + tripFee;
 
@@ -1058,7 +1094,6 @@
     };
   }
 
-  // Build WhatsApp message
   function buildMessage(){
     const name = v("name");
     const phone = v("phone");
@@ -1114,7 +1149,7 @@
     return false;
   }
 
-  // ✅ Improved: tells exactly what's missing + highlights fields
+  // ✅ Improved validation: shows exactly what's missing + highlights
   function collectBookingPayload(){
     const requiredMap = {
       name: "Name",
@@ -1125,13 +1160,11 @@
       vehicle: "Vehicle"
     };
 
-    // Clear old highlights
     Object.keys(requiredMap).forEach(id=>{
       const el = document.getElementById(id);
       if (el) el.style.borderColor = "rgba(255,255,255,.16)";
     });
 
-    // Find missing fields
     const missing = [];
     for (const id of Object.keys(requiredMap)){
       if (!v(id)) missing.push(id);
@@ -1160,7 +1193,7 @@
         name: v("name"),
         phone: v("phone"),
         date: v("date"),
-        time: v("time"),
+        time: v("time"), // now always stable "HH:MM"
         pickup: v("pickup"),
         dropoff: v("dropoff"),
         triptype: v("triptype"),
@@ -1182,8 +1215,8 @@
 
     const payload = collectBookingPayload();
     if (!payload.ok){
-      if (statusEl) statusEl.textContent = payload.error; // shows on page
-      alert(payload.error); // also popup so beginners notice
+      if (statusEl) statusEl.textContent = payload.error;
+      alert(payload.error);
       return;
     }
 
@@ -1208,7 +1241,6 @@
     }
   }
 
-  // Events
   ["triptype","vehicle","hours","roundtrip"].forEach(id=>{
     const el = document.getElementById(id);
     if (el) el.addEventListener("change", ()=>{
@@ -1218,6 +1250,7 @@
   });
 
   window.addEventListener("load", ()=>{
+    buildTimeOptions(5);     // ✅ create time dropdown
     syncTriptypeUI();
     computeEstimate();
     showPaymentBanner();
