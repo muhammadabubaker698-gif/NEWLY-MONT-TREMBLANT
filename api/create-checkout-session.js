@@ -9,7 +9,7 @@ function toCents(cad) {
 
 module.exports = async (req, res) => {
   try {
-    // If key missing, return a clear error (prevents crash)
+    // Clear error if env var missing
     if (!process.env.STRIPE_SECRET_KEY) {
       return res.status(500).json({
         error: "STRIPE_SECRET_KEY is not set in Vercel Environment Variables."
@@ -21,8 +21,8 @@ module.exports = async (req, res) => {
     }
 
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
     const b = req.body || {};
+
     if (!b.name || !b.date || !b.time || !b.pickup || !b.dropoff || !b.vehicle) {
       return res.status(400).json({ error: "Missing required booking fields." });
     }
@@ -48,9 +48,9 @@ module.exports = async (req, res) => {
           currency: "cad",
           product_data: {
             name: "Mont Tremblant Limo Reservation (Full Payment)",
-            description: description.slice(0, 4000),
+            description: description.slice(0, 4000)
           },
-          unit_amount: amount,
+          unit_amount: amount
         },
         quantity: 1
       }],
@@ -68,12 +68,12 @@ module.exports = async (req, res) => {
         estimate_total_cad: String(b.estimate_total_cad ?? "")
       },
       success_url: `${DOMAIN}/?payment=success`,
-      cancel_url: `${DOMAIN}/?payment=cancel`,
+      cancel_url: `${DOMAIN}/?payment=cancel`
     });
 
     return res.status(200).json({ url: session.url });
   } catch (err) {
-    console.error("Checkout session error:", err);
+    console.error("Function error:", err);
     return res.status(500).json({ error: err.message || "Server error" });
   }
 };
