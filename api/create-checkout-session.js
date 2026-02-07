@@ -1,6 +1,4 @@
-import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const Stripe = require("stripe");
 
 function toCents(cad) {
   const n = Number(cad);
@@ -9,14 +7,22 @@ function toCents(cad) {
   return Math.round(n * 100);
 }
 
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
-
+module.exports = async (req, res) => {
   try {
-    const b = req.body || {};
+    // If key missing, return a clear error (prevents crash)
+    if (!process.env.STRIPE_SECRET_KEY) {
+      return res.status(500).json({
+        error: "STRIPE_SECRET_KEY is not set in Vercel Environment Variables."
+      });
+    }
 
+    if (req.method !== "POST") {
+      return res.status(405).json({ error: "Method not allowed. Use POST." });
+    }
+
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+    const b = req.body || {};
     if (!b.name || !b.date || !b.time || !b.pickup || !b.dropoff || !b.vehicle) {
       return res.status(400).json({ error: "Missing required booking fields." });
     }
@@ -24,7 +30,7 @@ export default async function handler(req, res) {
     const amount = toCents(b.pay_now_cad);
     if (!amount) return res.status(400).json({ error: "Invalid payment amount." });
 
-    const DOMAIN = process.env.PUBLIC_DOMAIN || "https://monttremblantlimoservices.com";
+    const DOMAIN = process.env.PUBLIC_DOMAIN || "https://www.monttremblantlimoservices.com";
 
     const description =
       `Trip: ${b.triptype}\n` +
@@ -67,8 +73,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ url: session.url });
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Server error creating checkout session." });
+    console.error("Checkout session error:", err);
+    return res.status(500).json({ error: err.message || "Server error" });
   }
-}
-Add Stripe checkout API
+};
