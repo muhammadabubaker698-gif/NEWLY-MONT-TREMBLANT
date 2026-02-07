@@ -3,176 +3,1195 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Mont Tremblant Limo Services | Reserve Online</title>
-<meta name="description" content="Luxury chauffeur & limo service in Mont-Tremblant. Reserve online with instant pricing and secure payment." />
+<title>Mont Tremblant Limo Services | Luxury Chauffeur</title>
+<meta name="description" content="Luxury chauffeur service in Mont-Tremblant. Escalade, Suburban, Denali, QX60, Tesla & Sprinter. Minimum 3 hours. Call or WhatsApp +1 (514) 293-3170." />
+<link rel="canonical" href="https://monttremblantlimoservices.com/" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- SEO: LocalBusiness + Service schema -->
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"LocalBusiness",
+  "name":"Mont Tremblant Limo Services",
+  "url":"https://monttremblantlimoservices.com/",
+  "telephone":"+1-514-293-3170",
+  "description":"Luxury chauffeur service in Mont-Tremblant. Premium vehicles for airport transfers, hourly bookings, ski trips, corporate travel, and special events. Minimum 3 hours.",
+  "areaServed":[
+    {"@type":"City","name":"Mont-Tremblant"},
+    {"@type":"City","name":"Montréal"},
+    {"@type":"City","name":"Ottawa"},
+    {"@type":"City","name":"Québec City"},
+    {"@type":"City","name":"New York"},
+    {"@type":"City","name":"Boston"},
+    {"@type":"AdministrativeArea","name":"New Jersey"}
+  ],
+  "address":{
+    "@type":"PostalAddress",
+    "addressLocality":"Mont-Tremblant",
+    "addressRegion":"QC",
+    "addressCountry":"CA"
+  },
+  "image":[ "https://monttremblantlimoservices.com/Tremblant.jpg" ],
+  "sameAs":[ "https://wa.me/15142933170" ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Service",
+  "name":"Luxury Chauffeur & Limo Service",
+  "provider":{
+    "@type":"LocalBusiness",
+    "name":"Mont Tremblant Limo Services",
+    "telephone":"+1-514-293-3170",
+    "url":"https://monttremblantlimoservices.com/"
+  },
+  "areaServed":"Mont-Tremblant, QC and surrounding areas",
+  "serviceType":"Chauffeur Service"
+}
+</script>
 
 <style>
-body{
-  font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  background:#0b1220;
-  color:#fff;
-  margin:0;
-}
-.container{max-width:1100px;margin:auto;padding:20px}
-h1,h2{margin-bottom:10px}
-input,select,textarea,button{
-  width:100%;
-  padding:12px;
-  border-radius:8px;
-  border:none;
-  margin-bottom:12px;
-  font-size:15px
-}
-textarea{min-height:90px}
-button{
-  background:#e4c36a;
-  color:#000;
-  font-weight:800;
-  cursor:pointer
-}
-button:hover{opacity:.9}
-.card{
-  background:#111a2e;
-  border-radius:12px;
-  padding:20px;
-  margin-top:20px
-}
-.row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px
-}
-@media(max-width:800px){.row{grid-template-columns:1fr}}
-.note{font-size:13px;opacity:.8}
-.price-box{
-  background:#1a2646;
-  padding:14px;
-  border-radius:10px;
-  font-weight:700
-}
+  :root{
+    --bg:#070b12;
+    --bg2:#0b1220;
+    --panel:#0e1626;
+
+    --ink: rgba(255,255,255,.94);
+    --muted: rgba(255,255,255,.78);
+    --muted2: rgba(255,255,255,.66);
+    --line: rgba(255,255,255,.12);
+
+    /* Luxury gold */
+    --gold:#e4c36a;
+    --gold2:#c79a35;
+
+    --shadow: 0 18px 60px rgba(0,0,0,.55);
+    --shadow2: 0 12px 30px rgba(0,0,0,.38);
+
+    --radius: 18px;
+    --max: 1140px;
+    --headerH: 92px;
+
+    --headerText: rgba(255,255,255,.98);
+    --headerTextSoft: rgba(255,255,255,.86);
+
+    --headerBorder: rgba(228,195,106,.26);
+
+    --headerBg: rgba(28, 38, 56, .94);
+    --headerStripGradientA: rgba(0,0,0,.16);
+    --headerStripGradientB: rgba(0,0,0,.05);
+    --headerStripOverlayTop: rgba(0,0,0,.14);
+    --headerStripOverlayBottom: rgba(0,0,0,.34);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    color: var(--ink);
+    line-height: 1.7;
+    overflow-x: hidden;
+    font-size: 16.5px;
+    background:
+      radial-gradient(900px 520px at 18% -10%, rgba(228,195,106,.14), transparent 60%),
+      radial-gradient(900px 520px at 90% 10%, rgba(255,255,255,.06), transparent 55%),
+      linear-gradient(180deg, var(--bg), var(--bg2));
+  }
+  a{color:inherit;text-decoration:none}
+  .container{max-width:var(--max);margin:0 auto;padding: 18px}
+  main{position:relative;z-index:1}
+  section{ scroll-margin-top: calc(var(--headerH) + 18px); }
+
+  /* Rotating scenic background */
+  .bg-wrap{ position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+  .bg-layer{
+    position:absolute; inset:0;
+    background-size:cover; background-position:center;
+    transform: scale(1.05);
+    opacity: 0;
+    transition: opacity 1.2s ease;
+    filter: saturate(1.06) contrast(1.06);
+  }
+  .bg-layer.is-on{opacity: .14;}
+  .bg-vignette{
+    position:absolute; inset:0;
+    background:
+      radial-gradient(1100px 650px at 18% 75%, rgba(0,0,0,.62), transparent 60%),
+      radial-gradient(1100px 650px at 85% 15%, rgba(0,0,0,.62), transparent 60%),
+      linear-gradient(180deg, rgba(0,0,0,.20), rgba(0,0,0,.62));
+  }
+
+  /* Header */
+  header{
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid var(--headerBorder);
+    background: var(--headerBg);
+    backdrop-filter: blur(8px);
+  }
+
+  .header-strip{
+    position: relative;
+    border-bottom: 1px solid rgba(228,195,106,.16);
+    background:
+      linear-gradient(90deg, var(--headerStripGradientA), var(--headerStripGradientB), var(--headerStripGradientA)),
+      url("scenic4.jpg") center/cover no-repeat;
+  }
+  .header-strip:after{
+    content:"";
+    position:absolute; inset:0;
+    background: linear-gradient(180deg, var(--headerStripOverlayTop), var(--headerStripOverlayBottom));
+    pointer-events:none;
+  }
+
+  .topbar, .nav{ position:relative; text-shadow: 0 2px 10px rgba(0,0,0,.45); }
+
+  .topbar{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+    font-size: 13.5px;
+    color: var(--headerTextSoft);
+    padding: 12px 0 10px;
+  }
+  .topbar a{
+    color: var(--headerText);
+    font-weight: 900;
+    text-decoration: underline;
+    text-decoration-color: rgba(255,255,255,.35);
+    text-underline-offset: 3px;
+  }
+
+  .nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 14px;
+    padding: 10px 0 14px;
+    flex-wrap:wrap;
+  }
+
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{
+    width:42px;height:42px;border-radius:14px;
+    display:grid;place-items:center;
+    background: linear-gradient(145deg, rgba(228,195,106,.98), rgba(199,154,53,.86));
+    box-shadow: 0 12px 26px rgba(228,195,106,.16);
+    color:#0b0f16;
+    font-weight: 950;
+    letter-spacing:.2px;
+  }
+  .brand-title{ font-weight:950; letter-spacing:.2px; line-height:1.1; color: var(--headerText); }
+  .brand-sub{ display:block; margin-top:4px; color: var(--headerTextSoft); font-weight:700; font-size:12.8px }
+
+  .links{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap: 8px;
+  }
+  .links a{
+    color: var(--headerText);
+    font-size: 14.2px;
+    font-weight: 900;
+    padding: 10px 12px;
+    border-radius: 12px;
+    transition: .2s ease;
+    background: rgba(0,0,0,.32);
+    border: 1px solid rgba(255,255,255,.20);
+  }
+  .links a:hover{
+    background: rgba(0,0,0,.48);
+    border-color: rgba(255,255,255,.32);
+    transform: translateY(-1px);
+  }
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    padding: 11px 16px;
+    border-radius: 999px;
+    font-weight: 900;
+    border: 1px solid rgba(255,255,255,.16);
+    background: rgba(0,0,0,.14);
+    box-shadow: var(--shadow2);
+    color: rgba(255,255,255,.94);
+    transition: transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
+    white-space: nowrap;
+    cursor:pointer;
+  }
+  .btn:hover{ transform: translateY(-1px); background: rgba(0,0,0,.18); border-color: rgba(255,255,255,.24); }
+  .btn-ghost{ border: 1px solid rgba(255,255,255,.16); background: rgba(0,0,0,.12); box-shadow:none; }
+  .btn-gold{
+    border: 1px solid rgba(228,195,106,.80);
+    background: linear-gradient(180deg, rgba(228,195,106,.38), rgba(199,154,53,.22));
+    color: rgba(255,255,255,.98);
+  }
+
+  .btn-book{
+    padding: 12px 18px;
+    font-size: 14.6px;
+    letter-spacing: .2px;
+    border: 1px solid rgba(228,195,106,.95);
+    background: linear-gradient(180deg, rgba(228,195,106,.66), rgba(199,154,53,.34));
+    box-shadow:
+      0 18px 40px rgba(228,195,106,.18),
+      0 18px 60px rgba(0,0,0,.40);
+  }
+  .btn-book:hover{
+    transform: translateY(-2px);
+    box-shadow:
+      0 22px 48px rgba(228,195,106,.22),
+      0 22px 70px rgba(0,0,0,.45);
+  }
+
+  /* Hero */
+  .hero{
+    position: relative;
+    z-index: 1;
+    margin-top: 18px;
+    border-radius: 26px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--line);
+    background: var(--panel);
+  }
+  .hero-bg{
+    position:absolute; inset:0;
+    background:
+      linear-gradient(180deg, rgba(0,0,0,.06) 0%, rgba(11,18,32,.82) 58%, rgba(11,18,32,1) 100%),
+      url("Tremblant.jpg") center/cover no-repeat;
+    transform: scale(1.03);
+  }
+  .hero-bg:after{
+    content:"";
+    position:absolute; inset:0;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,.08), rgba(0,0,0,.70) 82%);
+    pointer-events:none;
+  }
+  .hero-inner{
+    position:relative;
+    padding: 42px 34px;
+    display:grid;
+    grid-template-columns: 1.2fr .8fr;
+    gap: 22px;
+    align-items: start;
+  }
+  .kicker{
+    display:inline-flex; align-items:center; gap:10px;
+    padding: 9px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.16);
+    background: rgba(0,0,0,.22);
+    color: rgba(255,255,255,.92);
+    font-weight: 850;
+    font-size: 13px;
+  }
+  .dot{
+    width: 9px; height: 9px;
+    border-radius: 999px;
+    background: var(--gold);
+    box-shadow: 0 0 0 6px rgba(228,195,106,.16);
+  }
+  .hero h1{
+    margin-top: 14px;
+    font-size: clamp(30px, 3.6vw, 54px);
+    line-height: 1.06;
+    letter-spacing: -0.6px;
+  }
+  .hero p{
+    margin-top:12px;
+    color: rgba(255,255,255,.86);
+    max-width: 70ch;
+    font-size: 16.5px;
+  }
+  .pillrow{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+  .pill{
+    font-size: 12.8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.18);
+    background: rgba(0,0,0,.20);
+    color: rgba(255,255,255,.88);
+    font-weight: 850;
+  }
+  .cta{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+  .quick-card{
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,.14);
+    background: linear-gradient(180deg, rgba(16,26,47,.92), rgba(13,20,36,.92));
+    box-shadow: 0 16px 42px rgba(0,0,0,.35);
+    padding: 16px;
+  }
+  .quick-card h3{ font-size: 14px; letter-spacing: .2px; margin-bottom: 6px; }
+  .quick-card p{ margin:0; font-size: 13.5px; color: rgba(255,255,255,.76); line-height: 1.5; }
+  .quick-actions{ margin-top: 12px; display:flex; flex-direction: column; gap: 10px; }
+
+  /* Sections */
+  section{margin-top: 52px}
+  h2{ font-size: 30px; letter-spacing: -0.2px; margin-bottom: 4px; }
+  .subtitle{ color: rgba(255,255,255,.78); max-width: 920px; margin-bottom: 14px; }
+
+  /* Fleet cards */
+  .fleet-grid{
+    display:grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 16px;
+  }
+  .card{
+    border-radius: var(--radius);
+    overflow:hidden;
+    border: 1px solid rgba(255,255,255,.10);
+    background: linear-gradient(180deg, rgba(16,26,47,.96), rgba(13,20,36,.96));
+    box-shadow: var(--shadow2);
+    transition: transform .18s ease, border-color .18s ease;
+  }
+  .card:hover{ transform: translateY(-2px); border-color: rgba(228,195,106,.22); }
+  .card-media{position:relative;background:#0b1020}
+  .card-media img{ width:100%; aspect-ratio: 16 / 10; object-fit:cover; display:block; }
+  .badge{
+    position:absolute; left:14px; top:14px;
+    font-size:12px; font-weight:950;
+    padding: 7px 10px;
+    border-radius: 999px;
+    background: rgba(0,0,0,.55);
+    border: 1px solid rgba(255,255,255,.18);
+    color: rgba(255,255,255,.94);
+    backdrop-filter: blur(8px);
+  }
+  .card-body{padding: 16px 16px 18px}
+  .card-body h3{font-size:18px;margin-bottom:6px}
+  .meta{color: rgba(255,255,255,.74); font-size: 13.2px; margin-bottom: 10px}
+  .price{ margin-top: 10px; font-weight: 950; font-size: 16.5px; }
+  .min{color: rgba(255,255,255,.68); font-size: 12.5px; margin-top: 2px}
+  .actions{margin-top: 12px; display:flex; gap: 10px; flex-wrap:wrap}
+
+  /* Routes + testimonials */
+  .panel{
+    border-radius: var(--radius);
+    border: 1px solid rgba(255,255,255,.10);
+    background: linear-gradient(180deg, rgba(16,26,47,.96), rgba(13,20,36,.96));
+    box-shadow: var(--shadow2);
+    overflow:hidden;
+  }
+  .grid2{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
+  .grid3{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
+  .route{padding: 16px; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center;}
+  .route b{font-size: 14.5px;}
+  .route span{color: rgba(255,255,255,.74); font-size: 13.5px;}
+  .tag{
+    padding: 7px 10px; border-radius: 999px;
+    border: 1px solid rgba(228,195,106,.26);
+    background: rgba(228,195,106,.10);
+    color: rgba(255,255,255,.92);
+    font-weight: 900; font-size: 12px;
+  }
+  .quote{ padding: 16px; }
+  .stars{ letter-spacing: 1px; color: rgba(228,195,106,.98); font-weight: 950; }
+  .qtext{ margin-top: 8px; color: rgba(255,255,255,.86); line-height: 1.6; }
+  .qname{ margin-top: 10px; color: rgba(255,255,255,.72); font-size: 13.5px; font-weight: 800; }
+
+  /* Booking */
+  .book-card{ border-radius: var(--radius); border: 1px solid rgba(255,255,255,.12); background: linear-gradient(180deg, rgba(16,26,47,.96), rgba(13,20,36,.96)); box-shadow: 0 18px 60px rgba(0,0,0,.35); overflow:hidden; }
+  .book-head{ padding: 16px 18px 14px; border-bottom: 1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.03); }
+  .book-head b{display:block;font-size:15px;letter-spacing:.2px}
+  .book-head small{display:block;color:rgba(255,255,255,.76);margin-top:5px;line-height:1.45}
+  .book-body{padding: 16px 18px 18px}
+  .row{display:grid;grid-template-columns: 1fr 1fr;gap:12px}
+  label{ display:block; font-size: 12.5px; font-weight: 900; color: rgba(255,255,255,.82); margin: 10px 0 6px; letter-spacing: .18px; }
+  input, select, textarea{
+    width:100%;
+    padding: 12px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,.16);
+    background: rgba(6,10,16,.60);
+    color: rgba(255,255,255,.94);
+    outline:none;
+  }
+  input::placeholder, textarea::placeholder{ color: rgba(255,255,255,.60); }
+  input:focus, select:focus, textarea:focus{ border-color: rgba(228,195,106,.65); box-shadow: 0 0 0 4px rgba(228,195,106,.14); }
+  textarea{min-height: 88px; resize: vertical}
+  .tinyhint{font-size:12.5px;color:rgba(255,255,255,.70);margin-top:6px}
+  .estimate-box{ margin-top: 12px; border: 1px solid rgba(228,195,106,.26); background: rgba(228,195,106,.10); border-radius: 12px; padding: 12px; }
+  .estimate-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
+  .estimate-top b{font-size:13.5px}
+  .estimate-value{font-weight:950;letter-spacing:.2px}
+  .estimate-sub{margin-top:6px;color:rgba(255,255,255,.80);font-size:12.8px;line-height:1.5}
+  .book-actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
+
+  /* Payment banner */
+  .banner{
+    margin-top: 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.06);
+    padding: 12px 14px;
+    color: rgba(255,255,255,.88);
+  }
+  .banner.good{ border-color: rgba(80,255,160,.25); background: rgba(80,255,160,.08); }
+  .banner.bad{ border-color: rgba(255,120,120,.22); background: rgba(255,120,120,.08); }
+
+  /* FAQ */
+  details{ border-top: 1px solid rgba(255,255,255,.12); padding: 14px 0; }
+  details:first-child{ border-top:none; }
+  summary{ cursor:pointer; list-style:none; font-weight: 900; color: rgba(255,255,255,.94); display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  summary::-webkit-details-marker{ display:none; }
+  .chev{ width: 28px; height: 28px; border-radius: 10px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); display:grid; place-items:center; color: rgba(255,255,255,.88); transition: transform .2s ease; }
+  details[open] .chev{ transform: rotate(180deg); }
+  details p{ margin-top:10px; color: rgba(255,255,255,.78); line-height:1.6; max-width: 90ch; }
+
+  /* Footer */
+  footer{ border-top: 1px solid rgba(255,255,255,.12); margin-top: 64px; padding: 28px 0; text-align:center; color: rgba(255,255,255,.66); font-size: 14px; position:relative; z-index:1; }
+
+  /* WhatsApp float */
+  .whatsapp-float{
+    position:fixed;
+    right:16px;
+    bottom:16px;
+    background:#25D366;
+    color:#0b0b0b;
+    padding:12px 16px;
+    border-radius:999px;
+    font-weight:950;
+    box-shadow: 0 16px 38px rgba(0,0,0,.30);
+    z-index:60;
+    border: 1px solid rgba(0,0,0,.18);
+  }
+
+  /* Responsive */
+  @media (max-width: 1080px){
+    .hero-inner{ grid-template-columns: 1fr; }
+    .quick-actions{ flex-direction: row; flex-wrap: wrap; }
+    .fleet-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+  }
+  @media (max-width: 980px){
+    .grid3{ grid-template-columns: 1fr; }
+    .grid2{ grid-template-columns: 1fr; }
+    .fleet-grid{ grid-template-columns: 1fr; }
+  }
+  @media (max-width: 860px){
+    .container{ padding: 14px; }
+    .topbar{ font-size: 12.8px; }
+    .links{ width:100%; justify-content:center; }
+    .row{ grid-template-columns: 1fr; }
+    .btn{ width: 100%; text-align:center; }
+    .cta .btn{ width:auto; }
+  }
 </style>
 </head>
 
 <body>
-
-<div class="container">
-  <h1>Mont Tremblant Limo Services</h1>
-  <p>Luxury chauffeur service • Full payment required to reserve</p>
-
-  <div class="card">
-    <h2>Instant Reservation</h2>
-
-    <form id="bookingForm">
-      <div class="row">
-        <input id="name" placeholder="Full Name" required />
-        <input id="phone" placeholder="Phone (optional)" />
-      </div>
-
-      <div class="row">
-        <input id="date" type="date" required />
-        <input id="time" type="time" required />
-      </div>
-
-      <input id="pickup" placeholder="Pickup location" required />
-      <input id="dropoff" placeholder="Drop-off location" required />
-
-      <div class="row">
-        <select id="triptype">
-          <option value="hourly">Hourly (3-hour minimum)</option>
-          <option value="point">Point-to-Point</option>
-          <option value="airport">Airport Transfer</option>
-        </select>
-
-        <select id="vehicle">
-          <option value="">Select vehicle</option>
-          <option value="Escalade">Cadillac Escalade — $150/hr</option>
-          <option value="Suburban">Chevrolet Suburban — $120/hr</option>
-          <option value="Denali">GMC Yukon Denali — $120/hr</option>
-          <option value="QX60">Infiniti QX60 — $99/hr</option>
-          <option value="Tesla">Tesla Model Y — $75/hr</option>
-          <option value="Sprinter">Mercedes Sprinter — $250/hr</option>
-        </select>
-      </div>
-
-      <select id="hours">
-        <option value="3">3 hours (minimum)</option>
-        <option value="4">4 hours</option>
-        <option value="5">5 hours</option>
-        <option value="6">6 hours</option>
-        <option value="8">8 hours</option>
-      </select>
-
-      <textarea id="notes" placeholder="Passengers, luggage, flight number, notes…"></textarea>
-
-      <div class="price-box">
-        Estimated Total: <span id="estimate">$0</span>
-      </div>
-
-      <button type="button" onclick="reserveNow()">Reserve Now (Pay Online)</button>
-      <p class="note">Secure payment powered by Stripe • Full payment required</p>
-    </form>
-  </div>
+<!-- Rotating background -->
+<div class="bg-wrap" aria-hidden="true">
+  <div id="bgA" class="bg-layer"></div>
+  <div id="bgB" class="bg-layer"></div>
+  <div class="bg-vignette"></div>
 </div>
 
+<header>
+  <div class="header-strip">
+    <div class="container">
+      <div class="topbar">
+        <div>Mont-Tremblant • Montréal • Ottawa • Airport Transfers</div>
+        <div>
+          📞 <a href="tel:+15142933170"><b>+1 (514) 293-3170</b></a> &nbsp;·&nbsp;
+          <a href="https://wa.me/15142933170" target="_blank" rel="noreferrer"><b>WhatsApp</b></a>
+        </div>
+      </div>
+
+      <div class="nav">
+        <div class="brand">
+          <div class="logo">MT</div>
+          <div>
+            <div class="brand-title">Mont Tremblant Limo Services</div>
+            <span class="brand-sub">Luxury chauffeur service • Mont-Tremblant, Québec</span>
+          </div>
+        </div>
+
+        <div id="navLinks" class="links">
+          <a href="#fleet">Our Fleet</a>
+          <a href="#fleet">Pricing</a>
+          <a href="#routes">Destinations</a>
+          <a href="#faq">FAQ</a>
+          <a href="#contact">Contact</a>
+        </div>
+
+        <a class="btn btn-gold btn-book" href="#contact">Book Now</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <div class="hero">
+    <div class="hero-bg" aria-hidden="true"></div>
+
+    <div class="hero-inner">
+      <div>
+        <div class="kicker"><span class="dot"></span> Premium rides inspired by Mont-Tremblant scenery</div>
+
+        <h1>Luxury chauffeur service for mountains, lakes, and long-distance destinations.</h1>
+        <p>
+          Premium vehicles for airport transfers, hourly bookings, ski trips, corporate travel, and special events.
+          <b>Minimum 3 hours on all vehicles.</b>
+        </p>
+
+        <div class="pillrow">
+          <div class="pill">24/7 Booking</div>
+          <div class="pill">Professional Chauffeurs</div>
+          <div class="pill">Clean Premium Vehicles</div>
+          <div class="pill">Mont-Tremblant • Montréal • Québec • USA Trips</div>
+        </div>
+
+        <div class="cta">
+          <a class="btn" href="tel:+15142933170">Call Now</a>
+          <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp Booking</a>
+          <a class="btn btn-ghost" href="#fleet">View Fleet</a>
+          <a class="btn btn-gold" href="#fleet">View Pricing</a>
+        </div>
+      </div>
+
+      <aside class="quick-card" aria-label="Quick booking">
+        <h3>Fast booking</h3>
+        <p>Reserve online with full payment, or use WhatsApp/phone for fastest response.</p>
+        <div class="quick-actions">
+          <a class="btn btn-gold" href="#contact">Reserve Now</a>
+          <a class="btn btn-ghost" href="tel:+15142933170">Call</a>
+          <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- OUR FLEET -->
+  <section id="fleet">
+    <h2>Our Fleet</h2>
+    <p class="subtitle">
+      Premium vehicles for Mont-Tremblant travel. Each card shows the vehicle photo and hourly rate.
+      <b>Minimum 3 hours</b> applies to all vehicles.
+    </p>
+
+    <div class="fleet-grid">
+      <div class="card">
+        <div class="card-media">
+          <span class="badge">VIP</span>
+          <img src="escalade.jpg" alt="2026 Cadillac Escalade ESV black">
+        </div>
+        <div class="card-body">
+          <h3>2026 Cadillac Escalade ESV</h3>
+          <div class="meta">Ultra-luxury • VIP airport transfers • ski trips</div>
+          <div class="price">$150 / hour</div>
+          <div class="min">3-hour minimum</div>
+          <div class="actions">
+            <a class="btn btn-gold" href="#contact">Estimate & Reserve</a>
+            <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-media">
+          <span class="badge">Executive SUV</span>
+          <img src="suburban.jpg" alt="2025 Chevrolet Suburban black">
+        </div>
+        <div class="card-body">
+          <h3>2025 Chevrolet Suburban</h3>
+          <div class="meta">Spacious • luggage friendly • long rides</div>
+          <div class="price">$120 / hour</div>
+          <div class="min">3-hour minimum</div>
+          <div class="actions">
+            <a class="btn btn-gold" href="#contact">Estimate & Reserve</a>
+            <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-media">
+          <span class="badge">Luxury SUV</span>
+          <img src="denali.jpg" alt="2026 GMC Yukon Denali black">
+        </div>
+        <div class="card-body">
+          <h3>2026 GMC Yukon Denali</h3>
+          <div class="meta">Premium comfort • smooth ride • executive travel</div>
+          <div class="price">$120 / hour</div>
+          <div class="min">3-hour minimum</div>
+          <div class="actions">
+            <a class="btn btn-gold" href="#contact">Estimate & Reserve</a>
+            <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-media">
+          <span class="badge">Premium</span>
+          <img src="qx60.jpg" alt="2024 Infiniti QX60 black">
+        </div>
+        <div class="card-body">
+          <h3>2024 Infiniti QX60</h3>
+          <div class="meta">Comfort + value • airport transfers • city rides</div>
+          <div class="price">$99 / hour</div>
+          <div class="min">3-hour minimum</div>
+          <div class="actions">
+            <a class="btn btn-gold" href="#contact">Estimate & Reserve</a>
+            <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-media">
+          <span class="badge">EV</span>
+          <img src="tesla.jpg" alt="2023 Tesla Model Y black">
+        </div>
+        <div class="card-body">
+          <h3>2023 Tesla Model Y</h3>
+          <div class="meta">Quiet • modern • eco-friendly</div>
+          <div class="price">$75 / hour</div>
+          <div class="min">3-hour minimum</div>
+          <div class="actions">
+            <a class="btn btn-gold" href="#contact">Estimate & Reserve</a>
+            <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-media">
+          <span class="badge">Group</span>
+          <img src="sprinter.jpg" alt="Black Mercedes Sprinter van">
+        </div>
+        <div class="card-body">
+          <h3>Mercedes Sprinter (Group Van)</h3>
+          <div class="meta">Groups • events • ski luggage</div>
+          <div class="price">$250 / hour</div>
+          <div class="min">3-hour minimum</div>
+          <div class="actions">
+            <a class="btn btn-gold" href="#contact">Estimate & Reserve</a>
+            <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Booking -->
+  <section id="contact">
+    <h2>Instant Estimate & Reserve</h2>
+    <p class="subtitle">Type your pickup and drop-off (no autocomplete). Reserve online with full payment via Stripe Checkout.</p>
+
+    <div id="paymentBanner" style="display:none;"></div>
+
+    <div class="book-card">
+      <div class="book-head">
+        <b>Reserve Now (Full payment required)</b>
+        <small>Instant estimate + secure payment via Stripe Checkout. After payment, your reservation is confirmed.</small>
+      </div>
+
+      <div class="book-body">
+        <form onsubmit="return sendBooking(event)">
+          <div class="row">
+            <div>
+              <label for="name">Name</label>
+              <input id="name" placeholder="Your name" required />
+            </div>
+            <div>
+              <label for="phone">Phone</label>
+              <input id="phone" placeholder="+1 ..." />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="date">Date</label>
+              <input id="date" type="date" required />
+            </div>
+            <div>
+              <label for="time">Time</label>
+              <input id="time" type="time" required />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="pickup">Pickup</label>
+              <input id="pickup"
+                     placeholder="Hotel / Airport / Address"
+                     required
+                     autocomplete="off"
+                     autocorrect="off"
+                     autocapitalize="off"
+                     spellcheck="false" />
+              <div class="tinyhint">Type your pickup location.</div>
+            </div>
+            <div>
+              <label for="dropoff">Drop-off</label>
+              <input id="dropoff"
+                     placeholder="Destination"
+                     required
+                     autocomplete="off"
+                     autocorrect="off"
+                     autocapitalize="off"
+                     spellcheck="false" />
+              <div class="tinyhint">Type your drop-off location.</div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="triptype">Trip type</label>
+              <select id="triptype">
+                <option value="hourly" selected>Hourly (3-hour minimum)</option>
+                <option value="point">Point-to-point (estimate)</option>
+                <option value="airport">Airport transfer (estimate)</option>
+              </select>
+            </div>
+            <div>
+              <label for="vehicle">Vehicle</label>
+              <select id="vehicle" required>
+                <option value="" selected>Select vehicle</option>
+                <option value="2026 Cadillac Escalade ESV">2026 Cadillac Escalade ESV</option>
+                <option value="2025 Chevrolet Suburban">2025 Chevrolet Suburban</option>
+                <option value="2026 GMC Yukon Denali">2026 GMC Yukon Denali</option>
+                <option value="2024 Infiniti QX60">2024 Infiniti QX60</option>
+                <option value="2023 Tesla Model Y">2023 Tesla Model Y</option>
+                <option value="Mercedes Sprinter (Group Van)">Mercedes Sprinter (Group Van)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row" id="hoursRow">
+            <div>
+              <label for="hours">Hours</label>
+              <select id="hours">
+                <option value="3">3 (minimum)</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="8">8</option>
+              </select>
+            </div>
+            <div>
+              <label for="roundtrip">Round trip?</label>
+              <select id="roundtrip">
+                <option value="no" selected>No</option>
+                <option value="yes">Yes (return included)</option>
+              </select>
+            </div>
+          </div>
+
+          <label for="notes">Notes (passengers, luggage, flight #, stops…)</label>
+          <textarea id="notes" placeholder="Example: 4 passengers + skis, YUL flight AC123 arriving 6:15pm"></textarea>
+
+          <div class="estimate-box" aria-live="polite">
+            <div class="estimate-top">
+              <b>Estimated total</b>
+              <div class="estimate-value" id="estimateValue">—</div>
+            </div>
+            <div class="estimate-sub" id="estimateSub">Select trip type + vehicle (+ hours if hourly) to calculate.</div>
+          </div>
+
+          <div class="book-actions">
+            <button class="btn btn-gold" type="button" onclick="startStripeCheckout()">Reserve Now (Pay Online)</button>
+            <button class="btn btn-ghost" type="submit">Send Request (WhatsApp)</button>
+            <a class="btn btn-ghost" href="#" onclick="return sendEmail()">Send by Email</a>
+            <a class="btn btn-ghost" href="tel:+15142933170">Call</a>
+          </div>
+          <div class="tinyhint" id="payStatus"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Destinations -->
+  <section id="routes">
+    <h2>Destinations</h2>
+    <p class="subtitle">Common trips. Long-distance routes and stops can be adjusted by message.</p>
+    <div class="grid2">
+      <div class="panel route">
+        <div><b>Montréal (YUL) ↔ Mont-Tremblant</b><br><span>Airport pickups • ski luggage • hotel drops</span></div>
+        <div class="tag">Most booked</div>
+      </div>
+      <div class="panel route">
+        <div><b>Montréal Downtown ↔ Mont-Tremblant</b><br><span>Business travel • weekends • events</span></div>
+        <div class="tag">Fast reserve</div>
+      </div>
+      <div class="panel route">
+        <div><b>Québec City ↔ Mont-Tremblant</b><br><span>Private long-distance • comfort ride</span></div>
+        <div class="tag">By request</div>
+      </div>
+      <div class="panel route">
+        <div><b>Ottawa ↔ Mont-Tremblant</b><br><span>Long-distance comfort • family trips</span></div>
+        <div class="tag">By request</div>
+      </div>
+      <div class="panel route">
+        <div><b>New York ↔ Mont-Tremblant</b><br><span>Cross-border long distance • VIP travel</span></div>
+        <div class="tag">Quote</div>
+      </div>
+      <div class="panel route">
+        <div><b>Boston ↔ Mont-Tremblant</b><br><span>Cross-border long distance • premium ride</span></div>
+        <div class="tag">Quote</div>
+      </div>
+      <div class="panel route">
+        <div><b>New Jersey ↔ Mont-Tremblant</b><br><span>Cross-border long distance • flexible stops</span></div>
+        <div class="tag">Quote</div>
+      </div>
+      <div class="panel route">
+        <div><b>Hourly Chauffeur (Mont-Tremblant)</b><br><span>Resort • restaurants • private tours</span></div>
+        <div class="tag">3-hour min</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section id="testimonials">
+    <h2>What Clients Say</h2>
+    <p class="subtitle">Professional, punctual, and premium — built for Mont-Tremblant travel.</p>
+    <div class="grid3">
+      <div class="panel quote">
+        <div class="stars">★★★★★</div>
+        <div class="qtext">“On time, clean SUV, very smooth ride to Tremblant. Professional chauffeur and easy booking.”</div>
+        <div class="qname">— Private client (Montréal → Tremblant)</div>
+      </div>
+      <div class="panel quote">
+        <div class="stars">★★★★★</div>
+        <div class="qtext">“Great for ski trip with luggage. Comfortable and stress-free pickup and drop-off.”</div>
+        <div class="qname">— Family booking (YUL airport)</div>
+      </div>
+      <div class="panel quote">
+        <div class="stars">★★★★★</div>
+        <div class="qtext">“Excellent service for our event. Communication was clear and the Sprinter was perfect for the group.”</div>
+        <div class="qname">— Group booking (Event transfer)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <h2>FAQ</h2>
+    <p class="subtitle">Quick answers to the most common questions.</p>
+    <div class="panel" style="padding: 0 18px;">
+      <details>
+        <summary>What is the minimum booking time? <span class="chev">⌄</span></summary>
+        <p>All vehicles have a <b>3-hour minimum</b>. Point-to-point and airport estimates include a 3-hour minimum equivalent and may adjust for stops/wait time.</p>
+      </details>
+      <details>
+        <summary>Do you do airport transfers (YUL)? <span class="chev">⌄</span></summary>
+        <p>Yes. We provide transfers between <b>Montréal–Trudeau (YUL)</b> and Mont-Tremblant, plus surrounding areas.</p>
+      </details>
+      <details>
+        <summary>Do you do New York / Boston / New Jersey? <span class="chev">⌄</span></summary>
+        <p>Yes, long-distance and cross-border trips are available. Share pickup, drop-off, date/time, passengers, and any stops.</p>
+      </details>
+      <details>
+        <summary>How do I book the fastest? <span class="chev">⌄</span></summary>
+        <p>Use <b>Reserve Now (Pay Online)</b> to confirm instantly, or WhatsApp/phone for fastest response.</p>
+      </details>
+    </div>
+  </section>
+
+  <section id="contact2">
+    <h2>Contact & Booking</h2>
+    <p class="subtitle">Fast booking is online payment, phone, WhatsApp, or the form above.</p>
+    <div class="panel" style="padding:20px;">
+      <p>
+        <b>Phone:</b> <a href="tel:+15142933170">+1 (514) 293-3170</a><br><br>
+        <b>WhatsApp:</b> <a href="https://wa.me/15142933170" target="_blank" rel="noreferrer">Chat on WhatsApp</a><br><br>
+        <b>Service Area:</b> Mont-Tremblant, Montréal, Ottawa, Québec City, New York, Boston, New Jersey & surrounding areas
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    © <span id="year"></span> Mont Tremblant Limo Services • All rights reserved
+  </footer>
+</main>
+
+<a class="whatsapp-float" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
+
 <script>
-const RATES={
-  Escalade:150,
-  Suburban:120,
-  Denali:120,
-  QX60:99,
-  Tesla:75,
-  Sprinter:250
-};
+  document.getElementById("year").textContent = new Date().getFullYear();
 
-function $(id){return document.getElementById(id).value}
+  // ===== Rotating scenic background =====
+  const scenicImages = ["scenic1.jpg","scenic2.jpg","scenic3.jpg","scenic4.jpg"];
+  const bgA = document.getElementById("bgA");
+  const bgB = document.getElementById("bgB");
+  let useA = true;
+  let idx = 0;
 
-function calculate(){
-  const vehicle=$("vehicle");
-  const trip=$("triptype");
-  const hours=Math.max(3,parseInt($("hours")));
-  if(!RATES[vehicle]) return 0;
+  function setLayer(layer, img){ layer.style.backgroundImage = `url("${img}")`; }
 
-  if(trip==="hourly") return RATES[vehicle]*hours;
-  if(trip==="airport") return RATES[vehicle]*3+60;
-  return RATES[vehicle]*3+40;
-}
+  function rotateBackground(){
+    const nextImg = scenicImages[idx % scenicImages.length];
+    idx++;
+    const onLayer = useA ? bgA : bgB;
+    const offLayer = useA ? bgB : bgA;
+    setLayer(offLayer, nextImg);
+    offLayer.classList.add("is-on");
+    onLayer.classList.remove("is-on");
+    useA = !useA;
+  }
 
-["vehicle","triptype","hours"].forEach(id=>{
-  document.getElementById(id).addEventListener("change",()=>{
-    document.getElementById("estimate").textContent="$"+calculate();
-  });
-});
+  setLayer(bgA, scenicImages[0]);
+  bgA.classList.add("is-on");
+  setLayer(bgB, scenicImages[1]);
+  setInterval(rotateBackground, 8000);
 
-async function reserveNow(){
-  const amount=calculate();
-  if(!amount){alert("Please select vehicle");return;}
+  // Business config
+  const BUSINESS_WA = "15142933170";
+  const BUSINESS_EMAIL = "monttremblantlimoservices@gmail.com";
 
-  const payload={
-    name:$("name"),
-    phone:$("phone"),
-    date:$("date"),
-    time:$("time"),
-    pickup:$("pickup"),
-    dropoff:$("dropoff"),
-    triptype:$("triptype"),
-    vehicle:$("vehicle"),
-    hours:$("hours"),
-    notes:$("notes"),
-    estimate_text:"Full payment reservation",
-    estimate_total_cad:amount,
-    pay_now_cad:amount
+  // Hourly rates (CAD)
+  const RATES = {
+    "2026 Cadillac Escalade ESV": 150,
+    "2025 Chevrolet Suburban": 120,
+    "2026 GMC Yukon Denali": 120,
+    "2024 Infiniti QX60": 99,
+    "2023 Tesla Model Y": 75,
+    "Mercedes Sprinter (Group Van)": 250
   };
 
-  const res=await fetch("/api/create-checkout-session",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(payload)
+  function v(id){ return (document.getElementById(id)?.value || "").trim(); }
+
+  function formatMoney(n){
+    try{
+      return new Intl.NumberFormat("en-CA", { style:"currency", currency:"CAD", maximumFractionDigits:0 }).format(n);
+    }catch(e){
+      return "$" + Math.round(n);
+    }
+  }
+
+  // Hide hours unless hourly
+  function syncTriptypeUI(){
+    const triptype = v("triptype");
+    const hoursRow = document.getElementById("hoursRow");
+    if (hoursRow) hoursRow.style.display = (triptype === "hourly") ? "grid" : "none";
+  }
+
+  // Payment banner after redirect
+  function showPaymentBanner(){
+    const params = new URLSearchParams(window.location.search);
+    const p = params.get("payment");
+    const bannerWrap = document.getElementById("paymentBanner");
+    if (!bannerWrap) return;
+
+    if (p === "success"){
+      bannerWrap.style.display = "block";
+      bannerWrap.className = "banner good";
+      bannerWrap.textContent = "Payment successful. Thank you — your reservation is confirmed. If you have special requests, message us on WhatsApp.";
+    } else if (p === "cancel"){
+      bannerWrap.style.display = "block";
+      bannerWrap.className = "banner bad";
+      bannerWrap.textContent = "Payment cancelled. You can try again or send the request by WhatsApp.";
+    } else {
+      bannerWrap.style.display = "none";
+    }
+  }
+
+  // Instant estimate (Hourly + rule-based Point/Airport)
+  function computeEstimate(){
+    const triptype = v("triptype");
+    const vehicle = v("vehicle");
+    const hoursRaw = parseInt(v("hours") || "3", 10);
+    const roundtrip = v("roundtrip");
+
+    const estimateValueEl = document.getElementById("estimateValue");
+    const estimateSubEl = document.getElementById("estimateSub");
+
+    const rate = RATES[vehicle];
+    const hours = Math.max(3, isNaN(hoursRaw) ? 3 : hoursRaw);
+
+    function needVehicle(){
+      estimateValueEl.textContent = "Select a vehicle";
+      estimateSubEl.textContent = "Choose a vehicle to calculate. 3-hour minimum applies.";
+      return { mode: triptype, total: null, text: "Select vehicle to estimate" };
+    }
+
+    // HOURLY
+    if (triptype === "hourly"){
+      if (!rate) return needVehicle();
+
+      let total = rate * hours;
+      if (roundtrip === "yes"){ total = Math.round(total * 1.7); }
+
+      estimateValueEl.textContent = formatMoney(total);
+      estimateSubEl.textContent =
+        `${formatMoney(rate)}/hr × ${hours} hour(s)` +
+        (roundtrip === "yes" ? " • round trip included (estimate)" : "") +
+        " • Taxes/tolls/parking may apply.";
+
+      return { mode:"hourly", total, text: `${formatMoney(rate)}/hr × ${hours}h` + (roundtrip === "yes" ? " (round trip)" : "") };
+    }
+
+    // POINT-TO-POINT / AIRPORT
+    if (!rate) return needVehicle();
+
+    const base = rate * 3; // 3-hour minimum equivalent
+    const tripFee = (triptype === "airport") ? 60 : 40;
+    let total = base + tripFee;
+
+    if (roundtrip === "yes"){ total = Math.round(total * 1.7); }
+
+    estimateValueEl.textContent = formatMoney(total);
+    estimateSubEl.textContent =
+      `Includes 3-hour minimum equivalent + ${formatMoney(tripFee)} service fee` +
+      (roundtrip === "yes" ? " • round trip included (estimate)" : "") +
+      " • Final may adjust for stops/wait time/tolls.";
+
+    return {
+      mode: triptype,
+      total,
+      text: `${formatMoney(total)} estimated (${triptype === "airport" ? "airport" : "point-to-point"})`
+    };
+  }
+
+  // Build WhatsApp message
+  function buildMessage(){
+    const name = v("name");
+    const phone = v("phone");
+    const date = v("date");
+    const time = v("time");
+    const pickup = v("pickup");
+    const dropoff = v("dropoff");
+    const triptype = v("triptype");
+    const vehicle = v("vehicle");
+    const hours = v("hours");
+    const roundtrip = v("roundtrip");
+    const notes = v("notes");
+
+    const est = computeEstimate();
+
+    let msg = "Booking Request - Mont Tremblant Limo Services%0A";
+    msg += "Name: " + encodeURIComponent(name) + "%0A";
+    if (phone) msg += "Phone: " + encodeURIComponent(phone) + "%0A";
+    msg += "Date: " + encodeURIComponent(date) + "%0A";
+    msg += "Time: " + encodeURIComponent(time) + "%0A";
+    msg += "Pickup: " + encodeURIComponent(pickup) + "%0A";
+    msg += "Drop-off: " + encodeURIComponent(dropoff) + "%0A";
+
+    const tt = (triptype === "hourly") ? "Hourly" : (triptype === "airport" ? "Airport transfer" : "Point-to-point");
+    msg += "Trip type: " + encodeURIComponent(tt) + "%0A";
+    msg += "Vehicle: " + encodeURIComponent(vehicle) + "%0A";
+    if (triptype === "hourly") msg += "Hours: " + encodeURIComponent(hours) + "%0A";
+    msg += "Round trip: " + encodeURIComponent(roundtrip) + "%0A";
+    msg += "Estimate: " + encodeURIComponent(est.text) + "%0A";
+    if (notes) msg += "Notes: " + encodeURIComponent(notes);
+    return msg;
+  }
+
+  function sendBooking(e){
+    e.preventDefault();
+    if (!v("name") || !v("date") || !v("time") || !v("pickup") || !v("dropoff") || !v("vehicle")) {
+      alert("Please fill Name, Date, Time, Pickup, Drop-off, and select a vehicle.");
+      return false;
+    }
+    const msg = buildMessage();
+    window.open("https://wa.me/" + BUSINESS_WA + "?text=" + msg, "_blank", "noreferrer");
+    return false;
+  }
+
+  function sendEmail(){
+    if (!v("name") || !v("date") || !v("time") || !v("pickup") || !v("dropoff") || !v("vehicle")) {
+      alert("Please fill Name, Date, Time, Pickup, Drop-off and select a vehicle first.");
+      return false;
+    }
+    const subject = encodeURIComponent("Booking Request - Mont Tremblant Limo Services");
+    const body = decodeURIComponent(buildMessage()).replaceAll("%0A", "\n");
+    window.location.href = "mailto:" + BUSINESS_EMAIL + "?subject=" + subject + "&body=" + encodeURIComponent(body);
+    return false;
+  }
+
+  // Stripe Checkout: full payment required
+  function collectBookingPayload(){
+    const required = ["name","date","time","pickup","dropoff","vehicle"];
+    for (const id of required){
+      if (!v(id)) return { ok:false, error:"Please fill Name, Date, Time, Pickup, Drop-off, and select a vehicle." };
+    }
+
+    const est = computeEstimate();
+    if (!est.total){
+      return { ok:false, error:"Please select trip type and vehicle to generate an estimate." };
+    }
+
+    return {
+      ok:true,
+      booking: {
+        name: v("name"),
+        phone: v("phone"),
+        date: v("date"),
+        time: v("time"),
+        pickup: v("pickup"),
+        dropoff: v("dropoff"),
+        triptype: v("triptype"),
+        vehicle: v("vehicle"),
+        hours: v("hours"),
+        roundtrip: v("roundtrip"),
+        notes: v("notes"),
+        estimate_text: est.text,
+        estimate_total_cad: est.total,
+        pay_option: "full",
+        pay_now_cad: est.total
+      }
+    };
+  }
+
+  async function startStripeCheckout(){
+    const statusEl = document.getElementById("payStatus");
+    if (statusEl) statusEl.textContent = "";
+
+    const payload = collectBookingPayload();
+    if (!payload.ok){
+      alert(payload.error);
+      return;
+    }
+
+    try{
+      if (statusEl) statusEl.textContent = "Starting secure checkout…";
+
+      const res = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type":"application/json" },
+        body: JSON.stringify(payload.booking)
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Unable to start checkout.");
+
+      window.location.href = data.url;
+    }catch(err){
+      console.error(err);
+      alert("Payment could not be started. " + (err.message || ""));
+      if (statusEl) statusEl.textContent = "Payment error: " + (err.message || "Unknown error");
+    }
+  }
+
+  // Events
+  ["triptype","vehicle","hours","roundtrip"].forEach(id=>{
+    const el = document.getElementById(id);
+    if (el) el.addEventListener("change", ()=>{
+      syncTriptypeUI();
+      computeEstimate();
+    });
   });
 
-  const data=await res.json();
-  if(data.url) window.location.href=data.url;
-  else alert("Payment error");
-}
+  window.addEventListener("load", ()=>{
+    syncTriptypeUI();
+    computeEstimate();
+    showPaymentBanner();
+  });
 </script>
 
 </body>
