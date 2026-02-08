@@ -259,13 +259,17 @@
     border: 1px solid var(--line);
     background: var(--panel);
   }
+
+  /* ✅ UPDATED hero background (desktop focus + better readability) */
   .hero-bg{
     position:absolute; inset:0;
     background:
+      linear-gradient(90deg, rgba(0,0,0,.62) 0%, rgba(0,0,0,.28) 55%, rgba(0,0,0,.14) 100%),
       linear-gradient(180deg, rgba(0,0,0,.06) 0%, rgba(11,18,32,.82) 58%, rgba(11,18,32,1) 100%),
-      url("Tremblant.jpg") center/cover no-repeat;
-    transform: scale(1.03);
+      url("Tremblant.jpg") 72% center / cover no-repeat;
+    transform: scale(1.02);
   }
+
   .hero-bg:after{
     content:"";
     position:absolute; inset:0;
@@ -488,6 +492,21 @@
     .btn{ width: 100%; text-align:center; }
     .cta .btn{ width:auto; }
   }
+
+  /* ===== ✅ Desktop-only hero fix (mobile stays the same) ===== */
+  @media (min-width: 861px){
+    .hero-bg{
+      background-position: 72% center; /* adjust 65%–80% if needed */
+    }
+    .hero-inner{
+      min-height: 560px; /* better balance on desktop */
+    }
+    .hero{
+      max-width: 1400px; /* makes hero look premium on large screens */
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
 </style>
 </head>
 
@@ -662,7 +681,7 @@
           <div class="min">3-hour minimum</div>
           <div class="actions">
             <a class="btn btn-gold" href="#contact">Estimate & Reserve</a>
-            <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
+          <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
       </div>
