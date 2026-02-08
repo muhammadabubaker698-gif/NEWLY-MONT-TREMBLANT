@@ -446,10 +446,10 @@
   /* Footer */
   footer{ border-top: 1px solid rgba(255,255,255,.12); margin-top: 64px; padding: 28px 0; text-align:center; color: rgba(255,255,255,.66); font-size: 14px; position:relative; z-index:1; }
 
-  /* WhatsApp float */
+  /* WhatsApp float (✅ moved LEFT of Tawk bubble) */
   .whatsapp-float{
     position:fixed;
-    right:16px;
+    right:96px;   /* ✅ left of the Tawk chat bubble */
     bottom:16px;
     background:#25D366;
     color:#0b0b0b;
@@ -459,6 +459,14 @@
     box-shadow: 0 16px 38px rgba(0,0,0,.30);
     z-index:60;
     border: 1px solid rgba(0,0,0,.18);
+  }
+
+  /* Mobile: stack WhatsApp above Tawk bubble */
+  @media (max-width: 520px){
+    .whatsapp-float{
+      right:16px;
+      bottom:96px;
+    }
   }
 
   /* Responsive */
@@ -967,14 +975,12 @@
     }
   }
 
-  // ✅ Build time dropdown options (5-minute steps)
   function buildTimeOptions(stepMinutes = 5){
     const timeEl = document.getElementById("time");
     if (!timeEl || timeEl.tagName !== "SELECT") return;
 
     timeEl.innerHTML = "";
 
-    // placeholder
     const ph = document.createElement("option");
     ph.value = "";
     ph.textContent = "Select time";
@@ -984,7 +990,6 @@
 
     const pad = (n)=> String(n).padStart(2,"0");
 
-    // 00:00 to 23:55
     for (let minutes = 0; minutes < 24 * 60; minutes += stepMinutes){
       const hh = Math.floor(minutes / 60);
       const mm = minutes % 60;
@@ -1006,8 +1011,7 @@
     if (mins >= 24*60) mins = 0;
     const hh = Math.floor(mins / 60);
     const mm = mins % 60;
-    const defaultValue = `${String(hh).padStart(2,"0")}:${String(mm).padStart(2,"0")}`;
-    timeEl.value = defaultValue;
+    timeEl.value = `${pad(hh)}:${pad(mm)}`;
   }
 
   function syncTriptypeUI(){
@@ -1251,7 +1255,6 @@
   });
 </script>
 
-<!-- ================== TAWK.TO CHAT ================== -->
 <!--Start of Tawk.to Script-->
 <script type="text/javascript">
 var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
@@ -1265,33 +1268,6 @@ s0.parentNode.insertBefore(s1,s0);
 })();
 </script>
 <!--End of Tawk.to Script-->
-
-<!-- ✅ Fix: Keep Tawk bubble higher so it never overlaps WhatsApp -->
-<script type="text/javascript">
-Tawk_API = Tawk_API || {};
-(function(){
-  function moveTawkBubble(){
-    var iframes = document.querySelectorAll('iframe');
-    for (var i = 0; i < iframes.length; i++){
-      var src = iframes[i].getAttribute('src') || '';
-      if (src.indexOf('tawk.to') !== -1){
-        iframes[i].style.bottom = '150px';   /* more space from WhatsApp */
-        iframes[i].style.right = '16px';     /* align with WhatsApp */
-      }
-    }
-  }
-
-  Tawk_API.onLoad = function () {
-    moveTawkBubble();
-    setTimeout(moveTawkBubble, 800);
-    setTimeout(moveTawkBubble, 2000);
-  };
-
-  // Re-apply periodically (Tawk can re-render iframe)
-  setInterval(moveTawkBubble, 2500);
-})();
-</script>
-<!-- ================================================= -->
 
 </body>
 </html>
