@@ -989,8 +989,7 @@
       const hh = Math.floor(minutes / 60);
       const mm = minutes % 60;
 
-      const value = `${pad(hh)}:${pad(mm)}`; // IMPORTANT: stable value for backend
-      // Display as 12-hour AM/PM
+      const value = `${pad(hh)}:${pad(mm)}`;
       const hour12 = ((hh + 11) % 12) + 1;
       const ampm = hh < 12 ? "AM" : "PM";
       const label = `${hour12}:${pad(mm)} ${ampm}`;
@@ -1001,25 +1000,22 @@
       timeEl.appendChild(opt);
     }
 
-    // Optional: default next 5-minute time
     const now = new Date();
     let mins = now.getHours() * 60 + now.getMinutes();
     mins = Math.ceil(mins / stepMinutes) * stepMinutes;
     if (mins >= 24*60) mins = 0;
     const hh = Math.floor(mins / 60);
     const mm = mins % 60;
-    const defaultValue = `${pad(hh)}:${pad(mm)}`;
+    const defaultValue = `${String(hh).padStart(2,"0")}:${String(mm).padStart(2,"0")}`;
     timeEl.value = defaultValue;
   }
 
-  // Hide hours unless hourly
   function syncTriptypeUI(){
     const triptype = v("triptype");
     const hoursRow = document.getElementById("hoursRow");
     if (hoursRow) hoursRow.style.display = (triptype === "hourly") ? "grid" : "none";
   }
 
-  // Payment banner after redirect
   function showPaymentBanner(){
     const params = new URLSearchParams(window.location.search);
     const p = params.get("payment");
@@ -1039,7 +1035,6 @@
     }
   }
 
-  // Instant estimate
   function computeEstimate(){
     const triptype = v("triptype");
     const vehicle = v("vehicle");
@@ -1149,7 +1144,6 @@
     return false;
   }
 
-  // ✅ Improved validation: shows exactly what's missing + highlights
   function collectBookingPayload(){
     const requiredMap = {
       name: "Name",
@@ -1193,7 +1187,7 @@
         name: v("name"),
         phone: v("phone"),
         date: v("date"),
-        time: v("time"), // now always stable "HH:MM"
+        time: v("time"),
         pickup: v("pickup"),
         dropoff: v("dropoff"),
         triptype: v("triptype"),
@@ -1250,7 +1244,7 @@
   });
 
   window.addEventListener("load", ()=>{
-    buildTimeOptions(5);     // ✅ create time dropdown
+    buildTimeOptions(5);
     syncTriptypeUI();
     computeEstimate();
     showPaymentBanner();
@@ -1272,13 +1266,30 @@ s0.parentNode.insertBefore(s1,s0);
 </script>
 <!--End of Tawk.to Script-->
 
-<!-- Move chat bubble UP so it doesn't overlap WhatsApp -->
+<!-- ✅ Fix: Keep Tawk bubble higher so it never overlaps WhatsApp -->
 <script type="text/javascript">
 Tawk_API = Tawk_API || {};
-Tawk_API.onLoad = function () {
-  var bubble = document.querySelector('iframe[src*="tawk.to"]');
-  if (bubble) bubble.style.bottom = '90px';
-};
+(function(){
+  function moveTawkBubble(){
+    var iframes = document.querySelectorAll('iframe');
+    for (var i = 0; i < iframes.length; i++){
+      var src = iframes[i].getAttribute('src') || '';
+      if (src.indexOf('tawk.to') !== -1){
+        iframes[i].style.bottom = '150px';   /* more space from WhatsApp */
+        iframes[i].style.right = '16px';     /* align with WhatsApp */
+      }
+    }
+  }
+
+  Tawk_API.onLoad = function () {
+    moveTawkBubble();
+    setTimeout(moveTawkBubble, 800);
+    setTimeout(moveTawkBubble, 2000);
+  };
+
+  // Re-apply periodically (Tawk can re-render iframe)
+  setInterval(moveTawkBubble, 2500);
+})();
 </script>
 <!-- ================================================= -->
 
