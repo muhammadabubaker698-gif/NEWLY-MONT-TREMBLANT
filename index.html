@@ -11,7 +11,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
-<!-- SEO: LocalBusiness + Service schema -->
 <script type="application/ld+json">
 {
   "@context":"https://schema.org",
@@ -37,22 +36,6 @@
   },
   "image":[ "https://monttremblantlimoservices.com/Tremblant.jpg" ],
   "sameAs":[ "https://wa.me/15142933170" ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"Service",
-  "name":"Luxury Chauffeur & Limo Service",
-  "provider":{
-    "@type":"LocalBusiness",
-    "name":"Mont Tremblant Limo Services",
-    "telephone":"+1-514-293-3170",
-    "url":"https://monttremblantlimoservices.com/"
-  },
-  "areaServed":"Mont-Tremblant, QC and surrounding areas",
-  "serviceType":"Chauffeur Service"
 }
 </script>
 
@@ -176,27 +159,24 @@
     box-shadow: 0 18px 44px rgba(255,90,20,.22);
   }
 
-  /* ===== Hero (Blacklane-style) ===== */
+  /* ===== HERO (Safari-safe) =====
+     No absolute overlay content anymore.
+  */
   .hero-wrap{
     position:relative;
-    width:100%;
-    overflow:hidden;
     border-bottom: 1px solid var(--line);
-  }
-  .hero-bg{
-    height: 520px;
     background:
       linear-gradient(90deg, rgba(255,255,255,.55) 0%, rgba(255,255,255,.18) 45%, rgba(255,255,255,0) 72%),
       linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.12)),
       url("Tremblant.jpg") center/cover no-repeat;
   }
   .hero-inner{
-    position:absolute;
-    inset:0;
     display:grid;
     grid-template-columns: 1.25fr .75fr;
-    align-items:center;
+    align-items: start;
     gap: 22px;
+    padding: 26px 0 34px;
+    min-height: 520px;
   }
   .hero-left{ padding: 0 18px; }
   .hero-left .container{padding:0}
@@ -207,6 +187,7 @@
     font-weight: 950;
     color:#0b1220;
     max-width: 18ch;
+    margin-top: 24px;
   }
   .hero-sub{
     margin-top: 12px;
@@ -232,17 +213,18 @@
     box-shadow: 0 10px 20px rgba(0,0,0,.06);
   }
 
-  /* ===== Step-based booking widget ===== */
+  /* ===== Booking widget (step 1 only) ===== */
   .booking-card{
     margin-right: 18px;
     justify-self:end;
     width: min(430px, 100%);
-    border-radius: 10px;
+    border-radius: 14px;
     background: #fff;
     box-shadow: 0 28px 70px rgba(0,0,0,.24);
     border: 1px solid rgba(11,18,32,.10);
     overflow:hidden;
   }
+
   .tabs{
     display:flex;
     background: #fff;
@@ -282,10 +264,9 @@
   }
   .stepdot > i{
     position:absolute; inset:0;
-    width: 0%;
+    width: 33%;
     background: linear-gradient(90deg, var(--gradA), var(--gradB));
     border-radius: 999px;
-    transition: width .2s ease;
   }
   .steptext{
     font-size: 12.5px;
@@ -306,7 +287,6 @@
     margin-bottom: 10px;
   }
   .ico{ width: 18px; height: 18px; color: rgba(11,18,32,.55); flex:0 0 auto; }
-
   .field input, .field select{
     width:100%;
     border:none;
@@ -317,18 +297,8 @@
     color: rgba(11,18,32,.90);
   }
   .field input::placeholder{ color: rgba(11,18,32,.50); font-weight:800; }
-  .row2{
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-
-  .note{
-    margin: 8px 4px 10px;
-    color: rgba(11,18,32,.62);
-    font-size: 12.8px;
-    font-weight: 800;
-  }
+  .row2{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .note{ margin: 8px 4px 10px; color: rgba(11,18,32,.62); font-size: 12.8px; font-weight: 800; }
 
   .search-btn{
     width:100%;
@@ -344,79 +314,6 @@
   }
   .search-btn[disabled]{ opacity:.65; cursor:not-allowed; box-shadow:none; }
 
-  .results{
-    display:none;
-    margin-top: 12px;
-    border-top: 1px solid rgba(11,18,32,.10);
-    padding-top: 12px;
-  }
-  .results-head{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    margin-bottom: 10px;
-  }
-  .results-head b{ font-size: 13.5px; letter-spacing: .2px; }
-  .mini-btn{
-    border: 1px solid rgba(11,18,32,.12);
-    background: #fff;
-    color: rgba(11,18,32,.82);
-    padding: 8px 10px;
-    border-radius: 10px;
-    font-weight: 900;
-    cursor:pointer;
-  }
-
-  .vlist{display:flex;flex-direction:column;gap:10px}
-  .vcard{
-    border-radius: 12px;
-    border: 1px solid rgba(11,18,32,.12);
-    background: #fff;
-    overflow:hidden;
-    cursor:pointer;
-    transition: .15s ease;
-  }
-  .vcard:hover{ transform: translateY(-1px); box-shadow: 0 14px 30px rgba(0,0,0,.10); }
-  .vcard.selected{
-    border-color: rgba(255,90,20,.55);
-    box-shadow: 0 0 0 2px rgba(255,90,20,.12) inset;
-  }
-  .vtop{
-    padding: 10px 10px;
-    display:flex;
-    justify-content:space-between;
-    gap:10px;
-    align-items:flex-start;
-  }
-  .vname{ font-weight: 950; font-size: 13.8px; line-height:1.2; }
-  .vmeta{ margin-top:3px; color: rgba(11,18,32,.62); font-weight: 800; font-size: 12.5px; }
-  .vprice{ text-align:right; }
-  .vprice b{ font-size: 14.8px; }
-  .vprice small{ display:block; margin-top:2px; font-size: 12px; color: rgba(11,18,32,.58); font-weight: 800; }
-
-  .continue-btn{
-    margin-top: 10px;
-    width:100%;
-    border:none;
-    border-radius: 10px;
-    padding: 12px 12px;
-    font-weight: 950;
-    font-size: 14px;
-    color:#fff;
-    background: linear-gradient(90deg, var(--gradA), var(--gradB));
-    cursor:pointer;
-  }
-  /* ✅ NEW: clearer disabled/enabled behavior */
-  .continue-btn:disabled{
-    opacity:.55;
-    cursor:not-allowed;
-  }
-  .continue-btn.enabled{
-    opacity: 1;
-    cursor: pointer;
-  }
-
   .alert{
     display:none;
     margin-top: 10px;
@@ -430,7 +327,144 @@
   .alert.bad{ border-color: rgba(176,0,32,.25); background: rgba(176,0,32,.06); color: var(--bad); }
   .alert.good{ border-color: rgba(15,157,88,.22); background: rgba(15,157,88,.06); color: var(--good); }
 
-  /* ===== Page sections ===== */
+  /* ===== “Blacklane-like” full-screen pages (Step 2 + Step 3) ===== */
+  .overlay{
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: rgba(255,255,255,.96);
+    display: none;
+    overflow: hidden;
+  }
+  .overlay.show{ display: block; }
+
+  .overlay-top{
+    height: 76px;
+    border-bottom: 1px solid rgba(11,18,32,.10);
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(10px);
+    display:flex;
+    align-items:center;
+  }
+  .overlay-top .container{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 12px;
+    width: 100%;
+  }
+  .overlay-title{
+    font-weight: 950;
+    letter-spacing: .2px;
+  }
+  .overlay-close{
+    border: 1px solid rgba(11,18,32,.14);
+    background: #fff;
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-weight: 900;
+    cursor: pointer;
+  }
+
+  .overlay-body{
+    height: calc(100vh - 76px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 26px 0 40px;
+  }
+
+  .flow-wrap{
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 18px;
+  }
+
+  .flow-steps{
+    display:flex;
+    gap: 18px;
+    align-items:center;
+    justify-content:center;
+    color: rgba(11,18,32,.55);
+    font-weight: 900;
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+  .flow-steps .on{ color: rgba(11,18,32,.92); }
+
+  .summary-pill{
+    border: 1px solid rgba(11,18,32,.12);
+    border-radius: 16px;
+    background: #fbfbfc;
+    padding: 14px 16px;
+    font-weight: 800;
+    color: rgba(11,18,32,.82);
+  }
+  .summary-pill small{
+    display:block;
+    color: rgba(11,18,32,.62);
+    font-weight: 800;
+    margin-top: 4px;
+  }
+
+  .flow-h1{
+    margin-top: 18px;
+    font-size: 28px;
+    line-height: 1.15;
+    letter-spacing: -.2px;
+    font-weight: 950;
+  }
+  .flow-sub{
+    margin-top: 8px;
+    color: rgba(11,18,32,.66);
+    font-weight: 750;
+  }
+
+  .vlist{
+    margin-top: 16px;
+    border: 1px solid rgba(11,18,32,.12);
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .vrow{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 14px;
+    padding: 14px 14px;
+    border-top: 1px solid rgba(11,18,32,.10);
+    cursor: pointer;
+  }
+  .vrow:first-child{ border-top: none; }
+  .vrow:hover{ background: rgba(11,18,32,.03); }
+  .vrow.selected{ outline: 2px solid rgba(255,90,20,.35); background: rgba(255,90,20,.06); }
+
+  .vleft b{ display:block; font-weight: 950; }
+  .vleft small{ display:block; margin-top: 2px; color: rgba(11,18,32,.62); font-weight: 800; }
+  .vright{
+    text-align:right;
+    font-weight: 950;
+    white-space: nowrap;
+  }
+
+  .flow-actions{
+    margin-top: 18px;
+    display:flex;
+    gap: 12px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .flow-actions .btn{
+    border-radius: 14px;
+    padding: 12px 14px;
+    box-shadow:none;
+  }
+  .flow-actions .btn-primary{
+    box-shadow: 0 16px 34px rgba(255,90,20,.18);
+  }
+  .btn:disabled{ opacity:.55; cursor:not-allowed; }
+
+  /* Reserve form section */
   .section{ margin-top: 46px; }
   h2{ font-size: 30px; letter-spacing: -.2px; line-height:1.15; }
   .subtitle{
@@ -439,6 +473,7 @@
     font-weight: 700;
     max-width: 920px;
   }
+
   .grid3{
     margin-top: 16px;
     display:grid;
@@ -467,7 +502,6 @@
   .actions{ margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; }
   .actions .btn{ box-shadow:none; }
 
-  /* Reserve form */
   .book-wrap{
     margin-top: 16px;
     border-radius: 18px;
@@ -521,26 +555,6 @@
   .estimate-sub{margin-top:6px;color:rgba(11,18,32,.68);font-size:12.8px;font-weight:700}
   .book-actions{margin-top: 12px; display:flex; gap: 10px; flex-wrap:wrap;}
 
-  .banner{
-    margin-top: 12px;
-    border-radius: 12px;
-    border: 1px solid rgba(11,18,32,.10);
-    background: #fbfbfc;
-    padding: 12px 14px;
-    color: rgba(11,18,32,.86);
-    font-weight: 800;
-  }
-  .banner.good{ border-color: rgba(35,190,120,.25); background: rgba(35,190,120,.08); }
-  .banner.bad{ border-color: rgba(240,85,85,.22); background: rgba(240,85,85,.08); }
-
-  details{ border-top: 1px solid rgba(11,18,32,.10); padding: 14px 0; }
-  details:first-child{ border-top:none; }
-  summary{ cursor:pointer; list-style:none; font-weight: 900; color: rgba(11,18,32,.94); display:flex; align-items:center; justify-content:space-between; gap:10px; }
-  summary::-webkit-details-marker{ display:none; }
-  .chev{ width: 28px; height: 28px; border-radius: 10px; border: 1px solid rgba(11,18,32,.12); background: rgba(11,18,32,.04); display:grid; place-items:center; color: rgba(11,18,32,.70); transition: transform .2s ease; }
-  details[open] .chev{ transform: rotate(180deg); }
-  details p{ margin-top:10px; color: rgba(11,18,32,.70); line-height:1.6; max-width: 90ch; font-weight: 700; }
-
   footer{
     margin-top: 64px;
     padding: 26px 0;
@@ -550,7 +564,6 @@
     font-weight: 700;
   }
 
-  /* WhatsApp float (left of Tawk bubble) */
   .whatsapp-float{
     position:fixed;
     right: 96px;
@@ -568,111 +581,20 @@
     .whatsapp-float{ right: 16px; bottom: 96px; }
   }
 
-  /* Base responsive */
   @media (max-width: 980px){
-    .hero-inner{ grid-template-columns: 1fr; align-items:start; }
-    .booking-card{ justify-self:stretch; margin: 14px 18px 0; width:auto; border-radius: 14px; }
-    .hero-bg{ height: 620px; }
-    .hero-title{ max-width: 22ch; }
+    .hero-inner{ grid-template-columns: 1fr; }
+    .booking-card{ justify-self:stretch; margin: 14px 18px 0; width:auto; }
     .grid3{ grid-template-columns: 1fr; }
     .grid2{ grid-template-columns: 1fr; }
+    .row{ grid-template-columns: 1fr; }
+    .row2{ grid-template-columns: 1fr; }
   }
   @media (max-width: 860px){
     .links{ display:none; }
     .pill{ display:inline-flex; }
-    .row{ grid-template-columns: 1fr; }
     .header-actions .btn{ display:none; }
   }
 
-  /* Mobile polish */
-  @media (max-width: 980px){
-    .hero-bg{
-      height: 720px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.88) 0%, rgba(255,255,255,.45) 40%, rgba(255,255,255,0) 75%),
-        url("Tremblant.jpg") center/cover no-repeat;
-    }
-    .hero-left{ padding-top: 18px; }
-    .hero-title{ max-width: 24ch; font-size: clamp(30px, 7.4vw, 44px); }
-    .hero-sub{ font-size: 15.5px; line-height: 1.55; }
-    .hero-badges{ gap: 8px; }
-    .badge{ font-size: 12.5px; padding: 8px 10px; }
-    .row2{ grid-template-columns: 1fr; }
-    .search-btn{ padding: 14px 14px; font-size: 16px; }
-    .vtop{ padding: 12px 12px; }
-  }
-
-  @media (max-width: 520px){
-    header .nav{ height: 70px; }
-    .brand{ gap: 10px; }
-    .logo{ width: 34px; height: 34px; border-radius: 12px; }
-    .hero-bg{ height: 760px; }
-    .booking-card{ margin: 12px 14px 0; }
-    .container{ padding: 0 14px; }
-    .grid3, .grid2{ gap: 12px; }
-  }
-
-  /* Mobile sticky booking bar */
-  .mobile-cta-bar{ display:none; }
-  @media (max-width: 860px){
-    .mobile-cta-bar{
-      display:flex;
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 80;
-      padding: 10px 12px;
-      gap: 10px;
-      background: rgba(255,255,255,.92);
-      backdrop-filter: blur(10px);
-      border-top: 1px solid rgba(11,18,32,.10);
-    }
-    .mobile-cta-bar .btn{
-      flex: 1;
-      width: 100%;
-      border-radius: 12px;
-      padding: 12px 12px;
-      box-shadow: none;
-    }
-    .mobile-cta-bar .btn-primary{
-      box-shadow: 0 16px 34px rgba(255,90,20,.18);
-    }
-    body{ padding-bottom: 72px; }
-  }
-
-  /* Google Places Autocomplete tweaks */
-  .pac-container{
-    border-radius: 12px !important;
-    box-shadow: 0 18px 55px rgba(0,0,0,.16) !important;
-    border: 1px solid rgba(11,18,32,.10) !important;
-    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial !important;
-  }
-  .pac-item{ padding: 10px 12px !important; }
-
-  /* ============================================================
-     ✅ NEW FIX (your screenshot): allow booking card to scroll
-     ============================================================ */
-  .booking-card{
-    max-height: calc(100vh - 96px); /* header ~76px + spacing */
-    overflow: hidden;              /* keep content inside card */
-  }
-  .booking-card .book-body{
-    max-height: calc(100vh - 96px - 52px); /* subtract tabs area */
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  #heroVehicleList{
-    max-height: 320px;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-right: 6px;
-  }
-  @media (max-width: 980px){
-    .booking-card{ max-height: none; overflow: visible; }
-    .booking-card .book-body{ max-height: none; overflow: visible; }
-    #heroVehicleList{ max-height: none; overflow: visible; padding-right: 0; }
-  }
 </style>
 </head>
 
@@ -702,34 +624,24 @@
   </div>
 </header>
 
-<!-- Mobile sticky bar -->
-<div class="mobile-cta-bar" aria-label="Quick actions">
-  <a class="btn" href="tel:+15142933170">Call</a>
-  <a class="btn" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
-  <a class="btn btn-primary" href="#contact">Book</a>
-</div>
-
+<!-- HERO -->
 <div class="hero-wrap">
-  <div class="hero-bg" aria-hidden="true"></div>
-
-  <div class="hero-inner">
+  <div class="hero-inner container">
     <div class="hero-left">
-      <div class="container">
-        <div class="hero-title">Luxury chauffeur service in Mont-Tremblant</div>
-        <div class="hero-sub">
-          Airport transfers, hourly bookings, ski trips, corporate travel and special events.
-          <b>Minimum 3 hours on all vehicles.</b>
-        </div>
-
-        <div class="hero-badges">
-          <span class="badge">24/7 booking</span>
-          <span class="badge">Professional chauffeurs</span>
-          <span class="badge">Premium vehicles</span>
-          <span class="badge">Mont-Tremblant • Montréal • Ottawa</span>
-        </div>
+      <div class="hero-title">Luxury chauffeur service in Mont-Tremblant</div>
+      <div class="hero-sub">
+        Airport transfers, hourly bookings, ski trips, corporate travel and special events.
+        <b>Minimum 3 hours on all vehicles.</b>
+      </div>
+      <div class="hero-badges">
+        <span class="badge">24/7 booking</span>
+        <span class="badge">Professional chauffeurs</span>
+        <span class="badge">Premium vehicles</span>
+        <span class="badge">Mont-Tremblant • Montréal • Ottawa</span>
       </div>
     </div>
 
+    <!-- STEP 1 -->
     <aside class="booking-card" aria-label="Search booking">
       <div class="tabs">
         <button id="tabOneWay" class="tab active" type="button" aria-selected="true">One way</button>
@@ -738,8 +650,8 @@
 
       <div class="book-body">
         <div class="stepbar" aria-hidden="true">
-          <div class="stepdot"><i id="stepFill"></i></div>
-          <div class="steptext" id="stepText">Step 1 of 3</div>
+          <div class="stepdot"><i></i></div>
+          <div class="steptext">Step 1 of 3</div>
         </div>
 
         <form id="heroSearchForm">
@@ -808,26 +720,90 @@
           <div class="note">Professional chauffeur • clean premium vehicles.</div>
 
           <button id="heroSearchBtn" class="search-btn" type="submit">Search</button>
-
           <div id="heroAlert" class="alert bad"></div>
-
-          <div id="heroResults" class="results" aria-live="polite">
-            <div class="results-head">
-              <b>Step 2: Choose a vehicle</b>
-              <button id="heroEditBtn" class="mini-btn" type="button">Edit</button>
-            </div>
-
-            <div id="heroVehicleList" class="vlist"></div>
-
-            <button id="heroContinueBtn" class="continue-btn" type="button" disabled>Continue to Reserve</button>
-
-            <div id="heroReserveNote" class="alert good" style="display:none; margin-top:10px;">
-              Step 3 ready — scroll to reserve and pay securely.
-            </div>
-          </div>
         </form>
       </div>
     </aside>
+  </div>
+</div>
+
+<!-- STEP 2 OVERLAY (Vehicle selection) -->
+<div id="overlayVehicles" class="overlay" aria-hidden="true">
+  <div class="overlay-top">
+    <div class="container">
+      <div class="overlay-title">Mont Tremblant Limo • Booking</div>
+      <button class="overlay-close" type="button" onclick="closeOverlay('overlayVehicles')">Close</button>
+    </div>
+  </div>
+  <div class="overlay-body">
+    <div class="flow-wrap">
+      <div class="flow-steps">
+        <span>Search</span> <span>›</span>
+        <span class="on">Service Class</span> <span>›</span>
+        <span>Checkout</span>
+      </div>
+
+      <div class="summary-pill" id="tripSummary"></div>
+
+      <div class="flow-h1">Select a vehicle</div>
+      <div class="flow-sub">Prices shown are estimates. Minimum 3 hours applies.</div>
+
+      <div class="vlist" id="vehicleOverlayList"></div>
+
+      <div class="flow-actions">
+        <button class="btn" type="button" onclick="backToSearch()">Edit search</button>
+        <button id="btnVehicleContinue" class="btn btn-primary" type="button" disabled onclick="goToCheckoutOverlay()">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 3 OVERLAY (Checkout / Pay) -->
+<div id="overlayCheckout" class="overlay" aria-hidden="true">
+  <div class="overlay-top">
+    <div class="container">
+      <div class="overlay-title">Mont Tremblant Limo • Checkout</div>
+      <button class="overlay-close" type="button" onclick="closeOverlay('overlayCheckout')">Close</button>
+    </div>
+  </div>
+  <div class="overlay-body">
+    <div class="flow-wrap">
+      <div class="flow-steps">
+        <span>Search</span> <span>›</span>
+        <span>Service Class</span> <span>›</span>
+        <span class="on">Checkout</span>
+      </div>
+
+      <div class="summary-pill" id="checkoutSummary"></div>
+
+      <div class="flow-h1">Your details</div>
+      <div class="flow-sub">Enter your name and phone, then pay securely via Stripe.</div>
+
+      <label for="c_name">Name</label>
+      <input id="c_name" placeholder="Your name" />
+
+      <label for="c_phone">Phone</label>
+      <input id="c_phone" placeholder="+1 ..." />
+
+      <label for="c_notes">Notes (optional)</label>
+      <textarea id="c_notes" placeholder="Passengers, luggage, flight #, stops…"></textarea>
+
+      <div class="estimate-box" style="margin-top:14px;">
+        <div class="estimate-top">
+          <b>Total estimate</b>
+          <div class="estimate-value" id="checkoutTotal">—</div>
+        </div>
+        <div class="estimate-sub" id="checkoutSub">Minimum 3 hours applies.</div>
+      </div>
+
+      <div class="flow-actions" style="margin-top:14px;">
+        <button class="btn" type="button" onclick="backToVehicles()">Back</button>
+        <button class="btn btn-primary" type="button" onclick="startStripeCheckoutFromOverlay()">Pay with Stripe</button>
+        <button class="btn" type="button" onclick="sendWhatsAppFromOverlay()">WhatsApp</button>
+      </div>
+
+      <div class="tinyhint" id="checkoutStatus" style="margin-top:10px;"></div>
+    </div>
   </div>
 </div>
 
@@ -924,23 +900,21 @@
   </section>
 
   <section id="contact" class="section">
-    <h2>Instant Estimate & Reserve</h2>
-    <p class="subtitle">Reserve online with full payment via Stripe Checkout. After payment, your reservation is confirmed.</p>
-
-    <div id="paymentBanner" style="display:none;"></div>
+    <h2>Reserve</h2>
+    <p class="subtitle">You can also book by WhatsApp. Stripe checkout requires your backend endpoint.</p>
 
     <div class="book-wrap">
       <div class="book-head">
-        <b>Reserve Now (Full payment required)</b>
-        <small>Estimate comes from live search (API). Secure payment via Stripe Checkout.</small>
+        <b>Reserve Now</b>
+        <small>If you use the search above, this form gets prefilled automatically.</small>
       </div>
 
       <div class="book-body2">
-        <form onsubmit="return sendBooking(event)">
+        <form onsubmit="return false;">
           <div class="row">
             <div>
               <label for="name">Name</label>
-              <input id="name" placeholder="Your name" required />
+              <input id="name" placeholder="Your name" />
             </div>
             <div>
               <label for="phone">Phone</label>
@@ -951,26 +925,22 @@
           <div class="row">
             <div>
               <label for="date">Date</label>
-              <input id="date" type="date" required />
+              <input id="date" type="date" />
             </div>
-
             <div>
               <label for="time">Time</label>
-              <select id="time" required></select>
-              <div class="tinyhint">Select a time (5-minute steps).</div>
+              <select id="time"></select>
             </div>
           </div>
 
           <div class="row">
             <div>
               <label for="pickup">Pickup</label>
-              <input id="pickup" placeholder="Hotel / Airport / Address" required autocomplete="off" />
-              <div class="tinyhint">Autocomplete enabled.</div>
+              <input id="pickup" placeholder="Hotel / Airport / Address" autocomplete="off" />
             </div>
             <div>
               <label for="dropoff">Drop-off</label>
-              <input id="dropoff" placeholder="Destination" required autocomplete="off" />
-              <div class="tinyhint">Autocomplete enabled.</div>
+              <input id="dropoff" placeholder="Destination" autocomplete="off" />
             </div>
           </div>
 
@@ -985,49 +955,23 @@
             </div>
             <div>
               <label for="vehicle">Vehicle</label>
-              <select id="vehicle" required></select>
-              <div class="tinyhint" id="vehicleHint">Choose a vehicle from live results.</div>
+              <select id="vehicle"></select>
             </div>
           </div>
 
-          <div class="row" id="hoursRow">
-            <div>
-              <label for="hours">Hours</label>
-              <select id="hours">
-                <option value="3">3 (minimum)</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="8">8</option>
-              </select>
-            </div>
-            <div>
-              <label for="roundtrip">Round trip?</label>
-              <select id="roundtrip">
-                <option value="no" selected>No</option>
-                <option value="yes">Yes (return included)</option>
-              </select>
-            </div>
-          </div>
-
-          <label for="notes">Notes (passengers, luggage, flight #, stops…)</label>
-          <textarea id="notes" placeholder="Example: 4 passengers + skis, YUL flight AC123 arriving 6:15pm"></textarea>
-
-          <div class="estimate-box" aria-live="polite">
+          <div class="estimate-box">
             <div class="estimate-top">
               <b>Estimated total</b>
               <div class="estimate-value" id="estimateValue">—</div>
             </div>
-            <div class="estimate-sub" id="estimateSub">Use the search widget above to get live prices.</div>
+            <div class="estimate-sub" id="estimateSub">Use the search widget above.</div>
           </div>
 
           <div class="book-actions">
-            <button class="btn btn-primary" type="button" onclick="startStripeCheckout()">Reserve Now (Pay Online)</button>
-            <button class="btn" type="submit">Send Request (WhatsApp)</button>
-            <a class="btn" href="#" onclick="return sendEmail()">Send by Email</a>
+            <button class="btn btn-primary" type="button" onclick="startStripeCheckoutFromForm()">Pay with Stripe</button>
+            <button class="btn" type="button" onclick="sendWhatsAppFromForm()">Send WhatsApp</button>
             <a class="btn" href="tel:+15142933170">Call</a>
           </div>
-          <div class="tinyhint" id="payStatus"></div>
         </form>
       </div>
     </div>
@@ -1049,16 +993,8 @@
     <p class="subtitle">Quick answers to the most common questions.</p>
     <div class="card" style="padding: 0 18px;">
       <details>
-        <summary>What is the minimum booking time? <span class="chev">⌄</span></summary>
-        <p>All vehicles have a <b>3-hour minimum</b>.</p>
-      </details>
-      <details>
-        <summary>Do you do airport transfers (YUL)? <span class="chev">⌄</span></summary>
-        <p>Yes. We provide transfers between <b>Montréal–Trudeau (YUL)</b> and Mont-Tremblant, plus surrounding areas.</p>
-      </details>
-      <details>
-        <summary>Do you do New York / Boston / New Jersey? <span class="chev">⌄</span></summary>
-        <p>Yes, long-distance and cross-border trips are available.</p>
+        <summary style="cursor:pointer; list-style:none; font-weight:900; padding:14px 0;">What is the minimum booking time?</summary>
+        <p style="padding-bottom:14px;color:rgba(11,18,32,.70);font-weight:700;">All vehicles have a <b>3-hour minimum</b>.</p>
       </details>
     </div>
   </section>
@@ -1074,55 +1010,37 @@
   document.getElementById("year").textContent = new Date().getFullYear();
 
   // =========================
-  // ✅ CONFIG YOU MUST SET
+  // ✅ SIMPLE LOCAL PRICING ONLY (no API)
   // =========================
-
-  // 1) Google Places key (Maps JavaScript API + Places API enabled)
-  // Replace YOUR_GOOGLE_PLACES_KEY
-  const GOOGLE_PLACES_API_KEY = "YOUR_GOOGLE_PLACES_KEY";
-
-  // 2) Booking API (your pricing/availability API)
-  // Replace endpoint + headers + payload mapping + response mapping (normalizeQuoteResponse)
-  const BOOKING_API = {
-    enabled: true,
-    endpoint: "/api/quote",        // ✅ CHANGE THIS (example: "https://api.yourdomain.com/quote")
-    method: "POST",
-    timeoutMs: 12000,
-    headers: {
-      "Content-Type": "application/json"
-      // "Authorization": "Bearer YOUR_TOKEN" // if needed
-    },
-    // If your API is not ready yet, you can allow fallback to local estimates:
-    allowFallbackLocalEstimates: true
-  };
-
-  // WhatsApp/email
   const BUSINESS_WA = "15142933170";
-  const BUSINESS_EMAIL = "monttremblantlimoservices@gmail.com";
 
-  // Optional local rates fallback (only used if allowFallbackLocalEstimates = true)
-  const LOCAL_RATES = {
-    "2026 Cadillac Escalade ESV": 150,
-    "2025 Chevrolet Suburban": 120,
-    "2026 GMC Yukon Denali": 120,
-    "2024 Infiniti QX60": 99,
-    "2023 Tesla Model Y": 75,
-    "Mercedes Sprinter (Group Van)": 250
+  const LOCAL_RATES = [
+    { id:"escalade", name:"2026 Cadillac Escalade ESV", hourly:150, meta:"Ultra-luxury • VIP airport transfers • ski trips" },
+    { id:"suburban", name:"2025 Chevrolet Suburban", hourly:120, meta:"Spacious • luggage friendly • long rides" },
+    { id:"denali", name:"2026 GMC Yukon Denali", hourly:120, meta:"Premium comfort • smooth ride • executive travel" },
+    { id:"qx60", name:"2024 Infiniti QX60", hourly:99, meta:"Comfort + value • airport transfers • city rides" },
+    { id:"tesla", name:"2023 Tesla Model Y", hourly:75, meta:"Quiet • modern • eco-friendly" },
+    { id:"sprinter", name:"Mercedes Sprinter (Group Van)", hourly:250, meta:"Groups • events • ski luggage" }
+  ];
+
+  const state = {
+    mode: "one_way", // one_way | hourly
+    pickup: "",
+    dropoff: "",
+    date: "",
+    time: "",
+    transfer: "point", // point|airport
+    hours: 3,
+    selectedVehicleId: null,
+    computedVehicles: []
   };
 
-  // =========================
-  // Helpers
-  // =========================
   function $(id){ return document.getElementById(id); }
   function val(id){ return ($(id)?.value || "").trim(); }
 
-  function formatMoney(n, currency="CAD"){
-    if (n === null || n === undefined || Number.isNaN(Number(n))) return "—";
-    try{
-      return new Intl.NumberFormat("en-CA", { style:"currency", currency, maximumFractionDigits:0 }).format(Number(n));
-    }catch(e){
-      return "$" + Math.round(Number(n));
-    }
+  function formatMoney(n){
+    if (!Number.isFinite(Number(n))) return "—";
+    return new Intl.NumberFormat("en-CA", { style:"currency", currency:"CAD", maximumFractionDigits:0 }).format(Number(n));
   }
 
   function buildTimeOptions(stepMinutes = 5, selectId = "time"){
@@ -1130,7 +1048,6 @@
     if (!timeEl || timeEl.tagName !== "SELECT") return;
 
     timeEl.innerHTML = "";
-
     const ph = document.createElement("option");
     ph.value = "";
     ph.textContent = "Select time";
@@ -1142,12 +1059,10 @@
     for (let minutes = 0; minutes < 24 * 60; minutes += stepMinutes){
       const hh = Math.floor(minutes / 60);
       const mm = minutes % 60;
-
       const value = `${pad(hh)}:${pad(mm)}`;
       const hour12 = ((hh + 11) % 12) + 1;
       const ampm = hh < 12 ? "AM" : "PM";
       const label = `${hour12}:${pad(mm)} ${ampm}`;
-
       const opt = document.createElement("option");
       opt.value = value;
       opt.textContent = label;
@@ -1163,50 +1078,23 @@
     timeEl.value = `${pad(hh)}:${pad(mm)}`;
   }
 
-  function showPaymentBanner(){
-    const params = new URLSearchParams(window.location.search);
-    const p = params.get("payment");
-    const bannerWrap = document.getElementById("paymentBanner");
-    if (!bannerWrap) return;
+  function setHeroMode(mode){
+    state.mode = mode;
+    $("heroMode").value = mode;
 
-    if (p === "success"){
-      bannerWrap.style.display = "block";
-      bannerWrap.className = "banner good";
-      bannerWrap.textContent = "Payment successful. Thank you — your reservation is confirmed. If you have special requests, message us on WhatsApp.";
-    } else if (p === "cancel"){
-      bannerWrap.style.display = "block";
-      bannerWrap.className = "banner bad";
-      bannerWrap.textContent = "Payment cancelled. You can try again or send the request by WhatsApp.";
-    } else {
-      bannerWrap.style.display = "none";
-    }
+    const one = mode === "one_way";
+    $("tabOneWay").classList.toggle("active", one);
+    $("tabHourly").classList.toggle("active", !one);
+
+    $("heroDropoffWrap").style.display = one ? "" : "none";
+    $("heroTransferWrap").style.display = one ? "" : "none";
+    $("heroHoursWrap").style.display = one ? "none" : "";
+
+    $("h_dropoff").required = one;
   }
 
-  // =========================
-  // ✅ Step flow state
-  // =========================
-  const heroState = {
-    mode: "one_way", // one_way | hourly
-    step: 1,         // 1 search, 2 choose vehicle, 3 reserve
-    quoteCurrency: "CAD",
-    quoteId: null,
-    vehicles: [],    // normalized list from API
-    selectedVehicleId: null
-  };
-
-  function setStep(step){
-    heroState.step = step;
-    const fill = $("stepFill");
-    const txt = $("stepText");
-
-    const pct = step === 1 ? 33 : step === 2 ? 66 : 100;
-    if (fill) fill.style.width = pct + "%";
-    if (txt) txt.textContent = `Step ${step} of 3`;
-  }
-
-  function showHeroAlert(message, kind="bad"){
+  function showHeroAlert(message){
     const el = $("heroAlert");
-    el.className = "alert " + (kind === "good" ? "good" : "bad");
     el.style.display = "block";
     el.textContent = message;
   }
@@ -1216,466 +1104,332 @@
     el.textContent = "";
   }
 
-  function setHeroMode(mode){
-    heroState.mode = mode;
-    $("heroMode").value = mode;
-
-    const one = mode === "one_way";
-    $("tabOneWay").classList.toggle("active", one);
-    $("tabHourly").classList.toggle("active", !one);
-    $("tabOneWay").setAttribute("aria-selected", one ? "true":"false");
-    $("tabHourly").setAttribute("aria-selected", !one ? "true":"false");
-
-    $("heroDropoffWrap").style.display = one ? "" : "none";
-    $("heroTransferWrap").style.display = one ? "" : "none";
-    $("heroHoursWrap").style.display = one ? "none" : "";
-
-    $("h_dropoff").required = one;
-
-    // reset results
-    $("heroResults").style.display = "none";
-    $("heroVehicleList").innerHTML = "";
-    $("heroContinueBtn").disabled = true;
-    $("heroContinueBtn").classList.remove("enabled");
-    $("heroReserveNote").style.display = "none";
-
-    heroState.vehicles = [];
-    heroState.selectedVehicleId = null;
-    heroState.quoteId = null;
-
-    setStep(1);
-    clearHeroAlert();
+  function validateHero(){
+    if (!val("h_pickup")) return "Please enter a pickup location.";
+    if (state.mode === "one_way" && !val("h_dropoff")) return "Please enter a destination.";
+    if (!$("h_date").value) return "Please choose a date.";
+    if (!val("h_time")) return "Please choose a time.";
+    return null;
   }
 
-  function escapeHtml(str){
-    return String(str ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
-
-  // =========================
-  // ✅ Booking API wiring
-  // =========================
-
-  function abortableFetch(url, options, timeoutMs){
-    const ctrl = new AbortController();
-    const t = setTimeout(()=>ctrl.abort(), timeoutMs);
-    return fetch(url, { ...options, signal: ctrl.signal })
-      .finally(()=>clearTimeout(t));
-  }
-
-  function buildQuotePayload(){
-    const pickup = val("h_pickup");
-    const dropoff = val("h_dropoff");
-    const date = $("h_date").value;
-    const time = val("h_time");
-    const transfer = val("h_transfer"); // point|airport
-    const hours = Number(val("h_hours") || 3);
-
-    const payload = {
-      service_area: "mont-tremblant",
-      mode: heroState.mode === "hourly" ? "hourly" : "one_way",
-      pickup: pickup,
-      dropoff: heroState.mode === "hourly" ? null : dropoff,
-      date: date,
-      time: time,
-      transfer_type: heroState.mode === "hourly" ? null : transfer,
-      hours: heroState.mode === "hourly" ? Math.max(3, hours) : null,
-      currency: "CAD"
-    };
-
-    return payload;
-  }
-
-  function normalizeQuoteResponse(apiJson){
-    if (apiJson && Array.isArray(apiJson.vehicles)){
-      const currency = apiJson.currency || "CAD";
-      const vehicles = apiJson.vehicles.map(v=>({
-        id: String(v.id ?? v.vehicleId ?? v.name),
-        name: v.name || v.vehicleName || "Vehicle",
-        description: v.description || v.meta || "",
-        price_total: Number(v.totalPrice ?? v.price_total ?? v.amount ?? v.total ?? NaN),
-        price_note: v.note || v.price_note || "",
-        image_url: v.image || v.image_url || ""
-      }));
-      return { quoteId: apiJson.quoteId || apiJson.quote_id || null, currency, vehicles };
+  function calcVehicleTotal(vehicle){
+    const h = Math.max(3, Number(state.hours || 3));
+    if (state.mode === "hourly") {
+      return vehicle.hourly * h;
     }
-
-    if (apiJson?.data?.options && Array.isArray(apiJson.data.options)){
-      const currency = apiJson.data.currency || "CAD";
-      const vehicles = apiJson.data.options.map(v=>({
-        id: String(v.id ?? v.code ?? v.name),
-        name: v.name || v.title || "Vehicle",
-        description: v.description || v.meta || "",
-        price_total: Number(v.total ?? v.price ?? v.amount ?? NaN),
-        price_note: v.note || "",
-        image_url: v.image || ""
-      }));
-      return { quoteId: apiJson.data.quote_id || apiJson.data.quoteId || null, currency, vehicles };
-    }
-
-    throw new Error("API response format not recognized. Update normalizeQuoteResponse() to match your API.");
+    // one_way estimate: 3h minimum + small fee
+    const fee = state.transfer === "airport" ? 60 : 40;
+    return (vehicle.hourly * 3) + fee;
   }
 
-  async function fetchLiveQuote(){
-    if (!BOOKING_API.enabled){
-      throw new Error("Booking API is disabled.");
-    }
-
-    const payload = buildQuotePayload();
-
-    const res = await abortableFetch(BOOKING_API.endpoint, {
-      method: BOOKING_API.method,
-      headers: BOOKING_API.headers,
-      body: JSON.stringify(payload)
-    }, BOOKING_API.timeoutMs);
-
-    const text = await res.text();
-    let json = null;
-    try{ json = text ? JSON.parse(text) : {}; }catch(e){}
-
-    if (!res.ok){
-      const msg = (json && (json.error || json.message)) ? (json.error || json.message) : ("API error: " + res.status);
-      throw new Error(msg);
-    }
-
-    const normalized = normalizeQuoteResponse(json);
-
-    if (!normalized.vehicles || !normalized.vehicles.length){
-      throw new Error("No vehicles available for this request.");
-    }
-
-    return normalized;
-  }
-
-  function buildLocalFallbackVehicles(){
-    const currency = "CAD";
-    const vehicles = Object.keys(LOCAL_RATES).map(name=>{
-      const rate = LOCAL_RATES[name];
-      let total = null;
-      let note = "";
-
-      if (heroState.mode === "hourly"){
-        const h = Math.max(3, Number(val("h_hours") || 3));
-        total = rate * h;
-        note = `Estimated for ${h}h (min 3h)`;
-      } else {
-        const transfer = val("h_transfer");
-        const fee = transfer === "airport" ? 60 : 40;
-        total = (rate * 3) + fee;
-        note = transfer === "airport" ? "Airport estimate (3h min + fee)" : "Point-to-point estimate (3h min + fee)";
-      }
-
-      return { id: name, name, description: "", price_total: total, price_note: note, image_url: "" };
+  function buildVehiclesForTrip(){
+    const list = LOCAL_RATES.map(v=>{
+      const total = calcVehicleTotal(v);
+      const note = state.mode === "hourly"
+        ? `Estimated for ${Math.max(3, Number(state.hours||3))}h (min 3h)`
+        : (state.transfer === "airport" ? "Airport estimate (3h min + fee)" : "Point-to-point estimate (3h min + fee)");
+      return { ...v, total, note };
     });
 
-    return { quoteId: null, currency, vehicles };
+    // sort cheapest first like marketplace
+    list.sort((a,b)=>a.total - b.total);
+    return list;
   }
 
-  // =========================
-  // ✅ Render vehicles + step 2
-  // =========================
-  function renderVehicleResults(){
-    const list = $("heroVehicleList");
-    list.innerHTML = "";
-    heroState.selectedVehicleId = null;
-    $("heroContinueBtn").disabled = true;
-    $("heroContinueBtn").classList.remove("enabled");
-    $("heroReserveNote").style.display = "none";
+  function openOverlay(id){
+    document.body.style.overflow = "hidden";
+    const el = $(id);
+    el.classList.add("show");
+    el.setAttribute("aria-hidden","false");
+  }
+  function closeOverlay(id){
+    const el = $(id);
+    el.classList.remove("show");
+    el.setAttribute("aria-hidden","true");
+    document.body.style.overflow = "";
+  }
 
-    heroState.vehicles.forEach(v=>{
-      const card = document.createElement("div");
-      card.className = "vcard";
-      card.innerHTML = `
-        <div class="vtop">
-          <div>
-            <div class="vname">${escapeHtml(v.name)}</div>
-            <div class="vmeta">${escapeHtml(v.description || v.price_note || "")}</div>
-          </div>
-          <div class="vprice">
-            <b>${formatMoney(v.price_total, heroState.quoteCurrency)}</b>
-            <small>${escapeHtml(v.price_note || "Estimated")}</small>
-          </div>
+  function backToSearch(){
+    closeOverlay("overlayVehicles");
+  }
+  function backToVehicles(){
+    closeOverlay("overlayCheckout");
+    openOverlay("overlayVehicles");
+  }
+
+  function renderTripSummary(){
+    const when = `${state.date} at ${state.time}`;
+    const route = state.mode === "hourly"
+      ? `${state.pickup} → Hourly (Mont-Tremblant area)`
+      : `${state.pickup} → ${state.dropoff}`;
+
+    $("tripSummary").innerHTML = `
+      <div><b>${when}</b></div>
+      <small>${route}</small>
+    `;
+  }
+
+  function renderVehiclesOverlay(){
+    const wrap = $("vehicleOverlayList");
+    wrap.innerHTML = "";
+    state.selectedVehicleId = null;
+    $("btnVehicleContinue").disabled = true;
+
+    state.computedVehicles.forEach(v=>{
+      const row = document.createElement("div");
+      row.className = "vrow";
+      row.innerHTML = `
+        <div class="vleft">
+          <b>${v.name}</b>
+          <small>${v.note}</small>
         </div>
+        <div class="vright">${formatMoney(v.total)}</div>
       `;
-      card.addEventListener("click", ()=>{
-        document.querySelectorAll(".vcard").forEach(el=>el.classList.remove("selected"));
-        card.classList.add("selected");
-        heroState.selectedVehicleId = v.id;
-        $("heroContinueBtn").disabled = false;
-        $("heroContinueBtn").classList.add("enabled");
+      row.addEventListener("click", ()=>{
+        document.querySelectorAll(".vrow").forEach(x=>x.classList.remove("selected"));
+        row.classList.add("selected");
+        state.selectedVehicleId = v.id;
+        $("btnVehicleContinue").disabled = false;
       });
-      list.appendChild(card);
+      wrap.appendChild(row);
     });
-
-    $("heroResults").style.display = "block";
-    setStep(2);
   }
 
-  // =========================
-  // ✅ Prefill reserve form + step 3
-  // =========================
-  function setReserveEstimateFromSelectedVehicle(){
-    const v = heroState.vehicles.find(x => String(x.id) === String(heroState.selectedVehicleId));
-    if (!v) return;
+  function goToCheckoutOverlay(){
+    if (!state.selectedVehicleId) return;
+    closeOverlay("overlayVehicles");
 
-    $("estimateValue").textContent = formatMoney(v.price_total, heroState.quoteCurrency);
-    $("estimateSub").textContent = v.price_note || "Live estimate from search.";
-    $("vehicleHint").textContent = "Live options loaded from search.";
+    const chosen = state.computedVehicles.find(v=>v.id === state.selectedVehicleId);
+    const when = `${state.date} at ${state.time}`;
+    const route = state.mode === "hourly"
+      ? `${state.pickup} → Hourly (Mont-Tremblant area)`
+      : `${state.pickup} → ${state.dropoff}`;
+
+    $("checkoutSummary").innerHTML = `
+      <div><b>${when}</b></div>
+      <small>${route} • ${chosen?.name || ""}</small>
+    `;
+
+    $("checkoutTotal").textContent = chosen ? formatMoney(chosen.total) : "—";
+    $("checkoutSub").textContent = chosen ? chosen.note : "";
+
+    // Prefill bottom form too (optional)
+    prefillBottomFormFromState();
+
+    openOverlay("overlayCheckout");
   }
 
-  function fillVehicleSelectFromResults(){
-    const sel = $("vehicle");
-    sel.innerHTML = "";
+  function prefillBottomFormFromState(){
+    $("pickup").value = state.pickup;
+    $("dropoff").value = state.mode === "hourly" ? "Mont-Tremblant (area)" : state.dropoff;
+    $("date").value = state.date;
+    $("time").value = state.time;
+
+    // triptype mapping
+    $("triptype").value = (state.mode === "hourly") ? "hourly" : (state.transfer === "airport" ? "airport" : "point");
+
+    // vehicle dropdown
+    const vehicleSel = $("vehicle");
+    vehicleSel.innerHTML = "";
     const ph = document.createElement("option");
     ph.value = "";
     ph.textContent = "Select vehicle";
     ph.selected = true;
-    sel.appendChild(ph);
+    vehicleSel.appendChild(ph);
 
-    heroState.vehicles.forEach(v=>{
+    state.computedVehicles.forEach(v=>{
       const opt = document.createElement("option");
       opt.value = v.name;
-      opt.textContent = v.name;
+      opt.textContent = `${v.name} — ${formatMoney(v.total)}`;
       opt.dataset.vehicleId = v.id;
-      opt.dataset.total = String(v.price_total ?? "");
-      sel.appendChild(opt);
+      opt.dataset.total = String(v.total);
+      vehicleSel.appendChild(opt);
     });
-  }
 
-  function prefillReserveFromHero(){
-    const pickup = val("h_pickup");
-    const dropoff = val("h_dropoff");
-    const date = $("h_date").value;
-    const time = val("h_time");
-    const transfer = val("h_transfer");
-    const hours = String(Math.max(3, Number(val("h_hours") || 3)));
+    const chosen = state.computedVehicles.find(v=>v.id === state.selectedVehicleId);
+    if (chosen) vehicleSel.value = chosen.name;
 
-    $("pickup").value = pickup;
-
-    /* ✅ FIXED: hourly dropoff should not read the reserve dropoff before setting */
-    $("dropoff").value = heroState.mode === "hourly"
-      ? "Mont-Tremblant (area)"
-      : dropoff;
-
-    $("date").value = date;
-    $("time").value = time;
-
-    if (heroState.mode === "hourly"){
-      $("triptype").value = "hourly";
-      $("hours").value = hours;
-    } else {
-      $("triptype").value = (transfer === "airport") ? "airport" : "point";
-    }
-
-    fillVehicleSelectFromResults();
-
-    const chosen = heroState.vehicles.find(v => String(v.id) === String(heroState.selectedVehicleId));
+    // estimate display
     if (chosen){
-      $("vehicle").value = chosen.name;
+      $("estimateValue").textContent = formatMoney(chosen.total);
+      $("estimateSub").textContent = chosen.note;
+    } else {
+      $("estimateValue").textContent = "—";
+      $("estimateSub").textContent = "Use the search widget above.";
     }
-
-    syncTriptypeUI();
-    setReserveEstimateFromSelectedVehicle();
-
-    setStep(3);
-    $("heroReserveNote").style.display = "block";
-
-    document.getElementById("contact").scrollIntoView({ behavior:"smooth", block:"start" });
   }
 
   // =========================
-  // Reserve form functions (WhatsApp/Email/Stripe)
+  // Stripe + WhatsApp (overlay)
   // =========================
-  function syncTriptypeUI(){
-    const triptype = val("triptype");
-    const hoursRow = $("hoursRow");
-    if (hoursRow) hoursRow.style.display = (triptype === "hourly") ? "grid" : "none";
+  function getChosenVehicle(){
+    return state.computedVehicles.find(v=>v.id === state.selectedVehicleId) || null;
   }
 
-  function getSelectedVehicleTotalFromDropdown(){
-    const sel = $("vehicle");
-    const opt = sel?.options?.[sel.selectedIndex];
-    if (!opt) return null;
-    const total = Number(opt.dataset.total);
-    return Number.isFinite(total) ? total : null;
+  function buildWhatsAppMessage(payload){
+    const lines = [];
+    lines.push("Booking Request - Mont Tremblant Limo Services");
+    lines.push(`Name: ${payload.name || ""}`);
+    if (payload.phone) lines.push(`Phone: ${payload.phone}`);
+    lines.push(`Date: ${payload.date}`);
+    lines.push(`Time: ${payload.time}`);
+    lines.push(`Pickup: ${payload.pickup}`);
+    lines.push(`Drop-off: ${payload.dropoff}`);
+    lines.push(`Trip type: ${payload.triptype}`);
+    lines.push(`Vehicle: ${payload.vehicle}`);
+    lines.push(`Estimate: ${payload.estimate_text}`);
+    if (payload.notes) lines.push(`Notes: ${payload.notes}`);
+    return encodeURIComponent(lines.join("\n"));
   }
 
-  function computeEstimateForReserve(){
-    const liveTotal = getSelectedVehicleTotalFromDropdown();
-    if (Number.isFinite(liveTotal)) {
-      return { total: liveTotal, text: formatMoney(liveTotal, heroState.quoteCurrency) + " (live)" };
-    }
+  function sendWhatsAppFromOverlay(){
+    const chosen = getChosenVehicle();
+    if (!chosen) return;
 
-    if (!BOOKING_API.allowFallbackLocalEstimates) {
-      return { total: null, text: "Run Search above for live price" };
-    }
+    const name = val("c_name");
+    const phone = val("c_phone");
+    const notes = val("c_notes");
 
-    const triptype = val("triptype");
-    const vehicle = val("vehicle");
-    const rate = LOCAL_RATES[vehicle];
-    const hoursRaw = parseInt(val("hours") || "3", 10);
-    const roundtrip = val("roundtrip");
-    const hours = Math.max(3, isNaN(hoursRaw) ? 3 : hoursRaw);
-
-    if (!rate) return { total: null, text: "Select vehicle" };
-
-    if (triptype === "hourly"){
-      let total = rate * hours;
-      if (roundtrip === "yes"){ total = Math.round(total * 1.7); }
-      return { total, text: `${formatMoney(total)} estimate (hourly)` };
-    }
-
-    const base = rate * 3;
-    const tripFee = (triptype === "airport") ? 60 : 40;
-    let total = base + tripFee;
-    if (roundtrip === "yes"){ total = Math.round(total * 1.7); }
-    return { total, text: `${formatMoney(total)} estimate` };
-  }
-
-  function updateReserveEstimateUI(){
-    const est = computeEstimateForReserve();
-    $("estimateValue").textContent = est.total ? formatMoney(est.total, heroState.quoteCurrency) : "—";
-    $("estimateSub").textContent = est.total ? (est.text + " • Taxes/tolls/parking may apply.") : "Use the search widget above to get live prices.";
-  }
-
-  function buildMessage(){
-    const name = val("name");
-    const phone = val("phone");
-    const date = val("date");
-    const time = val("time");
-    const pickup = val("pickup");
-    const dropoff = val("dropoff");
-    const triptype = val("triptype");
-    const vehicle = val("vehicle");
-    const hours = val("hours");
-    const roundtrip = val("roundtrip");
-    const notes = val("notes");
-
-    const est = computeEstimateForReserve();
-
-    let msg = "Booking Request - Mont Tremblant Limo Services%0A";
-    msg += "Name: " + encodeURIComponent(name) + "%0A";
-    if (phone) msg += "Phone: " + encodeURIComponent(phone) + "%0A";
-    msg += "Date: " + encodeURIComponent(date) + "%0A";
-    msg += "Time: " + encodeURIComponent(time) + "%0A";
-    msg += "Pickup: " + encodeURIComponent(pickup) + "%0A";
-    msg += "Drop-off: " + encodeURIComponent(dropoff) + "%0A";
-
-    const tt = (triptype === "hourly") ? "Hourly" : (triptype === "airport" ? "Airport transfer" : "Point-to-point");
-    msg += "Trip type: " + encodeURIComponent(tt) + "%0A";
-    msg += "Vehicle: " + encodeURIComponent(vehicle) + "%0A";
-    if (triptype === "hourly") msg += "Hours: " + encodeURIComponent(hours) + "%0A";
-    msg += "Round trip: " + encodeURIComponent(roundtrip) + "%0A";
-    msg += "Estimate: " + encodeURIComponent(est.text) + "%0A";
-    if (notes) msg += "Notes: " + encodeURIComponent(notes);
-    return msg;
-  }
-
-  function sendBooking(e){
-    e.preventDefault();
-    if (!val("name") || !val("date") || !val("time") || !val("pickup") || !val("dropoff") || !val("vehicle")) {
-      alert("Please fill Name, Date, Time, Pickup, Drop-off, and select a vehicle.");
-      return false;
-    }
-    const msg = buildMessage();
-    window.open("https://wa.me/" + BUSINESS_WA + "?text=" + msg, "_blank", "noreferrer");
-    return false;
-  }
-
-  function sendEmail(){
-    if (!val("name") || !val("date") || !val("time") || !val("pickup") || !val("dropoff") || !val("vehicle")) {
-      alert("Please fill Name, Date, Time, Pickup, Drop-off and select a vehicle first.");
-      return false;
-    }
-    const subject = encodeURIComponent("Booking Request - Mont Tremblant Limo Services");
-    const body = decodeURIComponent(buildMessage()).replaceAll("%0A", "\n");
-    window.location.href = "mailto:" + BUSINESS_EMAIL + "?subject=" + subject + "&body=" + encodeURIComponent(body);
-    return false;
-  }
-
-  function collectBookingPayload(){
-    const est = computeEstimateForReserve();
-    if (!est.total){
-      return { ok:false, error:"Please run Search above and select a vehicle to get live price." };
-    }
-
-    const vehicleSel = $("vehicle");
-    const opt = vehicleSel?.options?.[vehicleSel.selectedIndex];
-
-    return {
-      ok:true,
-      booking: {
-        name: val("name"),
-        phone: val("phone"),
-        date: val("date"),
-        time: val("time"),
-        pickup: val("pickup"),
-        dropoff: val("dropoff"),
-        triptype: val("triptype"),
-        vehicle: val("vehicle"),
-        vehicle_id: opt?.dataset?.vehicleId || null,
-        hours: val("hours"),
-        roundtrip: val("roundtrip"),
-        notes: val("notes"),
-        estimate_text: est.text,
-        estimate_total_cad: est.total,
-        quote_id: heroState.quoteId,
-        pay_option: "full",
-        pay_now_cad: est.total
-      }
+    const triptype = (state.mode === "hourly") ? "Hourly" : (state.transfer === "airport" ? "Airport transfer" : "Point-to-point");
+    const payload = {
+      name, phone,
+      date: state.date,
+      time: state.time,
+      pickup: state.pickup,
+      dropoff: (state.mode === "hourly") ? "Mont-Tremblant (area)" : state.dropoff,
+      triptype,
+      vehicle: chosen.name,
+      estimate_text: `${formatMoney(chosen.total)} (${chosen.note})`,
+      notes
     };
+
+    window.open("https://wa.me/" + BUSINESS_WA + "?text=" + buildWhatsAppMessage(payload), "_blank", "noreferrer");
   }
 
-  async function startStripeCheckout(){
-    const statusEl = $("payStatus");
-    if (statusEl) statusEl.textContent = "";
+  async function startStripeCheckoutFromOverlay(){
+    const statusEl = $("checkoutStatus");
+    statusEl.textContent = "";
 
-    const payload = collectBookingPayload();
-    if (!payload.ok){
-      if (statusEl) statusEl.textContent = payload.error;
-      alert(payload.error);
+    const chosen = getChosenVehicle();
+    if (!chosen){
+      statusEl.textContent = "Please choose a vehicle first.";
       return;
     }
 
-    try{
-      if (statusEl) statusEl.textContent = "Starting secure checkout…";
+    const name = val("c_name");
+    if (!name){
+      statusEl.textContent = "Please enter your name.";
+      return;
+    }
 
+    const booking = {
+      name: name,
+      phone: val("c_phone"),
+      date: state.date,
+      time: state.time,
+      pickup: state.pickup,
+      dropoff: (state.mode === "hourly") ? "Mont-Tremblant (area)" : state.dropoff,
+      triptype: (state.mode === "hourly") ? "hourly" : (state.transfer === "airport" ? "airport" : "point"),
+      vehicle: chosen.name,
+      vehicle_id: chosen.id,
+      hours: String(Math.max(3, Number(state.hours||3))),
+      roundtrip: "no",
+      notes: val("c_notes"),
+      estimate_text: `${formatMoney(chosen.total)} (${chosen.note})`,
+      estimate_total_cad: chosen.total,
+      pay_option: "full",
+      pay_now_cad: chosen.total
+    };
+
+    try{
+      statusEl.textContent = "Starting secure checkout…";
       const res = await fetch("/api/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type":"application/json" },
-        body: JSON.stringify(payload.booking)
+        body: JSON.stringify(booking)
       });
-
-      const data = await res.json();
+      const data = await res.json().catch(()=> ({}));
       if (!res.ok) throw new Error(data?.error || "Unable to start checkout.");
+      if (!data?.url) throw new Error("Missing checkout URL from server.");
       window.location.href = data.url;
     }catch(err){
       console.error(err);
-      const msg = "Payment could not be started. " + (err.message || "");
-      alert(msg);
-      if (statusEl) statusEl.textContent = msg;
+      statusEl.textContent = "Stripe checkout error: " + (err.message || "Unknown error");
+      alert("Stripe checkout error: " + (err.message || "Unknown error"));
     }
   }
 
   // =========================
-  // ✅ Hero submit: call API + show vehicle list
+  // Bottom form quick buttons (optional)
   // =========================
-  function validateHeroInputs(){
-    const pickup = val("h_pickup");
-    const dropoff = val("h_dropoff");
-    const date = $("h_date").value;
-    const time = val("h_time");
-    if (!pickup) return "Please enter a pickup location.";
-    if (heroState.mode === "one_way" && !dropoff) return "Please enter a destination.";
-    if (!date) return "Please choose a date.";
-    if (!time) return "Please choose a time.";
-    return null;
+  function sendWhatsAppFromForm(){
+    const vehicleSel = $("vehicle");
+    const opt = vehicleSel?.options?.[vehicleSel.selectedIndex];
+    const total = Number(opt?.dataset?.total);
+    const totalText = Number.isFinite(total) ? formatMoney(total) : "—";
+
+    const payload = {
+      name: val("name"),
+      phone: val("phone"),
+      date: val("date"),
+      time: val("time"),
+      pickup: val("pickup"),
+      dropoff: val("dropoff"),
+      triptype: val("triptype"),
+      vehicle: val("vehicle"),
+      estimate_text: totalText,
+      notes: ""
+    };
+    window.open("https://wa.me/" + BUSINESS_WA + "?text=" + buildWhatsAppMessage(payload), "_blank", "noreferrer");
   }
 
+  async function startStripeCheckoutFromForm(){
+    const vehicleSel = $("vehicle");
+    const opt = vehicleSel?.options?.[vehicleSel.selectedIndex];
+    const total = Number(opt?.dataset?.total);
+
+    if (!val("name")) return alert("Please enter your name.");
+    if (!val("date") || !val("time") || !val("pickup") || !val("dropoff") || !val("vehicle")) {
+      return alert("Please complete the form and choose a vehicle.");
+    }
+    if (!Number.isFinite(total)) return alert("Please use the Search widget to generate vehicle totals.");
+
+    const booking = {
+      name: val("name"),
+      phone: val("phone"),
+      date: val("date"),
+      time: val("time"),
+      pickup: val("pickup"),
+      dropoff: val("dropoff"),
+      triptype: val("triptype"),
+      vehicle: val("vehicle"),
+      vehicle_id: opt?.dataset?.vehicleId || null,
+      hours: String(Math.max(3, Number(state.hours||3))),
+      roundtrip: "no",
+      notes: "",
+      estimate_text: total.toString(),
+      estimate_total_cad: total,
+      pay_option: "full",
+      pay_now_cad: total
+    };
+
+    try{
+      const res = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type":"application/json" },
+        body: JSON.stringify(booking)
+      });
+      const data = await res.json().catch(()=> ({}));
+      if (!res.ok) throw new Error(data?.error || "Unable to start checkout.");
+      window.location.href = data.url;
+    }catch(err){
+      alert("Stripe checkout error: " + (err.message || "Unknown error"));
+    }
+  }
+
+  // =========================
+  // Step 1 submit
+  // =========================
   function setHeroSearchLoading(isLoading){
     const btn = $("heroSearchBtn");
     btn.disabled = isLoading;
@@ -1685,112 +1439,38 @@
   $("tabOneWay").addEventListener("click", ()=> setHeroMode("one_way"));
   $("tabHourly").addEventListener("click", ()=> setHeroMode("hourly"));
 
-  $("heroEditBtn").addEventListener("click", ()=>{
-    $("heroResults").style.display = "none";
-    clearHeroAlert();
-    setStep(1);
-  });
-
-  $("heroContinueBtn").addEventListener("click", ()=>{
-    if (!heroState.selectedVehicleId) return;
-    prefillReserveFromHero();
-  });
-
-  $("heroSearchForm").addEventListener("submit", async (e)=>{
+  $("heroSearchForm").addEventListener("submit", (e)=>{
     e.preventDefault();
     clearHeroAlert();
 
-    const err = validateHeroInputs();
-    if (err) return showHeroAlert(err, "bad");
+    const err = validateHero();
+    if (err) return showHeroAlert(err);
+
+    // save state from form
+    state.pickup = val("h_pickup");
+    state.dropoff = val("h_dropoff");
+    state.date = $("h_date").value;
+    state.time = val("h_time");
+    state.transfer = val("h_transfer") || "point";
+    state.hours = Math.max(3, Number(val("h_hours") || 3));
 
     setHeroSearchLoading(true);
 
-    try{
-      const live = await fetchLiveQuote();
-      heroState.quoteId = live.quoteId || null;
-      heroState.quoteCurrency = live.currency || "CAD";
-      heroState.vehicles = live.vehicles;
-      renderVehicleResults();
-    }catch(error){
-      console.error(error);
+    // local compute (instant)
+    state.computedVehicles = buildVehiclesForTrip();
+    renderTripSummary();
+    renderVehiclesOverlay();
 
-      if (BOOKING_API.allowFallbackLocalEstimates){
-        const fallback = buildLocalFallbackVehicles();
-        heroState.quoteId = null;
-        heroState.quoteCurrency = fallback.currency;
-        heroState.vehicles = fallback.vehicles;
-
-        // (Optional) if you want this to look less "error-y", switch "bad" -> "good"
-        showHeroAlert("Live pricing is temporarily unavailable — showing estimated prices.", "bad");
-
-        renderVehicleResults();
-      } else {
-        showHeroAlert(error?.message || "Unable to get live pricing. Please try again.", "bad");
-      }
-    }finally{
-      setHeroSearchLoading(false);
-    }
+    setHeroSearchLoading(false);
+    openOverlay("overlayVehicles");
   });
-
-  ["triptype","vehicle","hours","roundtrip"].forEach(id=>{
-    const el = $(id);
-    if (el) el.addEventListener("change", ()=>{
-      syncTriptypeUI();
-      updateReserveEstimateUI();
-    });
-  });
-
-  document.querySelectorAll('.mobile-cta-bar a[href^="#"]').forEach(a=>{
-    a.addEventListener("click", (e)=>{
-      const id = a.getAttribute("href");
-      const el = document.querySelector(id);
-      if (!el) return;
-      e.preventDefault();
-      el.scrollIntoView({behavior:"smooth", block:"start"});
-    });
-  });
-
-  // =========================
-  // ✅ Google Places Autocomplete
-  // =========================
-  function initPlaces(){
-    if (!window.google || !google.maps || !google.maps.places) return;
-
-    const opts = {
-      fields: ["formatted_address","geometry","name","place_id"],
-      componentRestrictions: { country: ["ca"] }
-    };
-
-    const ids = ["h_pickup","h_dropoff","pickup","dropoff"];
-    ids.forEach(id=>{
-      const el = $(id);
-      if (!el) return;
-      const ac = new google.maps.places.Autocomplete(el, opts);
-      ac.addListener("place_changed", ()=>{
-        const place = ac.getPlace();
-      });
-    });
-  }
-
-  function loadGooglePlaces(){
-    if (!GOOGLE_PLACES_API_KEY || GOOGLE_PLACES_API_KEY.includes("YOUR_GOOGLE_PLACES_KEY")){
-      console.warn("Google Places key missing. Autocomplete will not load.");
-      return;
-    }
-    const s = document.createElement("script");
-    s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_PLACES_API_KEY)}&libraries=places&callback=__initPlacesCB`;
-    s.async = true;
-    s.defer = true;
-    window.__initPlacesCB = initPlaces;
-    document.head.appendChild(s);
-  }
 
   // =========================
   // Init
   // =========================
   window.addEventListener("load", ()=>{
-    buildTimeOptions(5, "time");
     buildTimeOptions(5, "h_time");
+    buildTimeOptions(5, "time");
 
     const d = new Date();
     const yyyy = d.getFullYear();
@@ -1799,10 +1479,6 @@
     $("h_date").value = `${yyyy}-${mm}-${dd}`;
 
     setHeroMode("one_way");
-    syncTriptypeUI();
-    showPaymentBanner();
-    loadGooglePlaces();
-    updateReserveEstimateUI();
   });
 </script>
 
