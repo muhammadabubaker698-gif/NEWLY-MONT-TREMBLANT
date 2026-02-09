@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- ✅ Better mobile behavior + iPhone safe-area -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Mont Tremblant Limo Services | Luxury Chauffeur</title>
 <meta name="description" content="Luxury chauffeur service in Mont-Tremblant. Escalade, Suburban, Denali, QX60, Tesla & Sprinter. Minimum 3 hours. Call or WhatsApp +1 (514) 293-3170." />
 <link rel="canonical" href="https://monttremblantlimoservices.com/" />
@@ -65,10 +66,15 @@
     font-size: 16px;
     overflow-x:hidden;
   }
-  a{color:inherit;text-decoration:none}
+
+  /* ✅ Prevent any element from forcing horizontal zoom/overflow on mobile */
+  html, body{ width:100%; max-width:100%; overflow-x:hidden; }
+  img, video, canvas, svg{ max-width:100%; height:auto; }
   .container{max-width:var(--max);margin:0 auto;padding: 0 18px}
   section{ scroll-margin-top: 96px; }
   main{padding-bottom: 64px}
+
+  a{color:inherit;text-decoration:none}
 
   header{
     position: sticky;
@@ -280,6 +286,7 @@
     border: 1px solid rgba(11,18,32,.10);
     background: #f4f5f7;
     margin-bottom: 10px;
+    min-width: 0;
   }
   .ico{ width: 18px; height: 18px; color: rgba(11,18,32,.55); flex:0 0 auto; }
   .field input, .field select{
@@ -290,6 +297,7 @@
     font-size: 14.5px;
     font-weight: 800;
     color: rgba(11,18,32,.90);
+    min-width: 0;
   }
   .field input::placeholder{ color: rgba(11,18,32,.50); font-weight:800; }
   .row2{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -325,7 +333,7 @@
   .overlay{
     position: fixed;
     inset: 0;
-    z-index: 99999; /* ✅ always above chat widgets */
+    z-index: 99999;
     background: rgba(255,255,255,.96);
     display: none;
     overflow: hidden;
@@ -358,17 +366,26 @@
     font-weight: 900;
     cursor: pointer;
   }
+
+  /* ✅ Make overlay body a flex column so actions can sit at the bottom even when content is short */
   .overlay-body{
     height: calc(100vh - 76px);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding: 26px 0 calc(40px + env(safe-area-inset-bottom) + 90px); /* ✅ iPhone Safari safe-area */
+    padding: 26px 0 calc(40px + env(safe-area-inset-bottom) + 90px);
+    display: flex;
+    flex-direction: column;
   }
   .flow-wrap{
     max-width: 760px;
+    width: 100%;
     margin: 0 auto;
     padding: 0 18px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
   }
+
   .flow-steps{
     display:flex;
     gap: 18px;
@@ -378,6 +395,8 @@
     font-weight: 900;
     font-size: 13px;
     margin-bottom: 14px;
+    flex-wrap: wrap;
+    text-align: center;
   }
   .flow-steps .on{ color: rgba(11,18,32,.92); }
 
@@ -427,11 +446,11 @@
     border-top: 1px solid rgba(11,18,32,.10);
     cursor: pointer;
     transition: transform .12s ease, padding .12s ease, background .12s ease;
+    min-width: 0; /* ✅ important for mobile */
   }
   .vrow:first-child{ border-top: none; }
   .vrow:hover{ background: rgba(11,18,32,.03); }
 
-  /* ✅ checkmark (hidden until selected) */
   .vcheck{
     position:absolute;
     right: 16px;
@@ -453,7 +472,6 @@
     pointer-events:none;
   }
 
-  /* ✅ Blacklane-like selected row */
   .vrow.selected{
     background: rgba(255,90,20,.06);
     padding-top: 18px;
@@ -466,7 +484,6 @@
     transform: scale(1);
   }
 
-  /* Closed rounded border */
   .vrow.selected::after{
     content:"";
     position:absolute;
@@ -476,10 +493,10 @@
     pointer-events:none;
   }
 
-  /* remove flat separator line effect near selection (Safari-safe via JS class) */
   .vrow.hide-top-border{ border-top-color: transparent; }
 
-  .vleft b{ display:block; font-weight: 950; }
+  .vleft, .vright{ min-width:0; }
+  .vleft b{ display:block; font-weight: 950; word-break: break-word; }
   .vleft small{ display:block; margin-top: 2px; color: rgba(11,18,32,.62); font-weight: 800; }
   .vright{
     text-align:right;
@@ -488,8 +505,9 @@
     padding-right: 26px;
   }
 
-  /* ✅ iPhone Safari: sticky action bar always clickable */
+  /* ✅ Action bar: push to bottom when content is short + stick when scrolling */
   .flow-actions{
+    margin-top: auto; /* ✅ keeps it at bottom on desktop (no weird floating) */
     position: sticky;
     bottom: 0;
     z-index: 5;
@@ -497,7 +515,6 @@
     backdrop-filter: blur(8px);
     border-top: 1px solid rgba(11,18,32,.10);
     padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
-    margin-top: 18px;
     display:flex;
     gap: 12px;
     justify-content: space-between;
@@ -513,7 +530,6 @@
   }
   .btn:disabled{ opacity:.55; cursor:not-allowed; }
 
-  /* Hide WhatsApp float when overlay is open */
   html.overlay-open .whatsapp-float{ display:none !important; }
 
   label{
@@ -607,6 +623,23 @@
     box-shadow: 0 16px 38px rgba(0,0,0,.16);
     z-index:60;
     border: 1px solid rgba(0,0,0,.14);
+  }
+
+  /* ✅ Mobile tightening for vehicle rows so no zoom needed */
+  @media (max-width: 640px){
+    .vrow{
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .vright{
+      text-align: left;
+      padding-right: 0;
+      white-space: normal;
+    }
+    .vcheck{
+      right: 14px;
+      top: 14px;
+    }
   }
 
   @media (max-width: 980px){
@@ -754,7 +787,8 @@
   <div class="overlay-top">
     <div class="container">
       <div class="overlay-title">Mont Tremblant Limo • Booking</div>
-      <button class="overlay-close" type="button" onclick="closeOverlay('overlayVehicles')">Close</button>
+      <!-- ✅ Close should also behave like Back (history) -->
+      <button class="overlay-close" type="button" onclick="closeOverlay('overlayVehicles', true)">Close</button>
     </div>
   </div>
   <div class="overlay-body">
@@ -773,6 +807,7 @@
       <div class="vlist" id="vehicleOverlayList"></div>
 
       <div class="flow-actions">
+        <!-- ✅ Use history so browser Back returns to main page -->
         <button class="btn" type="button" onclick="backToSearch()">Edit search</button>
         <button id="btnVehicleContinue" class="btn btn-primary" type="button" disabled onclick="goToCheckoutOverlay()">Continue</button>
       </div>
@@ -785,7 +820,8 @@
   <div class="overlay-top">
     <div class="container">
       <div class="overlay-title">Mont Tremblant Limo • Checkout</div>
-      <button class="overlay-close" type="button" onclick="closeOverlay('overlayCheckout')">Close</button>
+      <!-- ✅ Close should also behave like Back (history) -->
+      <button class="overlay-close" type="button" onclick="closeOverlay('overlayCheckout', true)">Close</button>
     </div>
   </div>
   <div class="overlay-body">
@@ -819,6 +855,7 @@
       </div>
 
       <div class="flow-actions" style="margin-top:14px;">
+        <!-- ✅ History back (browser back parity) -->
         <button class="btn" type="button" onclick="backToVehicles()">Back</button>
         <button class="btn btn-primary" type="button" onclick="startStripeCheckoutFromOverlay()">Pay with Stripe</button>
         <button class="btn" type="button" onclick="sendWhatsAppFromOverlay()">WhatsApp</button>
@@ -960,7 +997,6 @@
 
   function formatMoney(n){
     if (!Number.isFinite(Number(n))) return "—";
-    // ✅ explicit Canadian dollars: "CA$490"
     return "CA$" + Math.round(Number(n));
   }
 
@@ -1039,25 +1075,42 @@
     return (vehicle.hourly * 3) + fee;
   }
 
-  // ✅ Fixed order + removed min text in note
   function buildVehiclesForTrip(){
     const ORDER = ["escalade","suburban","denali","qx60","tesla","sprinter"];
-
     const list = LOCAL_RATES.map(v=>{
       const total = calcVehicleTotal(v);
       const note = state.mode === "hourly"
         ? `Total ${formatMoney(total)} for ${Math.max(3, Number(state.hours||3))} hours`
         : (state.transfer === "airport" ? "Airport estimate" : "Point-to-point estimate");
-
       return { ...v, total, note };
     });
-
     list.sort((a,b)=>ORDER.indexOf(a.id) - ORDER.indexOf(b.id));
     return list;
   }
 
-  // ✅ iPhone Safari: prevent chat widgets from blocking taps
-  function openOverlay(id){
+  /* =========================
+     ✅ Overlay + Browser Back Fix
+     - open overlay => pushState
+     - back button => returns to previous step/home (doesn't leave site)
+  ========================== */
+  function anyOverlayOpen(){
+    return !!document.querySelector(".overlay.show");
+  }
+  function closeAllOverlaysVisual(){
+    document.querySelectorAll(".overlay.show").forEach(el=>{
+      el.classList.remove("show");
+      el.setAttribute("aria-hidden","true");
+    });
+    document.body.style.overflow = "";
+    document.documentElement.classList.remove("overlay-open");
+    try{
+      if (window.Tawk_API && typeof window.Tawk_API.showWidget === "function") {
+        window.Tawk_API.showWidget();
+      }
+    }catch(e){}
+  }
+
+  function openOverlay(id, pushHistory = true){
     document.body.style.overflow = "hidden";
     document.documentElement.classList.add("overlay-open");
 
@@ -1065,34 +1118,60 @@
     el.classList.add("show");
     el.setAttribute("aria-hidden","false");
 
-    // Hide Tawk widget while overlay open (prevents tap-blocking)
     try{
       if (window.Tawk_API && typeof window.Tawk_API.hideWidget === "function") {
         window.Tawk_API.hideWidget();
       }
     }catch(e){}
+
+    if (pushHistory){
+      history.pushState({ overlay: id }, "", "#" + id);
+    }
   }
-  function closeOverlay(id){
+
+  function closeOverlay(id, popHistory = false){
     const el = $(id);
     el.classList.remove("show");
     el.setAttribute("aria-hidden","true");
 
-    // if no overlays open, restore scroll + widgets
-    const anyOpen = document.querySelector(".overlay.show");
-    if (!anyOpen){
+    const stillOpen = anyOverlayOpen();
+    if (!stillOpen){
       document.body.style.overflow = "";
       document.documentElement.classList.remove("overlay-open");
-
       try{
         if (window.Tawk_API && typeof window.Tawk_API.showWidget === "function") {
           window.Tawk_API.showWidget();
         }
       }catch(e){}
     }
+
+    // If user clicked Close, behave like BACK inside our flow:
+    if (popHistory && history.state && history.state.overlay){
+      history.back();
+    }else{
+      // If we closed without popping, keep URL clean if needed
+      if (!anyOverlayOpen() && (location.hash === "#overlayVehicles" || location.hash === "#overlayCheckout")){
+        history.replaceState({ page: "home" }, "", location.pathname + location.search);
+      }
+    }
   }
 
-  function backToSearch(){ closeOverlay("overlayVehicles"); }
-  function backToVehicles(){ closeOverlay("overlayCheckout"); openOverlay("overlayVehicles"); }
+  // Browser back/forward behavior: open/close overlays based on state
+  window.addEventListener("popstate", (e)=>{
+    closeAllOverlaysVisual();
+    if (e.state && e.state.overlay){
+      openOverlay(e.state.overlay, false);
+    }
+  });
+
+  function backToSearch(){
+    // go back in history (vehicles -> home)
+    history.back();
+  }
+  function backToVehicles(){
+    // checkout -> vehicles
+    history.back();
+  }
 
   function renderTripSummary(){
     const when = `${state.date} at ${state.time}`;
@@ -1121,9 +1200,6 @@
     if (next && next.classList.contains("vrow")) next.classList.add("hide-top-border");
   }
 
-  // ✅ Step 2 list:
-  // - hourly: show "Total CA$___ for X hours" UNDER PRICE
-  // - one-way: keep estimate label under vehicle name
   function renderVehiclesOverlay(){
     const wrap = $("vehicleOverlayList");
     wrap.innerHTML = "";
@@ -1142,7 +1218,7 @@
         : `<small style="display:block;margin-top:2px;color:rgba(11,18,32,.62);font-weight:800;">${v.note}</small>`;
 
       row.innerHTML = `
-        <div style="display:flex;align-items:center;gap:14px;">
+        <div style="display:flex;align-items:center;gap:14px;min-width:0;">
           <img
             src="${v.img}"
             alt="${v.name}"
@@ -1152,6 +1228,7 @@
               object-fit:cover;
               border-radius:10px;
               border:1px solid rgba(0,0,0,.08);
+              flex:0 0 auto;
             "
           />
           <div class="vleft">
@@ -1186,7 +1263,9 @@
 
   function goToCheckoutOverlay(){
     if (!state.selectedVehicleId) return;
-    closeOverlay("overlayVehicles");
+
+    // Close vehicles visually (keep history), then push checkout state
+    closeOverlay("overlayVehicles", false);
 
     const chosen = getChosenVehicle();
     const when = `${state.date} at ${state.time}`;
@@ -1202,7 +1281,7 @@
     $("checkoutTotal").textContent = chosen ? formatMoney(chosen.total) : "—";
     $("checkoutSub").textContent = chosen ? (state.mode === "hourly" ? `Total ${formatMoney(chosen.total)} for ${Math.max(3, Number(state.hours||3))} hours` : chosen.note) : "";
 
-    openOverlay("overlayCheckout");
+    openOverlay("overlayCheckout", true);
   }
 
   function buildWhatsAppMessage(payload){
@@ -1334,10 +1413,17 @@
     renderVehiclesOverlay();
 
     setHeroSearchLoading(false);
-    openOverlay("overlayVehicles");
+
+    // ✅ Push history state so browser Back returns to home (not previous site)
+    openOverlay("overlayVehicles", true);
   });
 
   window.addEventListener("load", ()=>{
+    // ✅ Ensure there's always a "home" state at the bottom of history for this page
+    if (!history.state){
+      history.replaceState({ page: "home" }, "", location.pathname + location.search + (location.hash || ""));
+    }
+
     buildTimeOptions(5, "h_time");
 
     const d = new Date();
@@ -1348,6 +1434,10 @@
 
     setHeroMode("one_way");
     document.getElementById("year").textContent = yyyy;
+
+    // ✅ If user loads a URL with #overlayVehicles or #overlayCheckout, open it without pushing
+    if (location.hash === "#overlayVehicles") openOverlay("overlayVehicles", false);
+    if (location.hash === "#overlayCheckout") openOverlay("overlayCheckout", false);
   });
 </script>
 
