@@ -325,7 +325,7 @@
   .overlay{
     position: fixed;
     inset: 0;
-    z-index: 999;
+    z-index: 99999; /* ✅ always above chat widgets */
     background: rgba(255,255,255,.96);
     display: none;
     overflow: hidden;
@@ -362,7 +362,7 @@
     height: calc(100vh - 76px);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding: 26px 0 40px;
+    padding: 26px 0 calc(40px + env(safe-area-inset-bottom) + 90px); /* ✅ iPhone Safari safe-area */
   }
   .flow-wrap{
     max-width: 760px;
@@ -456,9 +456,9 @@
   /* ✅ Blacklane-like selected row */
   .vrow.selected{
     background: rgba(255,90,20,.06);
-    padding-top: 18px;            /* slightly taller */
-    padding-bottom: 18px;         /* slightly taller */
-    transform: translateY(-1px);  /* tiny lift */
+    padding-top: 18px;
+    padding-bottom: 18px;
+    transform: translateY(-1px);
     z-index: 2;
   }
   .vrow.selected .vcheck{
@@ -485,10 +485,18 @@
     text-align:right;
     font-weight: 950;
     white-space: nowrap;
-    padding-right: 26px; /* space so price doesn't collide with checkmark */
+    padding-right: 26px;
   }
 
+  /* ✅ iPhone Safari: sticky action bar always clickable */
   .flow-actions{
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    background: rgba(255,255,255,.96);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid rgba(11,18,32,.10);
+    padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
     margin-top: 18px;
     display:flex;
     gap: 12px;
@@ -504,6 +512,9 @@
     box-shadow: 0 16px 34px rgba(255,90,20,.18);
   }
   .btn:disabled{ opacity:.55; cursor:not-allowed; }
+
+  /* Hide WhatsApp float when overlay is open */
+  html.overlay-open .whatsapp-float{ display:none !important; }
 
   label{
     display:block;
@@ -535,7 +546,7 @@
   .estimate-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
   .estimate-top b{font-size:13.5px}
   .estimate-value{font-weight:950}
-  .estimate-sub{margin-top:6px;color:rgba(11,18,32,.68);font-size:12.8px;font-weight:700}
+  .estimate-sub{margin-top:6px;color: rgba(11,18,32,.68);font-size:12.8px;font-weight:700}
   .tinyhint{margin-top:6px;font-size:12.5px;color:rgba(11,18,32,.62);font-weight:700}
 
   /* Sections */
@@ -949,7 +960,8 @@
 
   function formatMoney(n){
     if (!Number.isFinite(Number(n))) return "—";
-    return new Intl.NumberFormat("en-CA", { style:"currency", currency:"CAD", maximumFractionDigits:0 }).format(Number(n));
+    // ✅ explicit Canadian dollars: "CA$490"
+    return "CA$" + Math.round(Number(n));
   }
 
   function buildTimeOptions(stepMinutes = 5, selectId){
@@ -1034,7 +1046,7 @@
     const list = LOCAL_RATES.map(v=>{
       const total = calcVehicleTotal(v);
       const note = state.mode === "hourly"
-        ? `Estimated for ${Math.max(3, Number(state.hours||3))} hours`
+        ? `Total ${formatMoney(total)} for ${Math.max(3, Number(state.hours||3))} hours`
         : (state.transfer === "airport" ? "Airport estimate" : "Point-to-point estimate");
 
       return { ...v, total, note };
@@ -1044,17 +1056,39 @@
     return list;
   }
 
+  // ✅ iPhone Safari: prevent chat widgets from blocking taps
   function openOverlay(id){
     document.body.style.overflow = "hidden";
+    document.documentElement.classList.add("overlay-open");
+
     const el = $(id);
     el.classList.add("show");
     el.setAttribute("aria-hidden","false");
+
+    // Hide Tawk widget while overlay open (prevents tap-blocking)
+    try{
+      if (window.Tawk_API && typeof window.Tawk_API.hideWidget === "function") {
+        window.Tawk_API.hideWidget();
+      }
+    }catch(e){}
   }
   function closeOverlay(id){
     const el = $(id);
     el.classList.remove("show");
     el.setAttribute("aria-hidden","true");
-    document.body.style.overflow = "";
+
+    // if no overlays open, restore scroll + widgets
+    const anyOpen = document.querySelector(".overlay.show");
+    if (!anyOpen){
+      document.body.style.overflow = "";
+      document.documentElement.classList.remove("overlay-open");
+
+      try{
+        if (window.Tawk_API && typeof window.Tawk_API.showWidget === "function") {
+          window.Tawk_API.showWidget();
+        }
+      }catch(e){}
+    }
   }
 
   function backToSearch(){ closeOverlay("overlayVehicles"); }
@@ -1082,24 +1116,31 @@
     clearRowBorderHelpers();
     if (!selectedRow) return;
 
-    // hide the line above selected row
     selectedRow.classList.add("hide-top-border");
-
-    // hide the line above next row (so it doesn't look like an open line)
     const next = selectedRow.nextElementSibling;
     if (next && next.classList.contains("vrow")) next.classList.add("hide-top-border");
   }
 
-  // ✅ Step 2 list WITH IMAGES + checkmark element
+  // ✅ Step 2 list:
+  // - hourly: show "Total CA$___ for X hours" UNDER PRICE
+  // - one-way: keep estimate label under vehicle name
   function renderVehiclesOverlay(){
     const wrap = $("vehicleOverlayList");
     wrap.innerHTML = "";
     state.selectedVehicleId = null;
     $("btnVehicleContinue").disabled = true;
 
+    const hours = Math.max(3, Number(state.hours || 3));
+
     state.computedVehicles.forEach(v=>{
       const row = document.createElement("div");
       row.className = "vrow";
+
+      const underVehicle = (state.mode === "hourly") ? "" : `<small>${v.note}</small>`;
+      const underPrice = (state.mode === "hourly")
+        ? `<small style="display:block;margin-top:2px;color:rgba(11,18,32,.62);font-weight:800;">Total ${formatMoney(v.total)} for ${hours} hours</small>`
+        : `<small style="display:block;margin-top:2px;color:rgba(11,18,32,.62);font-weight:800;">${v.note}</small>`;
+
       row.innerHTML = `
         <div style="display:flex;align-items:center;gap:14px;">
           <img
@@ -1115,10 +1156,15 @@
           />
           <div class="vleft">
             <b>${v.name}</b>
-            <small>${v.note}</small>
+            ${underVehicle}
           </div>
         </div>
-        <div class="vright">${formatMoney(v.total)}</div>
+
+        <div class="vright">
+          <div>${formatMoney(v.total)}</div>
+          ${underPrice}
+        </div>
+
         <div class="vcheck" aria-hidden="true">✓</div>
       `;
 
@@ -1127,8 +1173,6 @@
         row.classList.add("selected");
         state.selectedVehicleId = v.id;
         $("btnVehicleContinue").disabled = false;
-
-        // remove flat line look around selection
         applyRowBorderHelpers(row);
       });
 
@@ -1156,7 +1200,7 @@
     `;
 
     $("checkoutTotal").textContent = chosen ? formatMoney(chosen.total) : "—";
-    $("checkoutSub").textContent = chosen ? chosen.note : "";
+    $("checkoutSub").textContent = chosen ? (state.mode === "hourly" ? `Total ${formatMoney(chosen.total)} for ${Math.max(3, Number(state.hours||3))} hours` : chosen.note) : "";
 
     openOverlay("overlayCheckout");
   }
@@ -1186,6 +1230,10 @@
     const notes = val("c_notes");
     const triptype = (state.mode === "hourly") ? "Hourly" : (state.transfer === "airport" ? "Airport transfer" : "Point-to-point");
 
+    const estimateText = (state.mode === "hourly")
+      ? `Total ${formatMoney(chosen.total)} for ${Math.max(3, Number(state.hours||3))} hours`
+      : `${formatMoney(chosen.total)} (${chosen.note})`;
+
     const payload = {
       name, phone,
       date: state.date,
@@ -1194,7 +1242,7 @@
       dropoff: (state.mode === "hourly") ? "Mont-Tremblant (area)" : state.dropoff,
       triptype,
       vehicle: chosen.name,
-      estimate_text: `${formatMoney(chosen.total)} (${chosen.note})`,
+      estimate_text: estimateText,
       notes
     };
 
@@ -1230,7 +1278,9 @@
       hours: String(Math.max(3, Number(state.hours||3))),
       roundtrip: "no",
       notes: val("c_notes"),
-      estimate_text: `${formatMoney(chosen.total)} (${chosen.note})`,
+      estimate_text: (state.mode === "hourly")
+        ? `Total ${formatMoney(chosen.total)} for ${Math.max(3, Number(state.hours||3))} hours`
+        : `${formatMoney(chosen.total)} (${chosen.note})`,
       estimate_total_cad: chosen.total,
       pay_option: "full",
       pay_now_cad: chosen.total
