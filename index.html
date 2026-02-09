@@ -406,9 +406,16 @@
     color:#fff;
     background: linear-gradient(90deg, var(--gradA), var(--gradB));
     cursor:pointer;
-    opacity: .55;
   }
-  .continue-btn.enabled{ opacity: 1; }
+  /* ✅ NEW: clearer disabled/enabled behavior */
+  .continue-btn:disabled{
+    opacity:.55;
+    cursor:not-allowed;
+  }
+  .continue-btn.enabled{
+    opacity: 1;
+    cursor: pointer;
+  }
 
   .alert{
     display:none;
@@ -642,6 +649,30 @@
     font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial !important;
   }
   .pac-item{ padding: 10px 12px !important; }
+
+  /* ============================================================
+     ✅ NEW FIX (your screenshot): allow booking card to scroll
+     ============================================================ */
+  .booking-card{
+    max-height: calc(100vh - 96px); /* header ~76px + spacing */
+    overflow: hidden;              /* keep content inside card */
+  }
+  .booking-card .book-body{
+    max-height: calc(100vh - 96px - 52px); /* subtract tabs area */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  #heroVehicleList{
+    max-height: 320px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-right: 6px;
+  }
+  @media (max-width: 980px){
+    .booking-card{ max-height: none; overflow: visible; }
+    .booking-card .book-body{ max-height: none; overflow: visible; }
+    #heroVehicleList{ max-height: none; overflow: visible; padding-right: 0; }
+  }
 </style>
 </head>
 
@@ -1237,8 +1268,6 @@
   }
 
   function buildQuotePayload(){
-    // This is the payload we send to YOUR API.
-    // If your API expects different keys, modify here.
     const pickup = val("h_pickup");
     const dropoff = val("h_dropoff");
     const date = $("h_date").value;
@@ -1262,23 +1291,6 @@
   }
 
   function normalizeQuoteResponse(apiJson){
-    /**
-     * ✅ ADAPT THIS to your API response.
-     *
-     * We need to return:
-     * {
-     *   quoteId: string|null,
-     *   currency: "CAD",
-     *   vehicles: [
-     *     { id, name, description, price_total, price_note, image_url? }
-     *   ]
-     * }
-     *
-     * Right now this supports a few common shapes.
-     */
-
-    // Shape A:
-    // { quoteId, currency, vehicles:[{id,name,description,totalPrice, note, image}] }
     if (apiJson && Array.isArray(apiJson.vehicles)){
       const currency = apiJson.currency || "CAD";
       const vehicles = apiJson.vehicles.map(v=>({
@@ -1292,8 +1304,6 @@
       return { quoteId: apiJson.quoteId || apiJson.quote_id || null, currency, vehicles };
     }
 
-    // Shape B:
-    // { data: { quote_id, currency, options:[...] } }
     if (apiJson?.data?.options && Array.isArray(apiJson.data.options)){
       const currency = apiJson.data.currency || "CAD";
       const vehicles = apiJson.data.options.map(v=>({
@@ -1307,7 +1317,6 @@
       return { quoteId: apiJson.data.quote_id || apiJson.data.quoteId || null, currency, vehicles };
     }
 
-    // Unknown shape:
     throw new Error("API response format not recognized. Update normalizeQuoteResponse() to match your API.");
   }
 
@@ -1342,7 +1351,6 @@
     return normalized;
   }
 
-  // Optional fallback local estimates (so site never looks broken)
   function buildLocalFallbackVehicles(){
     const currency = "CAD";
     const vehicles = Object.keys(LOCAL_RATES).map(name=>{
@@ -1430,7 +1438,7 @@
 
     heroState.vehicles.forEach(v=>{
       const opt = document.createElement("option");
-      opt.value = v.name; // keep your old flow (vehicle name) for Stripe payload
+      opt.value = v.name;
       opt.textContent = v.name;
       opt.dataset.vehicleId = v.id;
       opt.dataset.total = String(v.price_total ?? "");
@@ -1439,7 +1447,6 @@
   }
 
   function prefillReserveFromHero(){
-    // Use the same user inputs from hero
     const pickup = val("h_pickup");
     const dropoff = val("h_dropoff");
     const date = $("h_date").value;
@@ -1448,7 +1455,12 @@
     const hours = String(Math.max(3, Number(val("h_hours") || 3)));
 
     $("pickup").value = pickup;
-    $("dropoff").value = heroState.mode === "hourly" ? (val("dropoff") || "Mont-Tremblant (area)") : dropoff;
+
+    /* ✅ FIXED: hourly dropoff should not read the reserve dropoff before setting */
+    $("dropoff").value = heroState.mode === "hourly"
+      ? "Mont-Tremblant (area)"
+      : dropoff;
+
     $("date").value = date;
     $("time").value = time;
 
@@ -1461,7 +1473,6 @@
 
     fillVehicleSelectFromResults();
 
-    // select chosen vehicle
     const chosen = heroState.vehicles.find(v => String(v.id) === String(heroState.selectedVehicleId));
     if (chosen){
       $("vehicle").value = chosen.name;
@@ -1494,13 +1505,11 @@
   }
 
   function computeEstimateForReserve(){
-    // Prefer live total from selected vehicle result
     const liveTotal = getSelectedVehicleTotalFromDropdown();
     if (Number.isFinite(liveTotal)) {
       return { total: liveTotal, text: formatMoney(liveTotal, heroState.quoteCurrency) + " (live)" };
     }
 
-    // Fallback local (only if enabled)
     if (!BOOKING_API.allowFallbackLocalEstimates) {
       return { total: null, text: "Run Search above for live price" };
     }
@@ -1594,7 +1603,6 @@
       return { ok:false, error:"Please run Search above and select a vehicle to get live price." };
     }
 
-    // include quote info if you have it
     const vehicleSel = $("vehicle");
     const opt = vehicleSel?.options?.[vehicleSel.selectedIndex];
 
@@ -1711,7 +1719,10 @@
         heroState.quoteId = null;
         heroState.quoteCurrency = fallback.currency;
         heroState.vehicles = fallback.vehicles;
+
+        // (Optional) if you want this to look less "error-y", switch "bad" -> "good"
         showHeroAlert("Live pricing is temporarily unavailable — showing estimated prices.", "bad");
+
         renderVehicleResults();
       } else {
         showHeroAlert(error?.message || "Unable to get live pricing. Please try again.", "bad");
@@ -1721,7 +1732,6 @@
     }
   });
 
-  // Reserve estimate updates when user changes selections
   ["triptype","vehicle","hours","roundtrip"].forEach(id=>{
     const el = $(id);
     if (el) el.addEventListener("change", ()=>{
@@ -1730,7 +1740,6 @@
     });
   });
 
-  // Mobile CTA bar smooth scroll
   document.querySelectorAll('.mobile-cta-bar a[href^="#"]').forEach(a=>{
     a.addEventListener("click", (e)=>{
       const id = a.getAttribute("href");
@@ -1749,7 +1758,6 @@
 
     const opts = {
       fields: ["formatted_address","geometry","name","place_id"],
-      // Optional: restrict to Canada
       componentRestrictions: { country: ["ca"] }
     };
 
@@ -1760,11 +1768,6 @@
       const ac = new google.maps.places.Autocomplete(el, opts);
       ac.addListener("place_changed", ()=>{
         const place = ac.getPlace();
-        // If you want to store place_id/latlng for your API later, do it here.
-        // Example:
-        // el.dataset.placeId = place.place_id || "";
-        // el.dataset.lat = place.geometry?.location?.lat?.();
-        // el.dataset.lng = place.geometry?.location?.lng?.();
       });
     });
   }
@@ -1789,7 +1792,6 @@
     buildTimeOptions(5, "time");
     buildTimeOptions(5, "h_time");
 
-    // set default date today
     const d = new Date();
     const yyyy = d.getFullYear();
     const mm = String(d.getMonth()+1).padStart(2,"0");
@@ -1799,11 +1801,7 @@
     setHeroMode("one_way");
     syncTriptypeUI();
     showPaymentBanner();
-
-    // Load Google Places script
     loadGooglePlaces();
-
-    // Reserve estimate UI initial
     updateReserveEstimateUI();
   });
 </script>
