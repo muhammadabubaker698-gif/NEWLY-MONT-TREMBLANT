@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<!-- ✅ Better mobile behavior + iPhone safe-area -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Mont Tremblant Limo Services | Luxury Chauffeur</title>
 <meta name="description" content="Luxury chauffeur service in Mont-Tremblant. Escalade, Suburban, Denali, QX60, Tesla & Sprinter. Minimum 3 hours. Call or WhatsApp +1 (514) 293-3170." />
@@ -67,14 +66,14 @@
     overflow-x:hidden;
   }
 
-  /* ✅ Prevent any element from forcing horizontal zoom/overflow on mobile */
+  /* prevent horizontal zoom/overflow */
   html, body{ width:100%; max-width:100%; overflow-x:hidden; }
   img, video, canvas, svg{ max-width:100%; height:auto; }
+
+  a{color:inherit;text-decoration:none}
   .container{max-width:var(--max);margin:0 auto;padding: 0 18px}
   section{ scroll-margin-top: 96px; }
   main{padding-bottom: 64px}
-
-  a{color:inherit;text-decoration:none}
 
   header{
     position: sticky;
@@ -165,7 +164,6 @@
     box-shadow: 0 18px 44px rgba(255,90,20,.22);
   }
 
-  /* HERO (Safari-safe) */
   .hero-wrap{
     position:relative;
     border-bottom: 1px solid var(--line);
@@ -329,7 +327,13 @@
   }
   .alert.bad{ border-color: rgba(176,0,32,.25); background: rgba(176,0,32,.06); color: var(--bad); }
 
-  /* Overlays */
+  /* ===========================
+     ✅ OVERLAY SCROLL FIX (IMPORTANT)
+     - overlay captures scroll
+     - prevents scroll chaining to background
+     - works on iOS + desktop
+  ============================ */
+
   .overlay{
     position: fixed;
     inset: 0;
@@ -337,8 +341,10 @@
     background: rgba(255,255,255,.96);
     display: none;
     overflow: hidden;
+    overscroll-behavior: contain;
   }
   .overlay.show{ display: block; }
+
   .overlay-top{
     height: 76px;
     border-bottom: 1px solid rgba(11,18,32,.10);
@@ -367,15 +373,17 @@
     cursor: pointer;
   }
 
-  /* ✅ Make overlay body a flex column so actions can sit at the bottom even when content is short */
+  /* ✅ overlay-body is THE scroll container */
   .overlay-body{
-    height: calc(100vh - 76px);
+    height: calc(100dvh - 76px);
     overflow-y: auto;
+    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-    padding: 26px 0 calc(40px + env(safe-area-inset-bottom) + 90px);
-    display: flex;
-    flex-direction: column;
+    overscroll-behavior: contain;
+    padding: 26px 0 calc(24px + env(safe-area-inset-bottom));
+    touch-action: pan-y;
   }
+
   .flow-wrap{
     max-width: 760px;
     width: 100%;
@@ -383,7 +391,7 @@
     padding: 0 18px;
     display: flex;
     flex-direction: column;
-    min-height: 100%;
+    min-height: 0; /* ✅ key for scroll in nested flex layouts */
   }
 
   .flow-steps{
@@ -446,7 +454,7 @@
     border-top: 1px solid rgba(11,18,32,.10);
     cursor: pointer;
     transition: transform .12s ease, padding .12s ease, background .12s ease;
-    min-width: 0; /* ✅ important for mobile */
+    min-width: 0;
   }
   .vrow:first-child{ border-top: none; }
   .vrow:hover{ background: rgba(11,18,32,.03); }
@@ -505,9 +513,9 @@
     padding-right: 26px;
   }
 
-  /* ✅ Action bar: push to bottom when content is short + stick when scrolling */
+  /* ✅ Action bar always at bottom AND visible while scrolling */
   .flow-actions{
-    margin-top: auto; /* ✅ keeps it at bottom on desktop (no weird floating) */
+    margin-top: 18px;
     position: sticky;
     bottom: 0;
     z-index: 5;
@@ -565,7 +573,6 @@
   .estimate-sub{margin-top:6px;color: rgba(11,18,32,.68);font-size:12.8px;font-weight:700}
   .tinyhint{margin-top:6px;font-size:12.5px;color:rgba(11,18,32,.62);font-weight:700}
 
-  /* Sections */
   .section{ margin-top: 46px; }
   h2{ font-size: 30px; letter-spacing: -.2px; line-height:1.15; }
   .subtitle{
@@ -578,12 +585,6 @@
     margin-top: 16px;
     display:grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
-  }
-  .grid2{
-    margin-top: 16px;
-    display:grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
   }
   .card{
@@ -625,28 +626,15 @@
     border: 1px solid rgba(0,0,0,.14);
   }
 
-  /* ✅ Mobile tightening for vehicle rows so no zoom needed */
   @media (max-width: 640px){
-    .vrow{
-      flex-direction: column;
-      align-items: stretch;
-    }
-    .vright{
-      text-align: left;
-      padding-right: 0;
-      white-space: normal;
-    }
-    .vcheck{
-      right: 14px;
-      top: 14px;
-    }
+    .vrow{ flex-direction: column; align-items: stretch; }
+    .vright{ text-align:left; padding-right:0; white-space: normal; }
   }
 
   @media (max-width: 980px){
     .hero-inner{ grid-template-columns: 1fr; }
     .booking-card{ justify-self:stretch; margin: 14px 18px 0; width:auto; }
     .grid3{ grid-template-columns: 1fr; }
-    .grid2{ grid-template-columns: 1fr; }
     .row2{ grid-template-columns: 1fr; }
   }
   @media (max-width: 860px){
@@ -787,7 +775,6 @@
   <div class="overlay-top">
     <div class="container">
       <div class="overlay-title">Mont Tremblant Limo • Booking</div>
-      <!-- ✅ Close should also behave like Back (history) -->
       <button class="overlay-close" type="button" onclick="closeOverlay('overlayVehicles', true)">Close</button>
     </div>
   </div>
@@ -807,7 +794,6 @@
       <div class="vlist" id="vehicleOverlayList"></div>
 
       <div class="flow-actions">
-        <!-- ✅ Use history so browser Back returns to main page -->
         <button class="btn" type="button" onclick="backToSearch()">Edit search</button>
         <button id="btnVehicleContinue" class="btn btn-primary" type="button" disabled onclick="goToCheckoutOverlay()">Continue</button>
       </div>
@@ -820,7 +806,6 @@
   <div class="overlay-top">
     <div class="container">
       <div class="overlay-title">Mont Tremblant Limo • Checkout</div>
-      <!-- ✅ Close should also behave like Back (history) -->
       <button class="overlay-close" type="button" onclick="closeOverlay('overlayCheckout', true)">Close</button>
     </div>
   </div>
@@ -855,7 +840,6 @@
       </div>
 
       <div class="flow-actions" style="margin-top:14px;">
-        <!-- ✅ History back (browser back parity) -->
         <button class="btn" type="button" onclick="backToVehicles()">Back</button>
         <button class="btn btn-primary" type="button" onclick="startStripeCheckoutFromOverlay()">Pay with Stripe</button>
         <button class="btn" type="button" onclick="sendWhatsAppFromOverlay()">WhatsApp</button>
@@ -970,7 +954,6 @@
 
   const BUSINESS_WA = "15142933170";
 
-  // Vehicles with images (your existing images)
   const LOCAL_RATES = [
     { id:"escalade", name:"2026 Cadillac Escalade ESV", hourly:150, meta:"Ultra-luxury • VIP airport transfers • ski trips", img:"escalade.jpg" },
     { id:"suburban", name:"2025 Chevrolet Suburban", hourly:120, meta:"Spacious • luggage friendly • long rides", img:"suburban.jpg" },
@@ -1089,20 +1072,40 @@
   }
 
   /* =========================
+     ✅ HARD background scroll lock (iOS-safe)
+  ========================== */
+  let __scrollY = 0;
+  function lockBodyScroll(){
+    __scrollY = window.scrollY || 0;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${__scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.width = "100%";
+  }
+  function unlockBodyScroll(){
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.left = "";
+    document.body.style.right = "";
+    document.body.style.width = "";
+    window.scrollTo(0, __scrollY);
+  }
+
+  /* =========================
      ✅ Overlay + Browser Back Fix
-     - open overlay => pushState
-     - back button => returns to previous step/home (doesn't leave site)
   ========================== */
   function anyOverlayOpen(){
     return !!document.querySelector(".overlay.show");
   }
+
   function closeAllOverlaysVisual(){
     document.querySelectorAll(".overlay.show").forEach(el=>{
       el.classList.remove("show");
       el.setAttribute("aria-hidden","true");
     });
-    document.body.style.overflow = "";
     document.documentElement.classList.remove("overlay-open");
+    unlockBodyScroll();
     try{
       if (window.Tawk_API && typeof window.Tawk_API.showWidget === "function") {
         window.Tawk_API.showWidget();
@@ -1111,7 +1114,7 @@
   }
 
   function openOverlay(id, pushHistory = true){
-    document.body.style.overflow = "hidden";
+    lockBodyScroll();
     document.documentElement.classList.add("overlay-open");
 
     const el = $(id);
@@ -1134,29 +1137,24 @@
     el.classList.remove("show");
     el.setAttribute("aria-hidden","true");
 
-    const stillOpen = anyOverlayOpen();
-    if (!stillOpen){
-      document.body.style.overflow = "";
+    if (!anyOverlayOpen()){
       document.documentElement.classList.remove("overlay-open");
+      unlockBodyScroll();
       try{
         if (window.Tawk_API && typeof window.Tawk_API.showWidget === "function") {
           window.Tawk_API.showWidget();
         }
       }catch(e){}
-    }
-
-    // If user clicked Close, behave like BACK inside our flow:
-    if (popHistory && history.state && history.state.overlay){
-      history.back();
-    }else{
-      // If we closed without popping, keep URL clean if needed
-      if (!anyOverlayOpen() && (location.hash === "#overlayVehicles" || location.hash === "#overlayCheckout")){
+      if (location.hash === "#overlayVehicles" || location.hash === "#overlayCheckout"){
         history.replaceState({ page: "home" }, "", location.pathname + location.search);
       }
     }
+
+    if (popHistory && history.state && history.state.overlay){
+      history.back();
+    }
   }
 
-  // Browser back/forward behavior: open/close overlays based on state
   window.addEventListener("popstate", (e)=>{
     closeAllOverlaysVisual();
     if (e.state && e.state.overlay){
@@ -1164,14 +1162,8 @@
     }
   });
 
-  function backToSearch(){
-    // go back in history (vehicles -> home)
-    history.back();
-  }
-  function backToVehicles(){
-    // checkout -> vehicles
-    history.back();
-  }
+  function backToSearch(){ history.back(); }
+  function backToVehicles(){ history.back(); }
 
   function renderTripSummary(){
     const when = `${state.date} at ${state.time}`;
@@ -1186,15 +1178,11 @@
   }
 
   function clearRowBorderHelpers(){
-    document.querySelectorAll(".vrow").forEach(r=>{
-      r.classList.remove("hide-top-border");
-    });
+    document.querySelectorAll(".vrow").forEach(r=> r.classList.remove("hide-top-border"));
   }
-
   function applyRowBorderHelpers(selectedRow){
     clearRowBorderHelpers();
     if (!selectedRow) return;
-
     selectedRow.classList.add("hide-top-border");
     const next = selectedRow.nextElementSibling;
     if (next && next.classList.contains("vrow")) next.classList.add("hide-top-border");
@@ -1264,7 +1252,6 @@
   function goToCheckoutOverlay(){
     if (!state.selectedVehicleId) return;
 
-    // Close vehicles visually (keep history), then push checkout state
     closeOverlay("overlayVehicles", false);
 
     const chosen = getChosenVehicle();
@@ -1413,13 +1400,10 @@
     renderVehiclesOverlay();
 
     setHeroSearchLoading(false);
-
-    // ✅ Push history state so browser Back returns to home (not previous site)
     openOverlay("overlayVehicles", true);
   });
 
   window.addEventListener("load", ()=>{
-    // ✅ Ensure there's always a "home" state at the bottom of history for this page
     if (!history.state){
       history.replaceState({ page: "home" }, "", location.pathname + location.search + (location.hash || ""));
     }
@@ -1435,7 +1419,6 @@
     setHeroMode("one_way");
     document.getElementById("year").textContent = yyyy;
 
-    // ✅ If user loads a URL with #overlayVehicles or #overlayCheckout, open it without pushing
     if (location.hash === "#overlayVehicles") openOverlay("overlayVehicles", false);
     if (location.hash === "#overlayCheckout") openOverlay("overlayCheckout", false);
   });
