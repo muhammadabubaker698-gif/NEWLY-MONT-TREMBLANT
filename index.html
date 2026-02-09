@@ -58,154 +58,104 @@
 
 <style>
   :root{
-    --bg:#070b12;
-    --bg2:#0b1220;
-    --panel:#0e1626;
+    --bg:#ffffff;
+    --ink:#0b1220;
+    --muted: rgba(11,18,32,.68);
+    --line: rgba(11,18,32,.10);
 
-    --ink: rgba(255,255,255,.94);
-    --muted: rgba(255,255,255,.78);
-    --muted2: rgba(255,255,255,.66);
-    --line: rgba(255,255,255,.12);
+    --card:#ffffff;
+    --card2:#f6f7f9;
 
-    --gold:#e4c36a;
-    --gold2:#c79a35;
+    --shadow: 0 18px 55px rgba(0,0,0,.14);
+    --shadow2: 0 10px 28px rgba(0,0,0,.10);
 
-    --shadow: 0 18px 60px rgba(0,0,0,.55);
-    --shadow2: 0 12px 30px rgba(0,0,0,.38);
+    --radius: 16px;
+    --max: 1160px;
 
-    --radius: 18px;
-    --max: 1140px;
-    --headerH: 92px;
-
-    --headerText: rgba(255,255,255,.98);
-    --headerTextSoft: rgba(255,255,255,.86);
-    --headerBorder: rgba(228,195,106,.26);
-
-    --headerBg: rgba(28, 38, 56, .94);
-    --headerStripGradientA: rgba(0,0,0,.16);
-    --headerStripGradientB: rgba(0,0,0,.05);
-    --headerStripOverlayTop: rgba(0,0,0,.14);
-    --headerStripOverlayBottom: rgba(0,0,0,.34);
+    /* Blacklane-ish button */
+    --gradA:#ff2e63;
+    --gradB:#ff7a00;
   }
 
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{
     font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    background: var(--bg);
     color: var(--ink);
-    line-height: 1.7;
-    overflow-x: hidden;
-    font-size: 16.5px;
-    background:
-      radial-gradient(900px 520px at 18% -10%, rgba(228,195,106,.14), transparent 60%),
-      radial-gradient(900px 520px at 90% 10%, rgba(255,255,255,.06), transparent 55%),
-      linear-gradient(180deg, var(--bg), var(--bg2));
+    line-height: 1.6;
+    font-size: 16px;
+    overflow-x:hidden;
   }
   a{color:inherit;text-decoration:none}
-  .container{max-width:var(--max);margin:0 auto;padding: 18px}
-  main{position:relative;z-index:1}
-  section{ scroll-margin-top: calc(var(--headerH) + 18px); }
+  .container{max-width:var(--max);margin:0 auto;padding: 0 18px}
+  section{ scroll-margin-top: 96px; }
+  main{padding-bottom: 64px}
 
-  /* Rotating scenic background */
-  .bg-wrap{ position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
-  .bg-layer{
-    position:absolute; inset:0;
-    background-size:cover; background-position:center;
-    transform: scale(1.05);
-    opacity: 0;
-    transition: opacity 1.2s ease;
-    filter: saturate(1.06) contrast(1.06);
-  }
-  .bg-layer.is-on{opacity: .14;}
-  .bg-vignette{
-    position:absolute; inset:0;
-    background:
-      radial-gradient(1100px 650px at 18% 75%, rgba(0,0,0,.62), transparent 60%),
-      radial-gradient(1100px 650px at 85% 15%, rgba(0,0,0,.62), transparent 60%),
-      linear-gradient(180deg, rgba(0,0,0,.20), rgba(0,0,0,.62));
-  }
-
-  /* Header */
+  /* ===== Header (clean white like Blacklane) ===== */
   header{
     position: sticky;
-    top: 0;
-    z-index: 50;
-    border-bottom: 1px solid var(--headerBorder);
-    background: var(--headerBg);
-    backdrop-filter: blur(8px);
-  }
-  .header-strip{
-    position: relative;
-    border-bottom: 1px solid rgba(228,195,106,.16);
-    background:
-      linear-gradient(90deg, var(--headerStripGradientA), var(--headerStripGradientB), var(--headerStripGradientA)),
-      url("scenic4.jpg") center/cover no-repeat;
-  }
-  .header-strip:after{
-    content:"";
-    position:absolute; inset:0;
-    background: linear-gradient(180deg, var(--headerStripOverlayTop), var(--headerStripOverlayBottom));
-    pointer-events:none;
-  }
-  .topbar, .nav{ position:relative; text-shadow: 0 2px 10px rgba(0,0,0,.45); }
-  .topbar{
-    display:flex;
-    justify-content:space-between;
-    gap:12px;
-    flex-wrap:wrap;
-    font-size: 13.5px;
-    color: var(--headerTextSoft);
-    padding: 12px 0 10px;
-  }
-  .topbar a{
-    color: var(--headerText);
-    font-weight: 900;
-    text-decoration: underline;
-    text-decoration-color: rgba(255,255,255,.35);
-    text-underline-offset: 3px;
+    top:0;
+    z-index:50;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
   }
   .nav{
+    height: 76px;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    gap: 14px;
-    padding: 10px 0 14px;
-    flex-wrap:wrap;
+    gap:14px;
   }
-  .brand{display:flex;align-items:center;gap:12px}
-  .logo{
-    width:42px;height:42px;border-radius:14px;
-    display:grid;place-items:center;
-    background: linear-gradient(145deg, rgba(228,195,106,.98), rgba(199,154,53,.86));
-    box-shadow: 0 12px 26px rgba(228,195,106,.16);
-    color:#0b0f16;
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
     font-weight: 950;
-    letter-spacing:.2px;
+    letter-spacing: .4px;
   }
-  .brand-title{ font-weight:950; letter-spacing:.2px; line-height:1.1; color: var(--headerText); }
-  .brand-sub{ display:block; margin-top:4px; color: var(--headerTextSoft); font-weight:700; font-size:12.8px }
-
+  .logo{
+    width: 38px; height: 38px;
+    border-radius: 12px;
+    background: #0b1220;
+    color:#fff;
+    display:grid;
+    place-items:center;
+    font-weight: 950;
+  }
   .links{
     display:flex;
     align-items:center;
-    justify-content:center;
+    gap: 12px;
     flex-wrap:wrap;
-    gap: 8px;
+    justify-content:center;
   }
   .links a{
-    color: var(--headerText);
-    font-size: 14.2px;
-    font-weight: 900;
-    padding: 10px 12px;
+    color: rgba(11,18,32,.78);
+    font-weight: 800;
+    font-size: 14px;
+    padding: 10px 10px;
     border-radius: 12px;
-    transition: .2s ease;
-    background: rgba(0,0,0,.32);
-    border: 1px solid rgba(255,255,255,.20);
+    transition: .15s ease;
   }
-  .links a:hover{
-    background: rgba(0,0,0,.48);
-    border-color: rgba(255,255,255,.32);
-    transform: translateY(-1px);
+  .links a:hover{ background: rgba(11,18,32,.06); color: rgba(11,18,32,.92); }
+
+  .header-actions{
+    display:flex;
+    gap:10px;
+    align-items:center;
+  }
+  .pill{
+    display:none;
+    font-size: 13px;
+    color: rgba(11,18,32,.75);
+    font-weight: 800;
+    padding: 10px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(11,18,32,.12);
+    background: rgba(255,255,255,.65);
+    white-space:nowrap;
   }
 
   .btn{
@@ -216,723 +166,649 @@
     padding: 11px 16px;
     border-radius: 999px;
     font-weight: 900;
-    border: 1px solid rgba(255,255,255,.16);
-    background: rgba(0,0,0,.14);
+    border: 1px solid rgba(11,18,32,.14);
+    background: #fff;
     box-shadow: var(--shadow2);
-    color: rgba(255,255,255,.94);
-    transition: transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
-    white-space: nowrap;
+    color: rgba(11,18,32,.92);
+    transition: transform .15s ease, box-shadow .15s ease;
     cursor:pointer;
-  }
-  .btn:hover{ transform: translateY(-1px); background: rgba(0,0,0,.18); border-color: rgba(255,255,255,.24); }
-  .btn-ghost{ border: 1px solid rgba(255,255,255,.16); background: rgba(0,0,0,.12); box-shadow:none; }
-  .btn-gold{
-    border: 1px solid rgba(228,195,106,.80);
-    background: linear-gradient(180deg, rgba(228,195,106,.38), rgba(199,154,53,.22));
-    color: rgba(255,255,255,.98);
-  }
-  .btn-book{
-    padding: 12px 18px;
-    font-size: 14.6px;
-    letter-spacing: .2px;
-    border: 1px solid rgba(228,195,106,.95);
-    background: linear-gradient(180deg, rgba(228,195,106,.66), rgba(199,154,53,.34));
-    box-shadow:
-      0 18px 40px rgba(228,195,106,.18),
-      0 18px 60px rgba(0,0,0,.40);
-  }
-  .btn-book:hover{
-    transform: translateY(-2px);
-    box-shadow:
-      0 22px 48px rgba(228,195,106,.22),
-      0 22px 70px rgba(0,0,0,.45);
-  }
-
-  /* Hero */
-  .hero{
-    position: relative;
-    z-index: 1;
-    margin-top: 18px;
-    border-radius: 26px;
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--line);
-    background: var(--panel);
-  }
-
-  .hero-bg{
-    position:absolute; inset:0;
-    background:
-      linear-gradient(90deg, rgba(0,0,0,.62) 0%, rgba(0,0,0,.28) 55%, rgba(0,0,0,.14) 100%),
-      linear-gradient(180deg, rgba(0,0,0,.06) 0%, rgba(11,18,32,.82) 58%, rgba(11,18,32,1) 100%),
-      url("Tremblant.jpg") 72% center / cover no-repeat;
-    transform: scale(1.02);
-  }
-
-  .hero-bg:after{
-    content:"";
-    position:absolute; inset:0;
-    background: radial-gradient(ellipse at center, rgba(0,0,0,.08), rgba(0,0,0,.70) 82%);
-    pointer-events:none;
-  }
-  .hero-inner{
-    position:relative;
-    padding: 42px 34px;
-    display:grid;
-    grid-template-columns: 1.2fr .8fr;
-    gap: 22px;
-    align-items: start;
-  }
-  .kicker{
-    display:inline-flex; align-items:center; gap:10px;
-    padding: 9px 12px;
-    border-radius: 999px;
-    border: 1px solid rgba(255,255,255,.16);
-    background: rgba(0,0,0,.22);
-    color: rgba(255,255,255,.92);
-    font-weight: 850;
-    font-size: 13px;
-  }
-  .dot{
-    width: 9px; height: 9px;
-    border-radius: 999px;
-    background: var(--gold);
-    box-shadow: 0 0 0 6px rgba(228,195,106,.16);
-  }
-  .hero h1{
-    margin-top: 14px;
-    font-size: clamp(30px, 3.6vw, 54px);
-    line-height: 1.06;
-    letter-spacing: -0.6px;
-  }
-  .hero p{
-    margin-top:12px;
-    color: rgba(255,255,255,.86);
-    max-width: 70ch;
-    font-size: 16.5px;
-  }
-  .pillrow{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
-  .pill{
-    font-size: 12.8px;
-    padding: 8px 12px;
-    border-radius: 999px;
-    border: 1px solid rgba(255,255,255,.18);
-    background: rgba(0,0,0,.20);
-    color: rgba(255,255,255,.88);
-    font-weight: 850;
-  }
-  .cta{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-
-  /* ===== NEW: Blacklane-like Hero Booking (Search -> Select Vehicle -> Continue) ===== */
-  .hero-book{
-    border-radius: 18px;
-    border: 1px solid rgba(255,255,255,.14);
-    background: linear-gradient(180deg, rgba(16,26,47,.92), rgba(13,20,36,.92));
-    box-shadow: 0 16px 42px rgba(0,0,0,.35);
-    overflow:hidden;
-  }
-  .hero-book-head{
-    padding: 14px 16px 12px;
-    border-bottom: 1px solid rgba(255,255,255,.10);
-    background: rgba(255,255,255,.03);
-    display:flex; align-items:center; justify-content:space-between; gap:10px;
-  }
-  .hero-book-head b{font-size:14px;letter-spacing:.2px}
-  .step-pill{
-    font-size: 12px;
-    padding: 7px 10px;
-    border-radius: 999px;
-    border: 1px solid rgba(255,255,255,.14);
-    background: rgba(0,0,0,.18);
-    color: rgba(255,255,255,.86);
-    font-weight: 900;
     white-space:nowrap;
   }
-  .hero-book-body{padding: 14px 16px 16px}
-  .tabs{
-    display:flex; gap:8px;
-    padding: 6px;
+  .btn:hover{ transform: translateY(-1px); box-shadow: 0 16px 34px rgba(0,0,0,.12); }
+  .btn-primary{
+    border: none;
+    color:#fff;
+    background: linear-gradient(90deg, var(--gradA), var(--gradB));
+    box-shadow: 0 18px 44px rgba(255,90,20,.22);
+  }
+
+  /* ===== Hero (full width image + floating booking widget) ===== */
+  .hero-wrap{
+    position:relative;
+    width:100%;
+    overflow:hidden;
+    border-bottom: 1px solid var(--line);
+  }
+  .hero-bg{
+    height: 520px;
+    background:
+      linear-gradient(90deg, rgba(255,255,255,.55) 0%, rgba(255,255,255,.18) 45%, rgba(255,255,255,0) 72%),
+      linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.12)),
+      url("Tremblant.jpg") center/cover no-repeat;
+  }
+  .hero-inner{
+    position:absolute;
+    inset:0;
+    display:grid;
+    grid-template-columns: 1.25fr .75fr;
+    align-items:center;
+    gap: 22px;
+  }
+  .hero-left{
+    padding: 0 18px;
+  }
+  .hero-left .container{padding:0}
+  .hero-title{
+    font-size: clamp(34px, 4vw, 58px);
+    line-height: 1.05;
+    letter-spacing: -0.6px;
+    font-weight: 950;
+    color:#0b1220;
+    max-width: 18ch;
+  }
+  .hero-sub{
+    margin-top: 12px;
+    color: rgba(11,18,32,.74);
+    font-size: 17px;
+    max-width: 68ch;
+    font-weight: 700;
+  }
+  .hero-badges{
+    margin-top: 18px;
+    display:flex;
+    flex-wrap:wrap;
+    gap: 10px;
+  }
+  .badge{
+    padding: 9px 12px;
     border-radius: 999px;
-    border: 1px solid rgba(255,255,255,.12);
-    background: rgba(0,0,0,.18);
-    margin-bottom: 10px;
+    background: rgba(255,255,255,.75);
+    border: 1px solid rgba(11,18,32,.10);
+    color: rgba(11,18,32,.75);
+    font-weight: 900;
+    font-size: 13px;
+    box-shadow: 0 10px 20px rgba(0,0,0,.06);
+  }
+
+  /* Booking card (Blacklane-like) */
+  .booking-card{
+    margin-right: 18px;
+    justify-self:end;
+    width: min(420px, 100%);
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 28px 70px rgba(0,0,0,.24);
+    border: 1px solid rgba(11,18,32,.10);
+    overflow:hidden;
+  }
+  .tabs{
+    display:flex;
+    background: #fff;
+    border-bottom: 1px solid rgba(11,18,32,.08);
   }
   .tab{
     flex:1;
-    text-align:center;
-    padding: 10px 12px;
-    border-radius: 999px;
+    padding: 14px 14px;
     font-weight: 950;
-    font-size: 13px;
+    font-size: 14px;
+    color: rgba(11,18,32,.78);
+    background: #fff;
+    border:none;
     cursor:pointer;
-    border: 1px solid transparent;
-    color: rgba(255,255,255,.78);
-    background: transparent;
-    transition: .18s ease;
-    user-select:none;
   }
   .tab.active{
-    color: rgba(255,255,255,.96);
-    background: rgba(255,255,255,.10);
-    border-color: rgba(255,255,255,.14);
+    background: #f4f5f7;
+    color: rgba(11,18,32,.94);
   }
-  .hero-form-grid{
+  .book-body{
+    padding: 14px;
+    background: #fff;
+  }
+  .field{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    padding: 12px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(11,18,32,.10);
+    background: #f4f5f7;
+    margin-bottom: 10px;
+  }
+  .ico{
+    width: 18px;
+    height: 18px;
+    color: rgba(11,18,32,.55);
+    flex:0 0 auto;
+  }
+  .field input, .field select{
+    width:100%;
+    border:none;
+    outline:none;
+    background: transparent;
+    font-size: 14.5px;
+    font-weight: 800;
+    color: rgba(11,18,32,.90);
+  }
+  .field input::placeholder{ color: rgba(11,18,32,.50); font-weight:800; }
+  .field small{
+    color: rgba(11,18,32,.55);
+    font-weight: 800;
+    font-size: 12px;
+  }
+  .row2{
     display:grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
   }
-  .hero-book label{ margin: 10px 0 6px; }
-  .hero-book input, .hero-book select, .hero-book textarea{
-    padding: 11px 11px;
-    border-radius: 12px;
-  }
-  .hero-small{
-    font-size: 12.5px;
-    color: rgba(255,255,255,.72);
-    margin-top: 8px;
-    line-height: 1.45;
-  }
-  .hero-error{
-    display:none;
-    margin-top:10px;
-    border-radius: 12px;
-    border: 1px solid rgba(255,120,120,.22);
-    background: rgba(255,120,120,.08);
-    padding: 10px 12px;
-    color: rgba(255,255,255,.90);
-    font-weight: 900;
+
+  .note{
+    margin: 10px 4px 12px;
+    color: rgba(11,18,32,.62);
     font-size: 12.8px;
-    line-height: 1.4;
+    font-weight: 800;
   }
-  .hero-results{
+  .search-btn{
+    width:100%;
+    border:none;
+    border-radius: 10px;
+    padding: 13px 14px;
+    font-weight: 950;
+    font-size: 15px;
+    color: #fff;
+    background: linear-gradient(90deg, var(--gradA), var(--gradB));
+    cursor:pointer;
+    box-shadow: 0 18px 44px rgba(255,90,20,.22);
+  }
+  .search-btn:hover{ filter: brightness(1.02); }
+
+  /* Vehicle results inside card */
+  .results{
     display:none;
     margin-top: 12px;
-    border-top: 1px solid rgba(255,255,255,.10);
+    border-top: 1px solid rgba(11,18,32,.10);
     padding-top: 12px;
   }
-  .hero-results-top{
-    display:flex; justify-content:space-between; gap:10px; align-items:flex-start; flex-wrap:wrap;
+  .results-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
     margin-bottom: 10px;
   }
-  .hero-results-top b{font-size:13.5px;letter-spacing:.2px}
-  .hero-results-top small{display:block;margin-top:4px;color:rgba(255,255,255,.72);line-height:1.35}
-  .vlist{display:flex;flex-direction:column;gap:10px}
-  .vcard{
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,.12);
-    background: rgba(0,0,0,.14);
-    overflow:hidden;
-    transition: .18s ease;
+  .results-head b{
+    font-size: 13.5px;
+    letter-spacing: .2px;
+  }
+  .mini-btn{
+    border: 1px solid rgba(11,18,32,.12);
+    background: #fff;
+    color: rgba(11,18,32,.82);
+    padding: 8px 10px;
+    border-radius: 10px;
+    font-weight: 900;
     cursor:pointer;
   }
-  .vcard:hover{ border-color: rgba(228,195,106,.22); transform: translateY(-1px); }
+  .vlist{display:flex;flex-direction:column;gap:10px}
+  .vcard{
+    border-radius: 12px;
+    border: 1px solid rgba(11,18,32,.12);
+    background: #fff;
+    overflow:hidden;
+    cursor:pointer;
+    transition: .15s ease;
+  }
+  .vcard:hover{ transform: translateY(-1px); box-shadow: 0 14px 30px rgba(0,0,0,.10); }
   .vcard.selected{
-    border-color: rgba(228,195,106,.55);
-    box-shadow: 0 0 0 2px rgba(228,195,106,.14) inset;
+    border-color: rgba(255,90,20,.55);
+    box-shadow: 0 0 0 2px rgba(255,90,20,.12) inset;
   }
   .vtop{
-    padding: 12px 12px;
-    display:flex; justify-content:space-between; gap:10px; align-items:center;
+    padding: 10px 10px;
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    align-items:flex-start;
   }
-  .vname{font-weight:950; font-size: 13.8px; line-height:1.2}
-  .vmeta{font-size:12.5px;color:rgba(255,255,255,.72);font-weight:850;margin-top:3px}
+  .vname{ font-weight: 950; font-size: 13.8px; line-height:1.2; }
+  .vmeta{ margin-top:3px; color: rgba(11,18,32,.62); font-weight: 800; font-size: 12.5px; }
   .vprice{ text-align:right; }
-  .vprice b{font-size:15px}
-  .vprice small{display:block;color:rgba(255,255,255,.68);font-weight:850;margin-top:3px;font-size:11.8px}
-  .vbottom{
-    border-top: 1px solid rgba(255,255,255,.10);
-    padding: 10px 12px;
-    display:flex; justify-content:space-between; gap:10px; align-items:center; flex-wrap:wrap;
+  .vprice b{ font-size: 14.8px; }
+  .vprice small{ display:block; margin-top:2px; font-size: 12px; color: rgba(11,18,32,.58); font-weight: 800; }
+  .continue-btn{
+    margin-top: 10px;
+    width:100%;
+    border:none;
+    border-radius: 10px;
+    padding: 12px 12px;
+    font-weight: 950;
+    font-size: 14px;
+    color:#fff;
+    background: linear-gradient(90deg, var(--gradA), var(--gradB));
+    cursor:pointer;
+    opacity: .55;
   }
-  .chips{display:flex;gap:8px;flex-wrap:wrap}
-  .chip{
-    padding: 6px 10px;
-    border-radius: 999px;
-    border: 1px solid rgba(255,255,255,.12);
-    background: rgba(255,255,255,.05);
-    font-size: 12px;
-    font-weight: 900;
-    color: rgba(255,255,255,.86);
-  }
-  .hero-actions{
-    margin-top: 12px;
-    display:flex; gap:10px; flex-wrap:wrap;
-  }
-  .hero-actions .btn{ width:auto; }
-  .btn-full{ width:100%; }
-  @media (max-width: 860px){
-    .hero-actions .btn{ width:100%; }
-  }
+  .continue-btn.enabled{ opacity: 1; }
 
-  /* Sections */
-  section{margin-top: 52px}
-  h2{ font-size: 30px; letter-spacing: -0.2px; margin-bottom: 4px; }
-  .subtitle{ color: rgba(255,255,255,.78); max-width: 920px; margin-bottom: 14px; }
-
-  /* Fleet cards */
-  .fleet-grid{
+  /* ===== Content sections (light cards) ===== */
+  .section{
+    margin-top: 46px;
+  }
+  h2{
+    font-size: 30px;
+    letter-spacing: -.2px;
+    line-height:1.15;
+  }
+  .subtitle{
+    margin-top: 10px;
+    color: rgba(11,18,32,.66);
+    font-weight: 700;
+    max-width: 920px;
+  }
+  .grid3{
+    margin-top: 16px;
     display:grid;
-    grid-template-columns: repeat(3, minmax(0,1fr));
-    gap: 16px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .grid2{
+    margin-top: 16px;
+    display:grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
   }
   .card{
     border-radius: var(--radius);
-    overflow:hidden;
-    border: 1px solid rgba(255,255,255,.10);
-    background: linear-gradient(180deg, rgba(16,26,47,.96), rgba(13,20,36,.96));
-    box-shadow: var(--shadow2);
-    transition: transform .18s ease, border-color .18s ease;
-  }
-  .card:hover{ transform: translateY(-2px); border-color: rgba(228,195,106,.22); }
-  .card-media{position:relative;background:#0b1020}
-  .card-media img{ width:100%; aspect-ratio: 16 / 10; object-fit:cover; display:block; }
-  .badge{
-    position:absolute; left:14px; top:14px;
-    font-size:12px; font-weight:950;
-    padding: 7px 10px;
-    border-radius: 999px;
-    background: rgba(0,0,0,.55);
-    border: 1px solid rgba(255,255,255,.18);
-    color: rgba(255,255,255,.94);
-    backdrop-filter: blur(8px);
-  }
-  .card-body{padding: 16px 16px 18px}
-  .card-body h3{font-size:18px;margin-bottom:6px}
-  .meta{color: rgba(255,255,255,.74); font-size: 13.2px; margin-bottom: 10px}
-  .price{ margin-top: 10px; font-weight: 950; font-size: 16.5px; }
-  .min{color: rgba(255,255,255,.68); font-size: 12.5px; margin-top: 2px}
-  .actions{margin-top: 12px; display:flex; gap: 10px; flex-wrap:wrap}
-
-  /* Routes + testimonials */
-  .panel{
-    border-radius: var(--radius);
-    border: 1px solid rgba(255,255,255,.10);
-    background: linear-gradient(180deg, rgba(16,26,47,.96), rgba(13,20,36,.96));
-    box-shadow: var(--shadow2);
+    border: 1px solid rgba(11,18,32,.10);
+    background: #fff;
+    box-shadow: 0 14px 36px rgba(0,0,0,.08);
     overflow:hidden;
   }
-  .grid2{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
-  .grid3{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
-  .route{padding: 16px; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center;}
-  .route b{font-size: 14.5px;}
-  .route span{color: rgba(255,255,255,.74); font-size: 13.5px;}
-  .tag{
-    padding: 7px 10px; border-radius: 999px;
-    border: 1px solid rgba(228,195,106,.26);
-    background: rgba(228,195,106,.10);
-    color: rgba(255,255,255,.92);
-    font-weight: 900; font-size: 12px;
-  }
-  .quote{ padding: 16px; }
-  .stars{ letter-spacing: 1px; color: rgba(228,195,106,.98); font-weight: 950; }
-  .qtext{ margin-top: 8px; color: rgba(255,255,255,.86); line-height: 1.6; }
-  .qname{ margin-top: 10px; color: rgba(255,255,255,.72); font-size: 13.5px; font-weight: 800; }
+  .card-media img{width:100%;aspect-ratio: 16/10;object-fit:cover;display:block}
+  .card-body{padding: 14px}
+  .card-body h3{ font-size: 17px; letter-spacing: -.1px; }
+  .meta{ margin-top: 6px; color: rgba(11,18,32,.66); font-weight:700; font-size: 13.5px; }
+  .price{ margin-top: 10px; font-weight: 950; }
+  .min{ margin-top: 3px; color: rgba(11,18,32,.58); font-weight: 800; font-size: 12.5px; }
+  .actions{ margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; }
+  .actions .btn{ box-shadow:none; }
 
-  /* Booking (existing) */
-  .book-card{ border-radius: var(--radius); border: 1px solid rgba(255,255,255,.12); background: linear-gradient(180deg, rgba(16,26,47,.96), rgba(13,20,36,.96)); box-shadow: 0 18px 60px rgba(0,0,0,.35); overflow:hidden; }
-  .book-head{ padding: 16px 18px 14px; border-bottom: 1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.03); }
-  .book-head b{display:block;font-size:15px;letter-spacing:.2px}
-  .book-head small{display:block;color:rgba(255,255,255,.76);margin-top:5px;line-height:1.45}
-  .book-body{padding: 16px 18px 18px}
-  .row{display:grid;grid-template-columns: 1fr 1fr;gap:12px}
-  label{ display:block; font-size: 12.5px; font-weight: 900; color: rgba(255,255,255,.82); margin: 10px 0 6px; letter-spacing: .18px; }
+  /* Existing booking form section - just light styling */
+  .book-wrap{
+    margin-top: 16px;
+    border-radius: 18px;
+    border: 1px solid rgba(11,18,32,.10);
+    background: #fff;
+    box-shadow: 0 18px 55px rgba(0,0,0,.10);
+    overflow:hidden;
+  }
+  .book-head{
+    padding: 16px 18px;
+    border-bottom: 1px solid rgba(11,18,32,.08);
+    background: #fbfbfc;
+  }
+  .book-head b{display:block;font-size:15px;font-weight:950}
+  .book-head small{display:block;margin-top:6px;color:rgba(11,18,32,.64);font-weight:700}
+  .book-body2{padding: 16px 18px 18px}
+  label{
+    display:block;
+    margin: 12px 0 6px;
+    font-size: 12.5px;
+    font-weight: 900;
+    color: rgba(11,18,32,.74);
+    letter-spacing: .18px;
+  }
   input, select, textarea{
     width:100%;
     padding: 12px 12px;
     border-radius: 12px;
-    border: 1px solid rgba(255,255,255,.16);
-    background: rgba(6,10,16,.60);
-    color: rgba(255,255,255,.94);
+    border: 1px solid rgba(11,18,32,.14);
+    background: #f4f5f7;
+    color: rgba(11,18,32,.92);
     outline:none;
+    font-weight: 800;
   }
-  input::placeholder, textarea::placeholder{ color: rgba(255,255,255,.60); }
-  input:focus, select:focus, textarea:focus{ border-color: rgba(228,195,106,.65); box-shadow: 0 0 0 4px rgba(228,195,106,.14); }
-  textarea{min-height: 88px; resize: vertical}
-  .tinyhint{font-size:12.5px;color:rgba(255,255,255,.70);margin-top:6px}
-  .estimate-box{ margin-top: 12px; border: 1px solid rgba(228,195,106,.26); background: rgba(228,195,106,.10); border-radius: 12px; padding: 12px; }
-  .estimate-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
-  .estimate-top b{font-size:13.5px}
-  .estimate-value{font-weight:950;letter-spacing:.2px}
-  .estimate-sub{margin-top:6px;color:rgba(255,255,255,.80);font-size:12.8px;line-height:1.5}
-  .book-actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
+  textarea{min-height: 92px; resize: vertical}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .tinyhint{margin-top:6px;font-size:12.5px;color:rgba(11,18,32,.62);font-weight:700}
+  input:focus, select:focus, textarea:focus{ border-color: rgba(255,90,20,.65); box-shadow: 0 0 0 4px rgba(255,90,20,.12); }
 
+  .estimate-box{
+    margin-top: 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(11,18,32,.12);
+    background: #fbfbfc;
+    padding: 12px;
+  }
+  .estimate-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+  .estimate-top b{font-size:13.5px}
+  .estimate-value{font-weight:950}
+  .estimate-sub{margin-top:6px;color:rgba(11,18,32,.68);font-size:12.8px;font-weight:700}
+
+  .book-actions{margin-top: 12px; display:flex; gap: 10px; flex-wrap:wrap;}
+  .book-actions .btn-primary{width:auto}
   .banner{
     margin-top: 12px;
-    border-radius: 14px;
-    border: 1px solid rgba(255,255,255,.14);
-    background: rgba(255,255,255,.06);
+    border-radius: 12px;
+    border: 1px solid rgba(11,18,32,.10);
+    background: #fbfbfc;
     padding: 12px 14px;
-    color: rgba(255,255,255,.88);
+    color: rgba(11,18,32,.86);
+    font-weight: 800;
   }
-  .banner.good{ border-color: rgba(80,255,160,.25); background: rgba(80,255,160,.08); }
-  .banner.bad{ border-color: rgba(255,120,120,.22); background: rgba(255,120,120,.08); }
+  .banner.good{ border-color: rgba(35,190,120,.25); background: rgba(35,190,120,.08); }
+  .banner.bad{ border-color: rgba(240,85,85,.22); background: rgba(240,85,85,.08); }
 
   /* FAQ */
-  details{ border-top: 1px solid rgba(255,255,255,.12); padding: 14px 0; }
+  details{ border-top: 1px solid rgba(11,18,32,.10); padding: 14px 0; }
   details:first-child{ border-top:none; }
-  summary{ cursor:pointer; list-style:none; font-weight: 900; color: rgba(255,255,255,.94); display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  summary{ cursor:pointer; list-style:none; font-weight: 900; color: rgba(11,18,32,.94); display:flex; align-items:center; justify-content:space-between; gap:10px; }
   summary::-webkit-details-marker{ display:none; }
-  .chev{ width: 28px; height: 28px; border-radius: 10px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); display:grid; place-items:center; color: rgba(255,255,255,.88); transition: transform .2s ease; }
+  .chev{ width: 28px; height: 28px; border-radius: 10px; border: 1px solid rgba(11,18,32,.12); background: rgba(11,18,32,.04); display:grid; place-items:center; color: rgba(11,18,32,.70); transition: transform .2s ease; }
   details[open] .chev{ transform: rotate(180deg); }
-  details p{ margin-top:10px; color: rgba(255,255,255,.78); line-height:1.6; max-width: 90ch; }
+  details p{ margin-top:10px; color: rgba(11,18,32,.70); line-height:1.6; max-width: 90ch; font-weight: 700; }
 
-  /* Footer */
-  footer{ border-top: 1px solid rgba(255,255,255,.12); margin-top: 64px; padding: 28px 0; text-align:center; color: rgba(255,255,255,.66); font-size: 14px; position:relative; z-index:1; }
-
-  /* WhatsApp float (moved LEFT of Tawk bubble) */
-  .whatsapp-float{
-    position:fixed;
-    right:96px;
-    bottom:16px;
-    background:#25D366;
-    color:#0b0b0b;
-    padding:12px 16px;
-    border-radius:999px;
-    font-weight:950;
-    box-shadow: 0 16px 38px rgba(0,0,0,.30);
-    z-index:60;
-    border: 1px solid rgba(0,0,0,.18);
+  footer{
+    margin-top: 64px;
+    padding: 26px 0;
+    text-align:center;
+    color: rgba(11,18,32,.62);
+    border-top: 1px solid rgba(11,18,32,.10);
+    font-weight: 700;
   }
 
-  /* Mobile: stack WhatsApp above Tawk bubble */
+  /* WhatsApp float */
+  .whatsapp-float{
+    position:fixed;
+    right: 96px;
+    bottom: 16px;
+    background:#25D366;
+    color:#0b0b0b;
+    padding: 12px 16px;
+    border-radius: 999px;
+    font-weight: 950;
+    box-shadow: 0 16px 38px rgba(0,0,0,.16);
+    z-index:60;
+    border: 1px solid rgba(0,0,0,.14);
+  }
   @media (max-width: 520px){
-    .whatsapp-float{
-      right:16px;
-      bottom:96px;
-    }
+    .whatsapp-float{ right: 16px; bottom: 96px; }
   }
 
   /* Responsive */
-  @media (max-width: 1080px){
-    .hero-inner{ grid-template-columns: 1fr; }
-    .fleet-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
-  }
   @media (max-width: 980px){
+    .hero-inner{ grid-template-columns: 1fr; align-items:start; }
+    .booking-card{ justify-self:stretch; margin: 14px 18px 0; }
+    .hero-bg{ height: 620px; }
+    .hero-title{ max-width: 22ch; }
     .grid3{ grid-template-columns: 1fr; }
     .grid2{ grid-template-columns: 1fr; }
-    .fleet-grid{ grid-template-columns: 1fr; }
   }
   @media (max-width: 860px){
-    .container{ padding: 14px; }
-    .topbar{ font-size: 12.8px; }
-    .links{ width:100%; justify-content:center; }
+    .links{ display:none; }
+    .pill{ display:inline-flex; }
     .row{ grid-template-columns: 1fr; }
-    .btn{ width: 100%; text-align:center; }
-    .cta .btn{ width:auto; }
-    .hero-form-grid{ grid-template-columns: 1fr; }
-  }
-
-  /* Desktop-only hero fix */
-  @media (min-width: 861px){
-    .hero-bg{
-      background-position: 72% center;
-    }
-    .hero-inner{
-      min-height: 560px;
-    }
-    .hero{
-      max-width: 1400px;
-      margin-left: auto;
-      margin-right: auto;
-    }
+    .header-actions .btn{ display:none; }
   }
 </style>
 </head>
 
 <body>
-<div class="bg-wrap" aria-hidden="true">
-  <div id="bgA" class="bg-layer"></div>
-  <div id="bgB" class="bg-layer"></div>
-  <div class="bg-vignette"></div>
-</div>
 
 <header>
-  <div class="header-strip">
-    <div class="container">
-      <div class="topbar">
-        <div>Mont-Tremblant • Montréal • Ottawa • Airport Transfers</div>
-        <div>
-          📞 <a href="tel:+15142933170"><b>+1 (514) 293-3170</b></a> &nbsp;·&nbsp;
-          <a href="https://wa.me/15142933170" target="_blank" rel="noreferrer"><b>WhatsApp</b></a>
-        </div>
+  <div class="container">
+    <div class="nav">
+      <div class="brand">
+        <div class="logo">MT</div>
+        <div>Mont Tremblant Limo</div>
       </div>
 
-      <div class="nav">
-        <div class="brand">
-          <div class="logo">MT</div>
-          <div>
-            <div class="brand-title">Mont Tremblant Limo Services</div>
-            <span class="brand-sub">Luxury chauffeur service • Mont-Tremblant, Québec</span>
-          </div>
-        </div>
+      <div class="links">
+        <a href="#fleet">Our fleet</a>
+        <a href="#routes">Destinations</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Book</a>
+      </div>
 
-        <div id="navLinks" class="links">
-          <a href="#fleet">Our Fleet</a>
-          <a href="#fleet">Pricing</a>
-          <a href="#routes">Destinations</a>
-          <a href="#faq">FAQ</a>
-          <a href="#contact">Contact</a>
-        </div>
-
-        <a class="btn btn-gold btn-book" href="#contact">Book Now</a>
+      <div class="header-actions">
+        <span class="pill">📞 <a href="tel:+15142933170">+1 (514) 293-3170</a></span>
+        <a class="btn" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
+        <a class="btn btn-primary" href="#contact">Book now</a>
       </div>
     </div>
   </div>
 </header>
 
-<main class="container">
-  <div class="hero">
-    <div class="hero-bg" aria-hidden="true"></div>
+<!-- Hero -->
+<div class="hero-wrap">
+  <div class="hero-bg" aria-hidden="true"></div>
 
-    <div class="hero-inner">
-      <div>
-        <div class="kicker"><span class="dot"></span> Premium rides inspired by Mont-Tremblant scenery</div>
-
-        <h1>Luxury chauffeur service for mountains, lakes, and long-distance destinations.</h1>
-        <p>
-          Premium vehicles for airport transfers, hourly bookings, ski trips, corporate travel, and special events.
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="container">
+        <div class="hero-title">Luxury chauffeur service in Mont-Tremblant</div>
+        <div class="hero-sub">
+          Airport transfers, hourly bookings, ski trips, corporate travel and special events.
           <b>Minimum 3 hours on all vehicles.</b>
-        </p>
-
-        <div class="pillrow">
-          <div class="pill">24/7 Booking</div>
-          <div class="pill">Professional Chauffeurs</div>
-          <div class="pill">Clean Premium Vehicles</div>
-          <div class="pill">Mont-Tremblant • Montréal • Québec • USA Trips</div>
         </div>
 
-        <div class="cta">
-          <a class="btn" href="tel:+15142933170">Call Now</a>
-          <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp Booking</a>
-          <a class="btn btn-ghost" href="#fleet">View Fleet</a>
-          <a class="btn btn-gold" href="#fleet">View Pricing</a>
+        <div class="hero-badges">
+          <span class="badge">24/7 booking</span>
+          <span class="badge">Professional chauffeurs</span>
+          <span class="badge">Premium vehicles</span>
+          <span class="badge">Mont-Tremblant • Montréal • Ottawa</span>
         </div>
       </div>
-
-      <!-- ✅ NEW: Blacklane-like Search + Vehicle Selection -->
-      <aside class="hero-book" aria-label="Search & select vehicle">
-        <div class="hero-book-head">
-          <b>Search vehicles & prices</b>
-          <span id="heroStepPill" class="step-pill">Step 1 of 2</span>
-        </div>
-
-        <div class="hero-book-body">
-          <div class="tabs" role="tablist" aria-label="Trip mode">
-            <button id="tabOneWay" class="tab active" type="button" role="tab" aria-selected="true">One way</button>
-            <button id="tabHourly" class="tab" type="button" role="tab" aria-selected="false">By the hour</button>
-          </div>
-
-          <form id="heroSearchForm">
-            <input type="hidden" id="heroMode" value="one_way" />
-
-            <div class="hero-form-grid">
-              <div>
-                <label for="h_pickup">From</label>
-                <input id="h_pickup" placeholder="Pickup address, hotel, or airport (YUL)" autocomplete="off" required />
-              </div>
-
-              <div id="heroDropoffWrap">
-                <label for="h_dropoff">To</label>
-                <input id="h_dropoff" placeholder="Destination address" autocomplete="off" required />
-              </div>
-
-              <div>
-                <label for="h_date">Date</label>
-                <input id="h_date" type="date" required />
-              </div>
-
-              <div>
-                <label for="h_time">Time</label>
-                <select id="h_time" required></select>
-              </div>
-
-              <div id="heroHoursWrap" style="display:none">
-                <label for="h_hours">Duration</label>
-                <select id="h_hours">
-                  <option value="3">3 hours (minimum)</option>
-                  <option value="4">4 hours</option>
-                  <option value="5">5 hours</option>
-                  <option value="6">6 hours</option>
-                  <option value="8">8 hours</option>
-                </select>
-              </div>
-
-              <div id="heroTransferWrap">
-                <label for="h_transfer">Transfer type</label>
-                <select id="h_transfer">
-                  <option value="point" selected>City / Point-to-point</option>
-                  <option value="airport">Airport transfer</option>
-                </select>
-              </div>
-            </div>
-
-            <label for="h_notes">Notes (optional)</label>
-            <textarea id="h_notes" placeholder="Passengers, luggage, flight #, stops…"></textarea>
-
-            <div class="hero-actions">
-              <button id="heroSearchBtn" class="btn btn-gold btn-full" type="submit">Search</button>
-              <a class="btn btn-ghost btn-full" href="tel:+15142933170">Call</a>
-              <a class="btn btn-ghost btn-full" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
-            </div>
-
-            <div class="hero-small">
-              Prices shown are based on your current rates (3-hour minimum). You can later plug in your live booking API for dynamic pricing.
-            </div>
-
-            <div id="heroError" class="hero-error" role="alert"></div>
-          </form>
-
-          <div id="heroResults" class="hero-results" aria-live="polite">
-            <div class="hero-results-top">
-              <div>
-                <b>Select a vehicle</b>
-                <small id="heroResultsSubtitle">Choose a vehicle to continue to reservation & Stripe payment.</small>
-              </div>
-              <button id="heroEditBtn" class="btn btn-ghost" type="button">Edit</button>
-            </div>
-
-            <div id="heroVehicleList" class="vlist"></div>
-
-            <div class="hero-actions">
-              <button id="heroContinueBtn" class="btn btn-gold btn-full" type="button" disabled>Continue to Reserve</button>
-            </div>
-
-            <div class="hero-small">
-              You’ll complete the booking and payment in the “Instant Estimate & Reserve” section below.
-            </div>
-          </div>
-        </div>
-      </aside>
     </div>
+
+    <!-- Blacklane-like booking widget -->
+    <aside class="booking-card" aria-label="Search booking">
+      <div class="tabs">
+        <button id="tabOneWay" class="tab active" type="button" aria-selected="true">One way</button>
+        <button id="tabHourly" class="tab" type="button" aria-selected="false">By the hour</button>
+      </div>
+
+      <div class="book-body">
+        <form id="heroSearchForm">
+          <input type="hidden" id="heroMode" value="one_way" />
+
+          <div class="field">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11Z" stroke="currentColor" stroke-width="2"/>
+              <path d="M12 10.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            <input id="h_pickup" placeholder="From: address, airport, hotel…" autocomplete="off" required />
+          </div>
+
+          <div id="heroDropoffWrap" class="field">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11Z" stroke="currentColor" stroke-width="2"/>
+              <path d="M12 10.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            <input id="h_dropoff" placeholder="To: address, airport, hotel…" autocomplete="off" required />
+          </div>
+
+          <div class="row2">
+            <div class="field">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M7 2v3M17 2v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M3 9h18" stroke="currentColor" stroke-width="2"/>
+                <path d="M5 5h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              <input id="h_date" type="date" required />
+            </div>
+
+            <div class="field">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 8v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              <select id="h_time" required></select>
+            </div>
+          </div>
+
+          <div id="heroTransferWrap" class="field" style="margin-top:10px">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M3 11h18M6 11V7a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M7 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            <select id="h_transfer">
+              <option value="point" selected>City / Point-to-point</option>
+              <option value="airport">Airport transfer</option>
+            </select>
+          </div>
+
+          <div id="heroHoursWrap" class="field" style="display:none; margin-top:10px">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 8v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            <select id="h_hours">
+              <option value="3">3 hours (minimum)</option>
+              <option value="4">4 hours</option>
+              <option value="5">5 hours</option>
+              <option value="6">6 hours</option>
+              <option value="8">8 hours</option>
+            </select>
+          </div>
+
+          <div class="note">Chauffeur will wait 15 minutes free of charge (example text).</div>
+
+          <button class="search-btn" type="submit">Search</button>
+
+          <div id="heroResults" class="results" aria-live="polite">
+            <div class="results-head">
+              <b>Select a vehicle</b>
+              <button id="heroEditBtn" class="mini-btn" type="button">Edit</button>
+            </div>
+            <div id="heroVehicleList" class="vlist"></div>
+            <button id="heroContinueBtn" class="continue-btn" type="button" disabled>Continue to Reserve</button>
+          </div>
+
+          <div id="heroError" style="display:none; margin-top:10px; font-weight:900; color:#b00020; font-size:13px;"></div>
+        </form>
+      </div>
+    </aside>
   </div>
+</div>
 
-  <!-- OUR FLEET -->
-  <section id="fleet">
+<main class="container">
+
+  <!-- Fleet -->
+  <section id="fleet" class="section">
     <h2>Our Fleet</h2>
-    <p class="subtitle">
-      Premium vehicles for Mont-Tremblant travel. Each card shows the vehicle photo and hourly rate.
-      <b>Minimum 3 hours</b> applies to all vehicles.
-    </p>
+    <p class="subtitle">Premium vehicles for Mont-Tremblant travel. <b>Minimum 3 hours</b> applies to all vehicles.</p>
 
-    <div class="fleet-grid">
+    <div class="grid3">
       <div class="card">
-        <div class="card-media">
-          <span class="badge">VIP</span>
-          <img src="escalade.jpg" alt="2026 Cadillac Escalade ESV black">
-        </div>
+        <div class="card-media"><img src="escalade.jpg" alt="2026 Cadillac Escalade ESV black"></div>
         <div class="card-body">
           <h3>2026 Cadillac Escalade ESV</h3>
           <div class="meta">Ultra-luxury • VIP airport transfers • ski trips</div>
           <div class="price">$150 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions">
-            <a class="btn btn-gold" href="#contact">Estimate & Reserve</a>
-            <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
+            <a class="btn btn-primary" href="#contact">Reserve</a>
+            <a class="btn" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-media">
-          <span class="badge">Executive SUV</span>
-          <img src="suburban.jpg" alt="2025 Chevrolet Suburban black">
-        </div>
+        <div class="card-media"><img src="suburban.jpg" alt="2025 Chevrolet Suburban black"></div>
         <div class="card-body">
           <h3>2025 Chevrolet Suburban</h3>
           <div class="meta">Spacious • luggage friendly • long rides</div>
           <div class="price">$120 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions">
-            <a class="btn btn-gold" href="#contact">Estimate & Reserve</a>
-            <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
+            <a class="btn btn-primary" href="#contact">Reserve</a>
+            <a class="btn" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-media">
-          <span class="badge">Luxury SUV</span>
-          <img src="denali.jpg" alt="2026 GMC Yukon Denali black">
-        </div>
+        <div class="card-media"><img src="denali.jpg" alt="2026 GMC Yukon Denali black"></div>
         <div class="card-body">
           <h3>2026 GMC Yukon Denali</h3>
           <div class="meta">Premium comfort • smooth ride • executive travel</div>
           <div class="price">$120 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions">
-            <a class="btn btn-gold" href="#contact">Estimate & Reserve</a>
-            <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
+            <a class="btn btn-primary" href="#contact">Reserve</a>
+            <a class="btn" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-media">
-          <span class="badge">Premium</span>
-          <img src="qx60.jpg" alt="2024 Infiniti QX60 black">
-        </div>
+        <div class="card-media"><img src="qx60.jpg" alt="2024 Infiniti QX60 black"></div>
         <div class="card-body">
           <h3>2024 Infiniti QX60</h3>
           <div class="meta">Comfort + value • airport transfers • city rides</div>
           <div class="price">$99 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions">
-            <a class="btn btn-gold" href="#contact">Estimate & Reserve</a>
-            <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
+            <a class="btn btn-primary" href="#contact">Reserve</a>
+            <a class="btn" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-media">
-          <span class="badge">EV</span>
-          <img src="tesla.jpg" alt="2023 Tesla Model Y black">
-        </div>
+        <div class="card-media"><img src="tesla.jpg" alt="2023 Tesla Model Y black"></div>
         <div class="card-body">
           <h3>2023 Tesla Model Y</h3>
           <div class="meta">Quiet • modern • eco-friendly</div>
           <div class="price">$75 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions">
-            <a class="btn btn-gold" href="#contact">Estimate & Reserve</a>
-            <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
+            <a class="btn btn-primary" href="#contact">Reserve</a>
+            <a class="btn" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-media">
-          <span class="badge">Group</span>
-          <img src="sprinter.jpg" alt="Black Mercedes Sprinter van">
-        </div>
+        <div class="card-media"><img src="sprinter.jpg" alt="Black Mercedes Sprinter van"></div>
         <div class="card-body">
           <h3>Mercedes Sprinter (Group Van)</h3>
           <div class="meta">Groups • events • ski luggage</div>
           <div class="price">$250 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions">
-            <a class="btn btn-gold" href="#contact">Estimate & Reserve</a>
-            <a class="btn btn-ghost" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
+            <a class="btn btn-primary" href="#contact">Reserve</a>
+            <a class="btn" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Booking -->
-  <section id="contact">
+  <!-- Booking (Stripe) -->
+  <section id="contact" class="section">
     <h2>Instant Estimate & Reserve</h2>
-    <p class="subtitle">Type your pickup and drop-off (no autocomplete). Select time from a dropdown (5-minute steps). Reserve online with full payment via Stripe Checkout.</p>
+    <p class="subtitle">Reserve online with full payment via Stripe Checkout. After payment, your reservation is confirmed.</p>
 
     <div id="paymentBanner" style="display:none;"></div>
 
-    <div class="book-card">
+    <div class="book-wrap">
       <div class="book-head">
         <b>Reserve Now (Full payment required)</b>
-        <small>Instant estimate + secure payment via Stripe Checkout. After payment, your reservation is confirmed.</small>
+        <small>Instant estimate + secure payment via Stripe Checkout.</small>
       </div>
 
-      <div class="book-body">
+      <div class="book-body2">
         <form onsubmit="return sendBooking(event)">
           <div class="row">
             <div>
@@ -950,8 +826,6 @@
               <label for="date">Date</label>
               <input id="date" type="date" required />
             </div>
-
-            <!-- Time dropdown (5-minute steps) -->
             <div>
               <label for="time">Time</label>
               <select id="time" required></select>
@@ -962,24 +836,12 @@
           <div class="row">
             <div>
               <label for="pickup">Pickup</label>
-              <input id="pickup"
-                     placeholder="Hotel / Airport / Address"
-                     required
-                     autocomplete="off"
-                     autocorrect="off"
-                     autocapitalize="off"
-                     spellcheck="false" />
+              <input id="pickup" placeholder="Hotel / Airport / Address" required autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
               <div class="tinyhint">Type your pickup location.</div>
             </div>
             <div>
               <label for="dropoff">Drop-off</label>
-              <input id="dropoff"
-                     placeholder="Destination"
-                     required
-                     autocomplete="off"
-                     autocorrect="off"
-                     autocapitalize="off"
-                     spellcheck="false" />
+              <input id="dropoff" placeholder="Destination" required autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
               <div class="tinyhint">Type your drop-off location.</div>
             </div>
           </div>
@@ -1039,10 +901,10 @@
           </div>
 
           <div class="book-actions">
-            <button class="btn btn-gold" type="button" onclick="startStripeCheckout()">Reserve Now (Pay Online)</button>
-            <button class="btn btn-ghost" type="submit">Send Request (WhatsApp)</button>
-            <a class="btn btn-ghost" href="#" onclick="return sendEmail()">Send by Email</a>
-            <a class="btn btn-ghost" href="tel:+15142933170">Call</a>
+            <button class="btn btn-primary" type="button" onclick="startStripeCheckout()">Reserve Now (Pay Online)</button>
+            <button class="btn" type="submit">Send Request (WhatsApp)</button>
+            <a class="btn" href="#" onclick="return sendEmail()">Send by Email</a>
+            <a class="btn" href="tel:+15142933170">Call</a>
           </div>
           <div class="tinyhint" id="payStatus"></div>
         </form>
@@ -1051,73 +913,22 @@
   </section>
 
   <!-- Destinations -->
-  <section id="routes">
+  <section id="routes" class="section">
     <h2>Destinations</h2>
     <p class="subtitle">Common trips. Long-distance routes and stops can be adjusted by message.</p>
     <div class="grid2">
-      <div class="panel route">
-        <div><b>Montréal (YUL) ↔ Mont-Tremblant</b><br><span>Airport pickups • ski luggage • hotel drops</span></div>
-        <div class="tag">Most booked</div>
-      </div>
-      <div class="panel route">
-        <div><b>Montréal Downtown ↔ Mont-Tremblant</b><br><span>Business travel • weekends • events</span></div>
-        <div class="tag">Fast reserve</div>
-      </div>
-      <div class="panel route">
-        <div><b>Québec City ↔ Mont-Tremblant</b><br><span>Private long-distance • comfort ride</span></div>
-        <div class="tag">By request</div>
-      </div>
-      <div class="panel route">
-        <div><b>Ottawa ↔ Mont-Tremblant</b><br><span>Long-distance comfort • family trips</span></div>
-        <div class="tag">By request</div>
-      </div>
-      <div class="panel route">
-        <div><b>New York ↔ Mont-Tremblant</b><br><span>Cross-border long distance • VIP travel</span></div>
-        <div class="tag">Quote</div>
-      </div>
-      <div class="panel route">
-        <div><b>Boston ↔ Mont-Tremblant</b><br><span>Cross-border long distance • premium ride</span></div>
-        <div class="tag">Quote</div>
-      </div>
-      <div class="panel route">
-        <div><b>New Jersey ↔ Mont-Tremblant</b><br><span>Cross-border long distance • flexible stops</span></div>
-        <div class="tag">Quote</div>
-      </div>
-      <div class="panel route">
-        <div><b>Hourly Chauffeur (Mont-Tremblant)</b><br><span>Resort • restaurants • private tours</span></div>
-        <div class="tag">3-hour min</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Testimonials -->
-  <section id="testimonials">
-    <h2>What Clients Say</h2>
-    <p class="subtitle">Professional, punctual, and premium — built for Mont-Tremblant travel.</p>
-    <div class="grid3">
-      <div class="panel quote">
-        <div class="stars">★★★★★</div>
-        <div class="qtext">“On time, clean SUV, very smooth ride to Tremblant. Professional chauffeur and easy booking.”</div>
-        <div class="qname">— Private client (Montréal → Tremblant)</div>
-      </div>
-      <div class="panel quote">
-        <div class="stars">★★★★★</div>
-        <div class="qtext">“Great for ski trip with luggage. Comfortable and stress-free pickup and drop-off.”</div>
-        <div class="qname">— Family booking (YUL airport)</div>
-      </div>
-      <div class="panel quote">
-        <div class="stars">★★★★★</div>
-        <div class="qtext">“Excellent service for our event. Communication was clear and the Sprinter was perfect for the group.”</div>
-        <div class="qname">— Group booking (Event transfer)</div>
-      </div>
+      <div class="card"><div class="card-body"><h3>Montréal (YUL) ↔ Mont-Tremblant</h3><div class="meta">Airport pickups • ski luggage • hotel drops</div></div></div>
+      <div class="card"><div class="card-body"><h3>Montréal Downtown ↔ Mont-Tremblant</h3><div class="meta">Business travel • weekends • events</div></div></div>
+      <div class="card"><div class="card-body"><h3>Québec City ↔ Mont-Tremblant</h3><div class="meta">Private long-distance • comfort ride</div></div></div>
+      <div class="card"><div class="card-body"><h3>Ottawa ↔ Mont-Tremblant</h3><div class="meta">Long-distance comfort • family trips</div></div></div>
     </div>
   </section>
 
   <!-- FAQ -->
-  <section id="faq">
+  <section id="faq" class="section">
     <h2>FAQ</h2>
     <p class="subtitle">Quick answers to the most common questions.</p>
-    <div class="panel" style="padding: 0 18px;">
+    <div class="card" style="padding: 0 18px;">
       <details>
         <summary>What is the minimum booking time? <span class="chev">⌄</span></summary>
         <p>All vehicles have a <b>3-hour minimum</b>. Point-to-point and airport estimates include a 3-hour minimum equivalent and may adjust for stops/wait time/tolls.</p>
@@ -1137,18 +948,6 @@
     </div>
   </section>
 
-  <section id="contact2">
-    <h2>Contact & Booking</h2>
-    <p class="subtitle">Fast booking is online payment, phone, WhatsApp, or the form above.</p>
-    <div class="panel" style="padding:20px;">
-      <p>
-        <b>Phone:</b> <a href="tel:+15142933170">+1 (514) 293-3170</a><br><br>
-        <b>WhatsApp:</b> <a href="https://wa.me/15142933170" target="_blank" rel="noreferrer">Chat on WhatsApp</a><br><br>
-        <b>Service Area:</b> Mont-Tremblant, Montréal, Ottawa, Québec City, New York, Boston, New Jersey & surrounding areas
-      </p>
-    </div>
-  </section>
-
   <footer>
     © <span id="year"></span> Mont Tremblant Limo Services • All rights reserved
   </footer>
@@ -1158,31 +957,6 @@
 
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
-
-  // ===== Rotating scenic background =====
-  const scenicImages = ["scenic1.jpg","scenic2.jpg","scenic3.jpg","scenic4.jpg"];
-  const bgA = document.getElementById("bgA");
-  const bgB = document.getElementById("bgB");
-  let useA = true;
-  let idx = 0;
-
-  function setLayer(layer, img){ layer.style.backgroundImage = `url("${img}")`; }
-
-  function rotateBackground(){
-    const nextImg = scenicImages[idx % scenicImages.length];
-    idx++;
-    const onLayer = useA ? bgA : bgB;
-    const offLayer = useA ? bgB : bgA;
-    setLayer(offLayer, nextImg);
-    offLayer.classList.add("is-on");
-    onLayer.classList.remove("is-on");
-    useA = !useA;
-  }
-
-  setLayer(bgA, scenicImages[0]);
-  bgA.classList.add("is-on");
-  setLayer(bgB, scenicImages[1]);
-  setInterval(rotateBackground, 8000);
 
   // Business config
   const BUSINESS_WA = "15142933170";
@@ -1196,16 +970,6 @@
     "2024 Infiniti QX60": 99,
     "2023 Tesla Model Y": 75,
     "Mercedes Sprinter (Group Van)": 250
-  };
-
-  // Optional: lightweight metadata for nicer vehicle cards in hero results
-  const VEHICLE_META = {
-    "2026 Cadillac Escalade ESV": { seats: 7, bags: 6, tag: "VIP comfort" },
-    "2025 Chevrolet Suburban": { seats: 7, bags: 7, tag: "Best for ski luggage" },
-    "2026 GMC Yukon Denali": { seats: 7, bags: 6, tag: "Premium & smooth" },
-    "2024 Infiniti QX60": { seats: 6, bags: 5, tag: "Great value" },
-    "2023 Tesla Model Y": { seats: 4, bags: 3, tag: "Quiet EV" },
-    "Mercedes Sprinter (Group Van)": { seats: 14, bags: 14, tag: "Groups & gear" }
   };
 
   function v(id){ return (document.getElementById(id)?.value || "").trim(); }
@@ -1257,12 +1021,6 @@
     timeEl.value = `${pad(hh)}:${pad(mm)}`;
   }
 
-  function syncTriptypeUI(){
-    const triptype = v("triptype");
-    const hoursRow = document.getElementById("hoursRow");
-    if (hoursRow) hoursRow.style.display = (triptype === "hourly") ? "grid" : "none";
-  }
-
   function showPaymentBanner(){
     const params = new URLSearchParams(window.location.search);
     const p = params.get("payment");
@@ -1280,6 +1038,12 @@
     } else {
       bannerWrap.style.display = "none";
     }
+  }
+
+  function syncTriptypeUI(){
+    const triptype = v("triptype");
+    const hoursRow = document.getElementById("hoursRow");
+    if (hoursRow) hoursRow.style.display = (triptype === "hourly") ? "grid" : "none";
   }
 
   function computeEstimate(){
@@ -1391,65 +1155,6 @@
     return false;
   }
 
-  function collectBookingPayload(){
-    const requiredMap = {
-      name: "Name",
-      date: "Date",
-      time: "Time",
-      pickup: "Pickup",
-      dropoff: "Drop-off",
-      vehicle: "Vehicle"
-    };
-
-    Object.keys(requiredMap).forEach(id=>{
-      const el = document.getElementById(id);
-      if (el) el.style.borderColor = "rgba(255,255,255,.16)";
-    });
-
-    const missing = [];
-    for (const id of Object.keys(requiredMap)){
-      if (!v(id)) missing.push(id);
-    }
-
-    if (missing.length){
-      missing.forEach(id=>{
-        const el = document.getElementById(id);
-        if (el) el.style.borderColor = "rgba(255,120,120,.85)";
-      });
-      const first = document.getElementById(missing[0]);
-      if (first) first.focus();
-
-      const names = missing.map(id => requiredMap[id]).join(", ");
-      return { ok:false, error:`Missing: ${names}.` };
-    }
-
-    const est = computeEstimate();
-    if (!est.total){
-      return { ok:false, error:"Please select trip type and vehicle to generate an estimate." };
-    }
-
-    return {
-      ok:true,
-      booking: {
-        name: v("name"),
-        phone: v("phone"),
-        date: v("date"),
-        time: v("time"),
-        pickup: v("pickup"),
-        dropoff: v("dropoff"),
-        triptype: v("triptype"),
-        vehicle: v("vehicle"),
-        hours: v("hours"),
-        roundtrip: v("roundtrip"),
-        notes: v("notes"),
-        estimate_text: est.text,
-        estimate_total_cad: est.total,
-        pay_option: "full",
-        pay_now_cad: est.total
-      }
-    };
-  }
-
   async function startStripeCheckout(){
     const statusEl = document.getElementById("payStatus");
     if (statusEl) statusEl.textContent = "";
@@ -1482,105 +1187,117 @@
     }
   }
 
-  ["triptype","vehicle","hours","roundtrip"].forEach(id=>{
-    const el = document.getElementById(id);
-    if (el) el.addEventListener("change", ()=>{
-      syncTriptypeUI();
-      computeEstimate();
-    });
-  });
+  function collectBookingPayload(){
+    const requiredMap = {
+      name: "Name",
+      date: "Date",
+      time: "Time",
+      pickup: "Pickup",
+      dropoff: "Drop-off",
+      vehicle: "Vehicle"
+    };
 
-  // ===== NEW: Hero Search -> Vehicle Results -> Prefill Reserve Form =====
-  const hero = {
-    mode: "one_way",        // one_way | hourly
-    selectedVehicle: "",
-    selectedTotal: null,
-    selectedPriceNote: "",
-  };
+    const missing = [];
+    for (const id of Object.keys(requiredMap)){
+      if (!v(id)) missing.push(id);
+    }
+
+    if (missing.length){
+      const names = missing.map(id => requiredMap[id]).join(", ");
+      return { ok:false, error:`Missing: ${names}.` };
+    }
+
+    const est = computeEstimate();
+    if (!est.total){
+      return { ok:false, error:"Please select trip type and vehicle to generate an estimate." };
+    }
+
+    return {
+      ok:true,
+      booking: {
+        name: v("name"),
+        phone: v("phone"),
+        date: v("date"),
+        time: v("time"),
+        pickup: v("pickup"),
+        dropoff: v("dropoff"),
+        triptype: v("triptype"),
+        vehicle: v("vehicle"),
+        hours: v("hours"),
+        roundtrip: v("roundtrip"),
+        notes: v("notes"),
+        estimate_text: est.text,
+        estimate_total_cad: est.total,
+        pay_option: "full",
+        pay_now_cad: est.total
+      }
+    };
+  }
+
+  // ===== Hero widget logic (Search -> show vehicles -> Continue -> prefill reserve) =====
+  const heroState = { mode: "one_way", selectedVehicle: "" };
+
+  function heroError(msg){
+    const el = document.getElementById("heroError");
+    el.style.display = "block";
+    el.textContent = msg;
+  }
+  function heroClearError(){
+    const el = document.getElementById("heroError");
+    el.style.display = "none";
+    el.textContent = "";
+  }
 
   function setHeroMode(mode){
-    hero.mode = mode;
-    const isOneWay = (mode === "one_way");
-
+    heroState.mode = mode;
     document.getElementById("heroMode").value = mode;
-    document.getElementById("tabOneWay").classList.toggle("active", isOneWay);
-    document.getElementById("tabHourly").classList.toggle("active", !isOneWay);
-    document.getElementById("tabOneWay").setAttribute("aria-selected", isOneWay ? "true":"false");
-    document.getElementById("tabHourly").setAttribute("aria-selected", !isOneWay ? "true":"false");
 
-    document.getElementById("heroDropoffWrap").style.display = isOneWay ? "" : "none";
-    document.getElementById("heroHoursWrap").style.display = isOneWay ? "none" : "";
-    document.getElementById("heroTransferWrap").style.display = isOneWay ? "" : "none";
+    const one = mode === "one_way";
+    document.getElementById("tabOneWay").classList.toggle("active", one);
+    document.getElementById("tabHourly").classList.toggle("active", !one);
+    document.getElementById("tabOneWay").setAttribute("aria-selected", one ? "true":"false");
+    document.getElementById("tabHourly").setAttribute("aria-selected", !one ? "true":"false");
 
-    document.getElementById("h_dropoff").required = isOneWay;
+    document.getElementById("heroDropoffWrap").style.display = one ? "" : "none";
+    document.getElementById("heroTransferWrap").style.display = one ? "" : "none";
+    document.getElementById("heroHoursWrap").style.display = one ? "none" : "";
 
-    // Reset to step 1 view
-    showHeroResults(false);
-    clearHeroError();
+    document.getElementById("h_dropoff").required = one;
+
+    // reset results
+    document.getElementById("heroResults").style.display = "none";
+    document.getElementById("heroVehicleList").innerHTML = "";
+    document.getElementById("heroContinueBtn").disabled = true;
+    document.getElementById("heroContinueBtn").classList.remove("enabled");
+    heroState.selectedVehicle = "";
   }
 
-  function showHeroError(msg){
-    const el = document.getElementById("heroError");
-    el.textContent = msg;
-    el.style.display = "block";
-  }
-  function clearHeroError(){
-    const el = document.getElementById("heroError");
-    el.textContent = "";
-    el.style.display = "none";
-  }
-
-  function showHeroResults(show){
-    const results = document.getElementById("heroResults");
-    results.style.display = show ? "block" : "none";
-    document.getElementById("heroStepPill").textContent = show ? "Step 2 of 2" : "Step 1 of 2";
-    // keep form visible (Blacklane style), but step indicator updates
-  }
-
-  function getHeroValue(id){
-    return (document.getElementById(id)?.value || "").trim();
-  }
-
-  function isLikelyAirportText(txt){
-    const t = (txt || "").toUpperCase();
-    return t.includes("YUL") || t.includes("TRUDEAU") || t.includes("AIRPORT") || t.includes("AEROPORT") || t.includes("MONTRÉAL–TRUDEAU".toUpperCase());
-  }
-
-  function estimateFor(vehicleName, mode, hours, transferType){
+  function estimateHero(vehicleName){
     const rate = RATES[vehicleName];
     if (!rate) return { total: null, note: "Unavailable" };
 
-    if (mode === "hourly"){
-      const h = Math.max(3, Number(hours || 3));
-      const total = rate * h;
-      return { total, note: `Total for ${h}h (min 3h)` };
+    if (heroState.mode === "hourly"){
+      const h = Math.max(3, Number(document.getElementById("h_hours").value || 3));
+      return { total: rate * h, note: `Total for ${h}h (min 3h)` };
     }
 
-    // one way:
-    const fee = (transferType === "airport") ? 60 : 40;
-    const total = (rate * 3) + fee; // 3-hour minimum equivalent + service fee
-    return { total, note: transferType === "airport" ? "Airport transfer estimate" : "Point-to-point estimate" };
+    const transfer = document.getElementById("h_transfer").value;
+    const fee = (transfer === "airport") ? 60 : 40;
+    return { total: (rate * 3) + fee, note: transfer === "airport" ? "Airport transfer estimate" : "Point-to-point estimate" };
   }
 
-  function renderHeroVehicles(mode, hours, transferType){
+  function renderHeroVehicles(){
     const list = document.getElementById("heroVehicleList");
     list.innerHTML = "";
-    hero.selectedVehicle = "";
-    hero.selectedTotal = null;
-    hero.selectedPriceNote = "";
+    heroState.selectedVehicle = "";
     document.getElementById("heroContinueBtn").disabled = true;
+    document.getElementById("heroContinueBtn").classList.remove("enabled");
 
-    const vehicles = Object.keys(RATES);
-
-    vehicles.forEach(name=>{
-      const meta = VEHICLE_META[name] || {};
-      const est = estimateFor(name, mode, hours, transferType);
+    Object.keys(RATES).forEach(name=>{
+      const est = estimateHero(name);
 
       const card = document.createElement("div");
       card.className = "vcard";
-      card.setAttribute("role","button");
-      card.tabIndex = 0;
-
       card.innerHTML = `
         <div class="vtop">
           <div>
@@ -1589,34 +1306,17 @@
           </div>
           <div class="vprice">
             <b>${est.total ? formatMoney(est.total) : "—"}</b>
-            <small>${mode === "hourly" ? "Rate-based" : "3h min + fee"}</small>
+            <small>${heroState.mode === "hourly" ? "Rate-based" : "3h min + fee"}</small>
           </div>
-        </div>
-        <div class="vbottom">
-          <div class="chips">
-            ${meta.seats ? `<span class="chip">${meta.seats} seats</span>` : ``}
-            ${meta.bags ? `<span class="chip">${meta.bags} bags</span>` : ``}
-            ${meta.tag ? `<span class="chip">${escapeHtml(meta.tag)}</span>` : ``}
-          </div>
-          <span class="chip">Select</span>
         </div>
       `;
 
-      function selectThis(){
+      card.addEventListener("click", ()=>{
         document.querySelectorAll(".vcard").forEach(el=>el.classList.remove("selected"));
         card.classList.add("selected");
-        hero.selectedVehicle = name;
-        hero.selectedTotal = est.total;
-        hero.selectedPriceNote = est.note;
+        heroState.selectedVehicle = name;
         document.getElementById("heroContinueBtn").disabled = false;
-      }
-
-      card.addEventListener("click", selectThis);
-      card.addEventListener("keydown", (e)=>{
-        if(e.key === "Enter" || e.key === " "){
-          e.preventDefault();
-          selectThis();
-        }
+        document.getElementById("heroContinueBtn").classList.add("enabled");
       });
 
       list.appendChild(card);
@@ -1624,98 +1324,34 @@
   }
 
   function prefillReserveFromHero(){
-    // Map hero fields -> main form fields
-    const pickup = getHeroValue("h_pickup");
-    const dropoff = getHeroValue("h_dropoff");
-    const date = getHeroValue("h_date");
-    const time = getHeroValue("h_time");
-    const notes = getHeroValue("h_notes");
-
-    // Trip type mapping
-    if (hero.mode === "hourly"){
-      document.getElementById("triptype").value = "hourly";
-      document.getElementById("hours").value = String(Math.max(3, Number(getHeroValue("h_hours") || 3)));
-      // Keep dropoff required on main form, but for hourly we still keep it (people usually want a destination)
-      // We'll prefill dropoff only if user typed it earlier (they won't see it in hourly hero).
-      if (!document.getElementById("dropoff").value && dropoff) document.getElementById("dropoff").value = dropoff;
-    } else {
-      const transfer = getHeroValue("h_transfer");
-      document.getElementById("triptype").value = (transfer === "airport") ? "airport" : "point";
-    }
+    // basic validation
+    const pickup = (document.getElementById("h_pickup").value || "").trim();
+    const dropoff = (document.getElementById("h_dropoff").value || "").trim();
+    const date = document.getElementById("h_date").value;
+    const time = document.getElementById("h_time").value;
 
     document.getElementById("pickup").value = pickup;
-    if (hero.mode === "one_way") document.getElementById("dropoff").value = dropoff;
     document.getElementById("date").value = date;
     document.getElementById("time").value = time;
 
-    // Vehicle
-    document.getElementById("vehicle").value = hero.selectedVehicle;
-
-    // Notes (append, don’t overwrite if user already typed)
-    const notesEl = document.getElementById("notes");
-    const currentNotes = (notesEl.value || "").trim();
-    if (notes && !currentNotes) {
-      notesEl.value = notes;
-    } else if (notes && currentNotes && !currentNotes.includes(notes)) {
-      notesEl.value = currentNotes + "\n" + notes;
+    if (heroState.mode === "one_way"){
+      document.getElementById("dropoff").value = dropoff;
+      const transfer = document.getElementById("h_transfer").value;
+      document.getElementById("triptype").value = (transfer === "airport") ? "airport" : "point";
+    } else {
+      document.getElementById("triptype").value = "hourly";
+      document.getElementById("hours").value = String(Math.max(3, Number(document.getElementById("h_hours").value || 3)));
+      // keep dropoff as-is (still required on main form); user can type it if needed
+      if (!document.getElementById("dropoff").value) document.getElementById("dropoff").value = "Mont-Tremblant (area)";
     }
 
-    // Auto-detect airport if user typed YUL etc (extra safety)
-    if (hero.mode === "one_way") {
-      const likelyAirport = isLikelyAirportText(pickup) || isLikelyAirportText(dropoff);
-      if (likelyAirport) document.getElementById("triptype").value = "airport";
-    }
+    document.getElementById("vehicle").value = heroState.selectedVehicle;
 
-    // Sync UI + recalc
     syncTriptypeUI();
     computeEstimate();
 
-    // Scroll to reserve section
-    document.getElementById("contact").scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById("contact").scrollIntoView({ behavior:"smooth", block:"start" });
   }
-
-  document.getElementById("tabOneWay").addEventListener("click", ()=> setHeroMode("one_way"));
-  document.getElementById("tabHourly").addEventListener("click", ()=> setHeroMode("hourly"));
-
-  document.getElementById("heroEditBtn").addEventListener("click", ()=>{
-    showHeroResults(false);
-    clearHeroError();
-    document.getElementById("heroContinueBtn").disabled = true;
-  });
-
-  document.getElementById("heroContinueBtn").addEventListener("click", ()=>{
-    if (!hero.selectedVehicle) return;
-    prefillReserveFromHero();
-  });
-
-  document.getElementById("heroSearchForm").addEventListener("submit", (e)=>{
-    e.preventDefault();
-    clearHeroError();
-
-    const mode = document.getElementById("heroMode").value;
-    const pickup = getHeroValue("h_pickup");
-    const dropoff = getHeroValue("h_dropoff");
-    const date = getHeroValue("h_date");
-    const time = getHeroValue("h_time");
-    const transfer = getHeroValue("h_transfer");
-    const hours = getHeroValue("h_hours") || "3";
-
-    if (!pickup) return showHeroError("Please enter a pickup location.");
-    if (mode === "one_way" && !dropoff) return showHeroError("Please enter a destination.");
-    if (!date) return showHeroError("Please choose a date.");
-    if (!time) return showHeroError("Please choose a time.");
-
-    // smart airport hint: if user typed airport words, switch transfer type to airport
-    if (mode === "one_way"){
-      const likelyAirport = isLikelyAirportText(pickup) || isLikelyAirportText(dropoff);
-      if (likelyAirport) document.getElementById("h_transfer").value = "airport";
-    }
-
-    renderHeroVehicles(mode === "hourly" ? "hourly" : "one_way", hours, (mode === "one_way" ? document.getElementById("h_transfer").value : "hourly"));
-    showHeroResults(true);
-    document.getElementById("heroResultsSubtitle").textContent =
-      "Select a vehicle, then continue to the reservation form (Stripe payment).";
-  });
 
   function escapeHtml(str){
     return String(str ?? "")
@@ -1725,6 +1361,45 @@
       .replaceAll('"',"&quot;")
       .replaceAll("'","&#039;");
   }
+
+  document.getElementById("tabOneWay").addEventListener("click", ()=> setHeroMode("one_way"));
+  document.getElementById("tabHourly").addEventListener("click", ()=> setHeroMode("hourly"));
+
+  document.getElementById("heroEditBtn").addEventListener("click", ()=>{
+    document.getElementById("heroResults").style.display = "none";
+    heroClearError();
+  });
+
+  document.getElementById("heroContinueBtn").addEventListener("click", ()=>{
+    if (!heroState.selectedVehicle) return;
+    prefillReserveFromHero();
+  });
+
+  document.getElementById("heroSearchForm").addEventListener("submit", (e)=>{
+    e.preventDefault();
+    heroClearError();
+
+    const pickup = (document.getElementById("h_pickup").value || "").trim();
+    const dropoff = (document.getElementById("h_dropoff").value || "").trim();
+    const date = document.getElementById("h_date").value;
+    const time = document.getElementById("h_time").value;
+
+    if (!pickup) return heroError("Please enter a pickup location.");
+    if (heroState.mode === "one_way" && !dropoff) return heroError("Please enter a destination.");
+    if (!date) return heroError("Please choose a date.");
+    if (!time) return heroError("Please choose a time.");
+
+    renderHeroVehicles();
+    document.getElementById("heroResults").style.display = "block";
+  });
+
+  ["triptype","vehicle","hours","roundtrip"].forEach(id=>{
+    const el = document.getElementById(id);
+    if (el) el.addEventListener("change", ()=>{
+      syncTriptypeUI();
+      computeEstimate();
+    });
+  });
 
   window.addEventListener("load", ()=>{
     buildTimeOptions(5, "time");
