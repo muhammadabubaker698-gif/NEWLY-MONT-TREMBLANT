@@ -68,6 +68,8 @@
     --max: 1160px;
     --gradA:#ff2e63;
     --gradB:#ff7a00;
+    --good:#0f9d58;
+    --bad:#b00020;
   }
 
   *{box-sizing:border-box;margin:0;padding:0}
@@ -174,6 +176,7 @@
     box-shadow: 0 18px 44px rgba(255,90,20,.22);
   }
 
+  /* ===== Hero (Blacklane-style) ===== */
   .hero-wrap{
     position:relative;
     width:100%;
@@ -195,9 +198,7 @@
     align-items:center;
     gap: 22px;
   }
-  .hero-left{
-    padding: 0 18px;
-  }
+  .hero-left{ padding: 0 18px; }
   .hero-left .container{padding:0}
   .hero-title{
     font-size: clamp(34px, 4vw, 58px);
@@ -231,10 +232,11 @@
     box-shadow: 0 10px 20px rgba(0,0,0,.06);
   }
 
+  /* ===== Step-based booking widget ===== */
   .booking-card{
     margin-right: 18px;
     justify-self:end;
-    width: min(420px, 100%);
+    width: min(430px, 100%);
     border-radius: 10px;
     background: #fff;
     box-shadow: 0 28px 70px rgba(0,0,0,.24);
@@ -260,10 +262,39 @@
     background: #f4f5f7;
     color: rgba(11,18,32,.94);
   }
-  .book-body{
-    padding: 14px;
-    background: #fff;
+
+  .book-body{ padding: 14px; background: #fff; }
+
+  .stepbar{
+    display:flex;
+    gap: 8px;
+    align-items:center;
+    justify-content:space-between;
+    margin: 6px 0 12px;
   }
+  .stepdot{
+    flex: 1;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(11,18,32,.10);
+    overflow:hidden;
+    position:relative;
+  }
+  .stepdot > i{
+    position:absolute; inset:0;
+    width: 0%;
+    background: linear-gradient(90deg, var(--gradA), var(--gradB));
+    border-radius: 999px;
+    transition: width .2s ease;
+  }
+  .steptext{
+    font-size: 12.5px;
+    color: rgba(11,18,32,.65);
+    font-weight: 900;
+    white-space:nowrap;
+    margin-left: 10px;
+  }
+
   .field{
     display:flex;
     align-items:center;
@@ -274,12 +305,8 @@
     background: #f4f5f7;
     margin-bottom: 10px;
   }
-  .ico{
-    width: 18px;
-    height: 18px;
-    color: rgba(11,18,32,.55);
-    flex:0 0 auto;
-  }
+  .ico{ width: 18px; height: 18px; color: rgba(11,18,32,.55); flex:0 0 auto; }
+
   .field input, .field select{
     width:100%;
     border:none;
@@ -295,12 +322,14 @@
     grid-template-columns: 1fr 1fr;
     gap: 10px;
   }
+
   .note{
-    margin: 10px 4px 12px;
+    margin: 8px 4px 10px;
     color: rgba(11,18,32,.62);
     font-size: 12.8px;
     font-weight: 800;
   }
+
   .search-btn{
     width:100%;
     border:none;
@@ -313,6 +342,7 @@
     cursor:pointer;
     box-shadow: 0 18px 44px rgba(255,90,20,.22);
   }
+  .search-btn[disabled]{ opacity:.65; cursor:not-allowed; box-shadow:none; }
 
   .results{
     display:none;
@@ -327,10 +357,7 @@
     gap:10px;
     margin-bottom: 10px;
   }
-  .results-head b{
-    font-size: 13.5px;
-    letter-spacing: .2px;
-  }
+  .results-head b{ font-size: 13.5px; letter-spacing: .2px; }
   .mini-btn{
     border: 1px solid rgba(11,18,32,.12);
     background: #fff;
@@ -340,6 +367,7 @@
     font-weight: 900;
     cursor:pointer;
   }
+
   .vlist{display:flex;flex-direction:column;gap:10px}
   .vcard{
     border-radius: 12px;
@@ -366,6 +394,7 @@
   .vprice{ text-align:right; }
   .vprice b{ font-size: 14.8px; }
   .vprice small{ display:block; margin-top:2px; font-size: 12px; color: rgba(11,18,32,.58); font-weight: 800; }
+
   .continue-btn{
     margin-top: 10px;
     width:100%;
@@ -381,6 +410,20 @@
   }
   .continue-btn.enabled{ opacity: 1; }
 
+  .alert{
+    display:none;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(11,18,32,.12);
+    background: #fbfbfc;
+    font-weight: 850;
+    font-size: 13px;
+  }
+  .alert.bad{ border-color: rgba(176,0,32,.25); background: rgba(176,0,32,.06); color: var(--bad); }
+  .alert.good{ border-color: rgba(15,157,88,.22); background: rgba(15,157,88,.06); color: var(--good); }
+
+  /* ===== Page sections ===== */
   .section{ margin-top: 46px; }
   h2{ font-size: 30px; letter-spacing: -.2px; line-height:1.15; }
   .subtitle{
@@ -417,6 +460,7 @@
   .actions{ margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; }
   .actions .btn{ box-shadow:none; }
 
+  /* Reserve form */
   .book-wrap{
     margin-top: 16px;
     border-radius: 18px;
@@ -468,7 +512,6 @@
   .estimate-top b{font-size:13.5px}
   .estimate-value{font-weight:950}
   .estimate-sub{margin-top:6px;color:rgba(11,18,32,.68);font-size:12.8px;font-weight:700}
-
   .book-actions{margin-top: 12px; display:flex; gap: 10px; flex-wrap:wrap;}
 
   .banner{
@@ -534,7 +577,7 @@
     .header-actions .btn{ display:none; }
   }
 
-  /* ===== Mobile polish (Blacklane-like) ===== */
+  /* Mobile polish */
   @media (max-width: 980px){
     .hero-bg{
       height: 720px;
@@ -547,13 +590,8 @@
     .hero-sub{ font-size: 15.5px; line-height: 1.55; }
     .hero-badges{ gap: 8px; }
     .badge{ font-size: 12.5px; padding: 8px 10px; }
-    .tabs .tab{ padding: 14px 10px; font-size: 13.5px; }
-    .field{ padding: 13px 12px; }
-    .field input, .field select{ font-size: 15px; }
     .row2{ grid-template-columns: 1fr; }
-    .note{ margin: 8px 4px 10px; }
     .search-btn{ padding: 14px 14px; font-size: 16px; }
-    .results{ padding-top: 14px; }
     .vtop{ padding: 12px 12px; }
   }
 
@@ -595,6 +633,15 @@
     }
     body{ padding-bottom: 72px; }
   }
+
+  /* Google Places Autocomplete tweaks */
+  .pac-container{
+    border-radius: 12px !important;
+    box-shadow: 0 18px 55px rgba(0,0,0,.16) !important;
+    border: 1px solid rgba(11,18,32,.10) !important;
+    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial !important;
+  }
+  .pac-item{ padding: 10px 12px !important; }
 </style>
 </head>
 
@@ -659,6 +706,11 @@
       </div>
 
       <div class="book-body">
+        <div class="stepbar" aria-hidden="true">
+          <div class="stepdot"><i id="stepFill"></i></div>
+          <div class="steptext" id="stepText">Step 1 of 3</div>
+        </div>
+
         <form id="heroSearchForm">
           <input type="hidden" id="heroMode" value="one_way" />
 
@@ -724,18 +776,24 @@
 
           <div class="note">Professional chauffeur • clean premium vehicles.</div>
 
-          <button class="search-btn" type="submit">Search</button>
+          <button id="heroSearchBtn" class="search-btn" type="submit">Search</button>
+
+          <div id="heroAlert" class="alert bad"></div>
 
           <div id="heroResults" class="results" aria-live="polite">
             <div class="results-head">
-              <b>Select a vehicle</b>
+              <b>Step 2: Choose a vehicle</b>
               <button id="heroEditBtn" class="mini-btn" type="button">Edit</button>
             </div>
-            <div id="heroVehicleList" class="vlist"></div>
-            <button id="heroContinueBtn" class="continue-btn" type="button" disabled>Continue to Reserve</button>
-          </div>
 
-          <div id="heroError" style="display:none; margin-top:10px; font-weight:900; color:#b00020; font-size:13px;"></div>
+            <div id="heroVehicleList" class="vlist"></div>
+
+            <button id="heroContinueBtn" class="continue-btn" type="button" disabled>Continue to Reserve</button>
+
+            <div id="heroReserveNote" class="alert good" style="display:none; margin-top:10px;">
+              Step 3 ready — scroll to reserve and pay securely.
+            </div>
+          </div>
         </form>
       </div>
     </aside>
@@ -843,7 +901,7 @@
     <div class="book-wrap">
       <div class="book-head">
         <b>Reserve Now (Full payment required)</b>
-        <small>Instant estimate + secure payment via Stripe Checkout.</small>
+        <small>Estimate comes from live search (API). Secure payment via Stripe Checkout.</small>
       </div>
 
       <div class="book-body2">
@@ -875,13 +933,13 @@
           <div class="row">
             <div>
               <label for="pickup">Pickup</label>
-              <input id="pickup" placeholder="Hotel / Airport / Address" required autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
-              <div class="tinyhint">Type your pickup location.</div>
+              <input id="pickup" placeholder="Hotel / Airport / Address" required autocomplete="off" />
+              <div class="tinyhint">Autocomplete enabled.</div>
             </div>
             <div>
               <label for="dropoff">Drop-off</label>
-              <input id="dropoff" placeholder="Destination" required autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
-              <div class="tinyhint">Type your drop-off location.</div>
+              <input id="dropoff" placeholder="Destination" required autocomplete="off" />
+              <div class="tinyhint">Autocomplete enabled.</div>
             </div>
           </div>
 
@@ -890,21 +948,14 @@
               <label for="triptype">Trip type</label>
               <select id="triptype">
                 <option value="hourly" selected>Hourly (3-hour minimum)</option>
-                <option value="point">Point-to-point (estimate)</option>
-                <option value="airport">Airport transfer (estimate)</option>
+                <option value="point">Point-to-point</option>
+                <option value="airport">Airport transfer</option>
               </select>
             </div>
             <div>
               <label for="vehicle">Vehicle</label>
-              <select id="vehicle" required>
-                <option value="" selected>Select vehicle</option>
-                <option value="2026 Cadillac Escalade ESV">2026 Cadillac Escalade ESV</option>
-                <option value="2025 Chevrolet Suburban">2025 Chevrolet Suburban</option>
-                <option value="2026 GMC Yukon Denali">2026 GMC Yukon Denali</option>
-                <option value="2024 Infiniti QX60">2024 Infiniti QX60</option>
-                <option value="2023 Tesla Model Y">2023 Tesla Model Y</option>
-                <option value="Mercedes Sprinter (Group Van)">Mercedes Sprinter (Group Van)</option>
-              </select>
+              <select id="vehicle" required></select>
+              <div class="tinyhint" id="vehicleHint">Choose a vehicle from live results.</div>
             </div>
           </div>
 
@@ -936,7 +987,7 @@
               <b>Estimated total</b>
               <div class="estimate-value" id="estimateValue">—</div>
             </div>
-            <div class="estimate-sub" id="estimateSub">Select trip type + vehicle (+ hours if hourly) to calculate.</div>
+            <div class="estimate-sub" id="estimateSub">Use the search widget above to get live prices.</div>
           </div>
 
           <div class="book-actions">
@@ -968,7 +1019,7 @@
     <div class="card" style="padding: 0 18px;">
       <details>
         <summary>What is the minimum booking time? <span class="chev">⌄</span></summary>
-        <p>All vehicles have a <b>3-hour minimum</b>. Point-to-point and airport estimates include a 3-hour minimum equivalent and may adjust for stops/wait time/tolls.</p>
+        <p>All vehicles have a <b>3-hour minimum</b>.</p>
       </details>
       <details>
         <summary>Do you do airport transfers (YUL)? <span class="chev">⌄</span></summary>
@@ -976,11 +1027,7 @@
       </details>
       <details>
         <summary>Do you do New York / Boston / New Jersey? <span class="chev">⌄</span></summary>
-        <p>Yes, long-distance and cross-border trips are available. Share pickup, drop-off, date/time, passengers, and any stops.</p>
-      </details>
-      <details>
-        <summary>How do I book the fastest? <span class="chev">⌄</span></summary>
-        <p>Use <b>Reserve Now (Pay Online)</b> to confirm instantly, or WhatsApp/phone for fastest response.</p>
+        <p>Yes, long-distance and cross-border trips are available.</p>
       </details>
     </div>
   </section>
@@ -995,12 +1042,35 @@
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  // Business config
+  // =========================
+  // ✅ CONFIG YOU MUST SET
+  // =========================
+
+  // 1) Google Places key (Maps JavaScript API + Places API enabled)
+  // Replace YOUR_GOOGLE_PLACES_KEY
+  const GOOGLE_PLACES_API_KEY = "YOUR_GOOGLE_PLACES_KEY";
+
+  // 2) Booking API (your pricing/availability API)
+  // Replace endpoint + headers + payload mapping + response mapping (normalizeQuoteResponse)
+  const BOOKING_API = {
+    enabled: true,
+    endpoint: "/api/quote",        // ✅ CHANGE THIS (example: "https://api.yourdomain.com/quote")
+    method: "POST",
+    timeoutMs: 12000,
+    headers: {
+      "Content-Type": "application/json"
+      // "Authorization": "Bearer YOUR_TOKEN" // if needed
+    },
+    // If your API is not ready yet, you can allow fallback to local estimates:
+    allowFallbackLocalEstimates: true
+  };
+
+  // WhatsApp/email
   const BUSINESS_WA = "15142933170";
   const BUSINESS_EMAIL = "monttremblantlimoservices@gmail.com";
 
-  // Hourly rates (CAD)
-  const RATES = {
+  // Optional local rates fallback (only used if allowFallbackLocalEstimates = true)
+  const LOCAL_RATES = {
     "2026 Cadillac Escalade ESV": 150,
     "2025 Chevrolet Suburban": 120,
     "2026 GMC Yukon Denali": 120,
@@ -1009,13 +1079,18 @@
     "Mercedes Sprinter (Group Van)": 250
   };
 
-  function v(id){ return (document.getElementById(id)?.value || "").trim(); }
+  // =========================
+  // Helpers
+  // =========================
+  function $(id){ return document.getElementById(id); }
+  function val(id){ return ($(id)?.value || "").trim(); }
 
-  function formatMoney(n){
+  function formatMoney(n, currency="CAD"){
+    if (n === null || n === undefined || Number.isNaN(Number(n))) return "—";
     try{
-      return new Intl.NumberFormat("en-CA", { style:"currency", currency:"CAD", maximumFractionDigits:0 }).format(n);
+      return new Intl.NumberFormat("en-CA", { style:"currency", currency, maximumFractionDigits:0 }).format(Number(n));
     }catch(e){
-      return "$" + Math.round(n);
+      return "$" + Math.round(Number(n));
     }
   }
 
@@ -1033,7 +1108,6 @@
     timeEl.appendChild(ph);
 
     const pad = (n)=> String(n).padStart(2,"0");
-
     for (let minutes = 0; minutes < 24 * 60; minutes += stepMinutes){
       const hh = Math.floor(minutes / 60);
       const mm = minutes % 60;
@@ -1077,80 +1151,402 @@
     }
   }
 
+  // =========================
+  // ✅ Step flow state
+  // =========================
+  const heroState = {
+    mode: "one_way", // one_way | hourly
+    step: 1,         // 1 search, 2 choose vehicle, 3 reserve
+    quoteCurrency: "CAD",
+    quoteId: null,
+    vehicles: [],    // normalized list from API
+    selectedVehicleId: null
+  };
+
+  function setStep(step){
+    heroState.step = step;
+    const fill = $("stepFill");
+    const txt = $("stepText");
+
+    const pct = step === 1 ? 33 : step === 2 ? 66 : 100;
+    if (fill) fill.style.width = pct + "%";
+    if (txt) txt.textContent = `Step ${step} of 3`;
+  }
+
+  function showHeroAlert(message, kind="bad"){
+    const el = $("heroAlert");
+    el.className = "alert " + (kind === "good" ? "good" : "bad");
+    el.style.display = "block";
+    el.textContent = message;
+  }
+  function clearHeroAlert(){
+    const el = $("heroAlert");
+    el.style.display = "none";
+    el.textContent = "";
+  }
+
+  function setHeroMode(mode){
+    heroState.mode = mode;
+    $("heroMode").value = mode;
+
+    const one = mode === "one_way";
+    $("tabOneWay").classList.toggle("active", one);
+    $("tabHourly").classList.toggle("active", !one);
+    $("tabOneWay").setAttribute("aria-selected", one ? "true":"false");
+    $("tabHourly").setAttribute("aria-selected", !one ? "true":"false");
+
+    $("heroDropoffWrap").style.display = one ? "" : "none";
+    $("heroTransferWrap").style.display = one ? "" : "none";
+    $("heroHoursWrap").style.display = one ? "none" : "";
+
+    $("h_dropoff").required = one;
+
+    // reset results
+    $("heroResults").style.display = "none";
+    $("heroVehicleList").innerHTML = "";
+    $("heroContinueBtn").disabled = true;
+    $("heroContinueBtn").classList.remove("enabled");
+    $("heroReserveNote").style.display = "none";
+
+    heroState.vehicles = [];
+    heroState.selectedVehicleId = null;
+    heroState.quoteId = null;
+
+    setStep(1);
+    clearHeroAlert();
+  }
+
+  function escapeHtml(str){
+    return String(str ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  // =========================
+  // ✅ Booking API wiring
+  // =========================
+
+  function abortableFetch(url, options, timeoutMs){
+    const ctrl = new AbortController();
+    const t = setTimeout(()=>ctrl.abort(), timeoutMs);
+    return fetch(url, { ...options, signal: ctrl.signal })
+      .finally(()=>clearTimeout(t));
+  }
+
+  function buildQuotePayload(){
+    // This is the payload we send to YOUR API.
+    // If your API expects different keys, modify here.
+    const pickup = val("h_pickup");
+    const dropoff = val("h_dropoff");
+    const date = $("h_date").value;
+    const time = val("h_time");
+    const transfer = val("h_transfer"); // point|airport
+    const hours = Number(val("h_hours") || 3);
+
+    const payload = {
+      service_area: "mont-tremblant",
+      mode: heroState.mode === "hourly" ? "hourly" : "one_way",
+      pickup: pickup,
+      dropoff: heroState.mode === "hourly" ? null : dropoff,
+      date: date,
+      time: time,
+      transfer_type: heroState.mode === "hourly" ? null : transfer,
+      hours: heroState.mode === "hourly" ? Math.max(3, hours) : null,
+      currency: "CAD"
+    };
+
+    return payload;
+  }
+
+  function normalizeQuoteResponse(apiJson){
+    /**
+     * ✅ ADAPT THIS to your API response.
+     *
+     * We need to return:
+     * {
+     *   quoteId: string|null,
+     *   currency: "CAD",
+     *   vehicles: [
+     *     { id, name, description, price_total, price_note, image_url? }
+     *   ]
+     * }
+     *
+     * Right now this supports a few common shapes.
+     */
+
+    // Shape A:
+    // { quoteId, currency, vehicles:[{id,name,description,totalPrice, note, image}] }
+    if (apiJson && Array.isArray(apiJson.vehicles)){
+      const currency = apiJson.currency || "CAD";
+      const vehicles = apiJson.vehicles.map(v=>({
+        id: String(v.id ?? v.vehicleId ?? v.name),
+        name: v.name || v.vehicleName || "Vehicle",
+        description: v.description || v.meta || "",
+        price_total: Number(v.totalPrice ?? v.price_total ?? v.amount ?? v.total ?? NaN),
+        price_note: v.note || v.price_note || "",
+        image_url: v.image || v.image_url || ""
+      }));
+      return { quoteId: apiJson.quoteId || apiJson.quote_id || null, currency, vehicles };
+    }
+
+    // Shape B:
+    // { data: { quote_id, currency, options:[...] } }
+    if (apiJson?.data?.options && Array.isArray(apiJson.data.options)){
+      const currency = apiJson.data.currency || "CAD";
+      const vehicles = apiJson.data.options.map(v=>({
+        id: String(v.id ?? v.code ?? v.name),
+        name: v.name || v.title || "Vehicle",
+        description: v.description || v.meta || "",
+        price_total: Number(v.total ?? v.price ?? v.amount ?? NaN),
+        price_note: v.note || "",
+        image_url: v.image || ""
+      }));
+      return { quoteId: apiJson.data.quote_id || apiJson.data.quoteId || null, currency, vehicles };
+    }
+
+    // Unknown shape:
+    throw new Error("API response format not recognized. Update normalizeQuoteResponse() to match your API.");
+  }
+
+  async function fetchLiveQuote(){
+    if (!BOOKING_API.enabled){
+      throw new Error("Booking API is disabled.");
+    }
+
+    const payload = buildQuotePayload();
+
+    const res = await abortableFetch(BOOKING_API.endpoint, {
+      method: BOOKING_API.method,
+      headers: BOOKING_API.headers,
+      body: JSON.stringify(payload)
+    }, BOOKING_API.timeoutMs);
+
+    const text = await res.text();
+    let json = null;
+    try{ json = text ? JSON.parse(text) : {}; }catch(e){}
+
+    if (!res.ok){
+      const msg = (json && (json.error || json.message)) ? (json.error || json.message) : ("API error: " + res.status);
+      throw new Error(msg);
+    }
+
+    const normalized = normalizeQuoteResponse(json);
+
+    if (!normalized.vehicles || !normalized.vehicles.length){
+      throw new Error("No vehicles available for this request.");
+    }
+
+    return normalized;
+  }
+
+  // Optional fallback local estimates (so site never looks broken)
+  function buildLocalFallbackVehicles(){
+    const currency = "CAD";
+    const vehicles = Object.keys(LOCAL_RATES).map(name=>{
+      const rate = LOCAL_RATES[name];
+      let total = null;
+      let note = "";
+
+      if (heroState.mode === "hourly"){
+        const h = Math.max(3, Number(val("h_hours") || 3));
+        total = rate * h;
+        note = `Estimated for ${h}h (min 3h)`;
+      } else {
+        const transfer = val("h_transfer");
+        const fee = transfer === "airport" ? 60 : 40;
+        total = (rate * 3) + fee;
+        note = transfer === "airport" ? "Airport estimate (3h min + fee)" : "Point-to-point estimate (3h min + fee)";
+      }
+
+      return { id: name, name, description: "", price_total: total, price_note: note, image_url: "" };
+    });
+
+    return { quoteId: null, currency, vehicles };
+  }
+
+  // =========================
+  // ✅ Render vehicles + step 2
+  // =========================
+  function renderVehicleResults(){
+    const list = $("heroVehicleList");
+    list.innerHTML = "";
+    heroState.selectedVehicleId = null;
+    $("heroContinueBtn").disabled = true;
+    $("heroContinueBtn").classList.remove("enabled");
+    $("heroReserveNote").style.display = "none";
+
+    heroState.vehicles.forEach(v=>{
+      const card = document.createElement("div");
+      card.className = "vcard";
+      card.innerHTML = `
+        <div class="vtop">
+          <div>
+            <div class="vname">${escapeHtml(v.name)}</div>
+            <div class="vmeta">${escapeHtml(v.description || v.price_note || "")}</div>
+          </div>
+          <div class="vprice">
+            <b>${formatMoney(v.price_total, heroState.quoteCurrency)}</b>
+            <small>${escapeHtml(v.price_note || "Estimated")}</small>
+          </div>
+        </div>
+      `;
+      card.addEventListener("click", ()=>{
+        document.querySelectorAll(".vcard").forEach(el=>el.classList.remove("selected"));
+        card.classList.add("selected");
+        heroState.selectedVehicleId = v.id;
+        $("heroContinueBtn").disabled = false;
+        $("heroContinueBtn").classList.add("enabled");
+      });
+      list.appendChild(card);
+    });
+
+    $("heroResults").style.display = "block";
+    setStep(2);
+  }
+
+  // =========================
+  // ✅ Prefill reserve form + step 3
+  // =========================
+  function setReserveEstimateFromSelectedVehicle(){
+    const v = heroState.vehicles.find(x => String(x.id) === String(heroState.selectedVehicleId));
+    if (!v) return;
+
+    $("estimateValue").textContent = formatMoney(v.price_total, heroState.quoteCurrency);
+    $("estimateSub").textContent = v.price_note || "Live estimate from search.";
+    $("vehicleHint").textContent = "Live options loaded from search.";
+  }
+
+  function fillVehicleSelectFromResults(){
+    const sel = $("vehicle");
+    sel.innerHTML = "";
+    const ph = document.createElement("option");
+    ph.value = "";
+    ph.textContent = "Select vehicle";
+    ph.selected = true;
+    sel.appendChild(ph);
+
+    heroState.vehicles.forEach(v=>{
+      const opt = document.createElement("option");
+      opt.value = v.name; // keep your old flow (vehicle name) for Stripe payload
+      opt.textContent = v.name;
+      opt.dataset.vehicleId = v.id;
+      opt.dataset.total = String(v.price_total ?? "");
+      sel.appendChild(opt);
+    });
+  }
+
+  function prefillReserveFromHero(){
+    // Use the same user inputs from hero
+    const pickup = val("h_pickup");
+    const dropoff = val("h_dropoff");
+    const date = $("h_date").value;
+    const time = val("h_time");
+    const transfer = val("h_transfer");
+    const hours = String(Math.max(3, Number(val("h_hours") || 3)));
+
+    $("pickup").value = pickup;
+    $("dropoff").value = heroState.mode === "hourly" ? (val("dropoff") || "Mont-Tremblant (area)") : dropoff;
+    $("date").value = date;
+    $("time").value = time;
+
+    if (heroState.mode === "hourly"){
+      $("triptype").value = "hourly";
+      $("hours").value = hours;
+    } else {
+      $("triptype").value = (transfer === "airport") ? "airport" : "point";
+    }
+
+    fillVehicleSelectFromResults();
+
+    // select chosen vehicle
+    const chosen = heroState.vehicles.find(v => String(v.id) === String(heroState.selectedVehicleId));
+    if (chosen){
+      $("vehicle").value = chosen.name;
+    }
+
+    syncTriptypeUI();
+    setReserveEstimateFromSelectedVehicle();
+
+    setStep(3);
+    $("heroReserveNote").style.display = "block";
+
+    document.getElementById("contact").scrollIntoView({ behavior:"smooth", block:"start" });
+  }
+
+  // =========================
+  // Reserve form functions (WhatsApp/Email/Stripe)
+  // =========================
   function syncTriptypeUI(){
-    const triptype = v("triptype");
-    const hoursRow = document.getElementById("hoursRow");
+    const triptype = val("triptype");
+    const hoursRow = $("hoursRow");
     if (hoursRow) hoursRow.style.display = (triptype === "hourly") ? "grid" : "none";
   }
 
-  function computeEstimate(){
-    const triptype = v("triptype");
-    const vehicle = v("vehicle");
-    const hoursRaw = parseInt(v("hours") || "3", 10);
-    const roundtrip = v("roundtrip");
+  function getSelectedVehicleTotalFromDropdown(){
+    const sel = $("vehicle");
+    const opt = sel?.options?.[sel.selectedIndex];
+    if (!opt) return null;
+    const total = Number(opt.dataset.total);
+    return Number.isFinite(total) ? total : null;
+  }
 
-    const estimateValueEl = document.getElementById("estimateValue");
-    const estimateSubEl = document.getElementById("estimateSub");
+  function computeEstimateForReserve(){
+    // Prefer live total from selected vehicle result
+    const liveTotal = getSelectedVehicleTotalFromDropdown();
+    if (Number.isFinite(liveTotal)) {
+      return { total: liveTotal, text: formatMoney(liveTotal, heroState.quoteCurrency) + " (live)" };
+    }
 
-    const rate = RATES[vehicle];
+    // Fallback local (only if enabled)
+    if (!BOOKING_API.allowFallbackLocalEstimates) {
+      return { total: null, text: "Run Search above for live price" };
+    }
+
+    const triptype = val("triptype");
+    const vehicle = val("vehicle");
+    const rate = LOCAL_RATES[vehicle];
+    const hoursRaw = parseInt(val("hours") || "3", 10);
+    const roundtrip = val("roundtrip");
     const hours = Math.max(3, isNaN(hoursRaw) ? 3 : hoursRaw);
 
-    function needVehicle(){
-      estimateValueEl.textContent = "Select a vehicle";
-      estimateSubEl.textContent = "Choose a vehicle to calculate. 3-hour minimum applies.";
-      return { mode: triptype, total: null, text: "Select vehicle to estimate" };
-    }
+    if (!rate) return { total: null, text: "Select vehicle" };
 
     if (triptype === "hourly"){
-      if (!rate) return needVehicle();
-
       let total = rate * hours;
       if (roundtrip === "yes"){ total = Math.round(total * 1.7); }
-
-      estimateValueEl.textContent = formatMoney(total);
-      estimateSubEl.textContent =
-        `${formatMoney(rate)}/hr × ${hours} hour(s)` +
-        (roundtrip === "yes" ? " • round trip included (estimate)" : "") +
-        " • Taxes/tolls/parking may apply.";
-
-      return { mode:"hourly", total, text: `${formatMoney(rate)}/hr × ${hours}h` + (roundtrip === "yes" ? " (round trip)" : "") };
+      return { total, text: `${formatMoney(total)} estimate (hourly)` };
     }
-
-    if (!rate) return needVehicle();
 
     const base = rate * 3;
     const tripFee = (triptype === "airport") ? 60 : 40;
     let total = base + tripFee;
-
     if (roundtrip === "yes"){ total = Math.round(total * 1.7); }
+    return { total, text: `${formatMoney(total)} estimate` };
+  }
 
-    estimateValueEl.textContent = formatMoney(total);
-    estimateSubEl.textContent =
-      `Includes 3-hour minimum equivalent + ${formatMoney(tripFee)} service fee` +
-      (roundtrip === "yes" ? " • round trip included (estimate)" : "") +
-      " • Final may adjust for stops/wait time/tolls.";
-
-    return {
-      mode: triptype,
-      total,
-      text: `${formatMoney(total)} estimated (${triptype === "airport" ? "airport" : "point-to-point"})`
-    };
+  function updateReserveEstimateUI(){
+    const est = computeEstimateForReserve();
+    $("estimateValue").textContent = est.total ? formatMoney(est.total, heroState.quoteCurrency) : "—";
+    $("estimateSub").textContent = est.total ? (est.text + " • Taxes/tolls/parking may apply.") : "Use the search widget above to get live prices.";
   }
 
   function buildMessage(){
-    const name = v("name");
-    const phone = v("phone");
-    const date = v("date");
-    const time = v("time");
-    const pickup = v("pickup");
-    const dropoff = v("dropoff");
-    const triptype = v("triptype");
-    const vehicle = v("vehicle");
-    const hours = v("hours");
-    const roundtrip = v("roundtrip");
-    const notes = v("notes");
+    const name = val("name");
+    const phone = val("phone");
+    const date = val("date");
+    const time = val("time");
+    const pickup = val("pickup");
+    const dropoff = val("dropoff");
+    const triptype = val("triptype");
+    const vehicle = val("vehicle");
+    const hours = val("hours");
+    const roundtrip = val("roundtrip");
+    const notes = val("notes");
 
-    const est = computeEstimate();
+    const est = computeEstimateForReserve();
 
     let msg = "Booking Request - Mont Tremblant Limo Services%0A";
     msg += "Name: " + encodeURIComponent(name) + "%0A";
@@ -1172,7 +1568,7 @@
 
   function sendBooking(e){
     e.preventDefault();
-    if (!v("name") || !v("date") || !v("time") || !v("pickup") || !v("dropoff") || !v("vehicle")) {
+    if (!val("name") || !val("date") || !val("time") || !val("pickup") || !val("dropoff") || !val("vehicle")) {
       alert("Please fill Name, Date, Time, Pickup, Drop-off, and select a vehicle.");
       return false;
     }
@@ -1182,7 +1578,7 @@
   }
 
   function sendEmail(){
-    if (!v("name") || !v("date") || !v("time") || !v("pickup") || !v("dropoff") || !v("vehicle")) {
+    if (!val("name") || !val("date") || !val("time") || !val("pickup") || !val("dropoff") || !val("vehicle")) {
       alert("Please fill Name, Date, Time, Pickup, Drop-off and select a vehicle first.");
       return false;
     }
@@ -1193,31 +1589,33 @@
   }
 
   function collectBookingPayload(){
-    const requiredMap = { name:"Name", date:"Date", time:"Time", pickup:"Pickup", dropoff:"Drop-off", vehicle:"Vehicle" };
-    const missing = [];
-    for (const id of Object.keys(requiredMap)){ if (!v(id)) missing.push(id); }
-    if (missing.length){
-      return { ok:false, error:`Missing: ${missing.map(id=>requiredMap[id]).join(", ")}.` };
+    const est = computeEstimateForReserve();
+    if (!est.total){
+      return { ok:false, error:"Please run Search above and select a vehicle to get live price." };
     }
-    const est = computeEstimate();
-    if (!est.total) return { ok:false, error:"Please select trip type and vehicle to generate an estimate." };
+
+    // include quote info if you have it
+    const vehicleSel = $("vehicle");
+    const opt = vehicleSel?.options?.[vehicleSel.selectedIndex];
 
     return {
       ok:true,
-      booking:{
-        name: v("name"),
-        phone: v("phone"),
-        date: v("date"),
-        time: v("time"),
-        pickup: v("pickup"),
-        dropoff: v("dropoff"),
-        triptype: v("triptype"),
-        vehicle: v("vehicle"),
-        hours: v("hours"),
-        roundtrip: v("roundtrip"),
-        notes: v("notes"),
+      booking: {
+        name: val("name"),
+        phone: val("phone"),
+        date: val("date"),
+        time: val("time"),
+        pickup: val("pickup"),
+        dropoff: val("dropoff"),
+        triptype: val("triptype"),
+        vehicle: val("vehicle"),
+        vehicle_id: opt?.dataset?.vehicleId || null,
+        hours: val("hours"),
+        roundtrip: val("roundtrip"),
+        notes: val("notes"),
         estimate_text: est.text,
         estimate_total_cad: est.total,
+        quote_id: heroState.quoteId,
         pay_option: "full",
         pay_now_cad: est.total
       }
@@ -1225,7 +1623,7 @@
   }
 
   async function startStripeCheckout(){
-    const statusEl = document.getElementById("payStatus");
+    const statusEl = $("payStatus");
     if (statusEl) statusEl.textContent = "";
 
     const payload = collectBookingPayload();
@@ -1255,166 +1653,80 @@
     }
   }
 
-  // ===== Hero widget logic (Search -> show vehicles -> Continue -> prefill reserve) =====
-  const heroState = { mode: "one_way", selectedVehicle: "" };
-
-  function heroError(msg){
-    const el = document.getElementById("heroError");
-    el.style.display = "block";
-    el.textContent = msg;
-  }
-  function heroClearError(){
-    const el = document.getElementById("heroError");
-    el.style.display = "none";
-    el.textContent = "";
-  }
-
-  function setHeroMode(mode){
-    heroState.mode = mode;
-    document.getElementById("heroMode").value = mode;
-
-    const one = mode === "one_way";
-    document.getElementById("tabOneWay").classList.toggle("active", one);
-    document.getElementById("tabHourly").classList.toggle("active", !one);
-    document.getElementById("tabOneWay").setAttribute("aria-selected", one ? "true":"false");
-    document.getElementById("tabHourly").setAttribute("aria-selected", !one ? "true":"false");
-
-    document.getElementById("heroDropoffWrap").style.display = one ? "" : "none";
-    document.getElementById("heroTransferWrap").style.display = one ? "" : "none";
-    document.getElementById("heroHoursWrap").style.display = one ? "none" : "";
-
-    document.getElementById("h_dropoff").required = one;
-
-    document.getElementById("heroResults").style.display = "none";
-    document.getElementById("heroVehicleList").innerHTML = "";
-    document.getElementById("heroContinueBtn").disabled = true;
-    document.getElementById("heroContinueBtn").classList.remove("enabled");
-    heroState.selectedVehicle = "";
+  // =========================
+  // ✅ Hero submit: call API + show vehicle list
+  // =========================
+  function validateHeroInputs(){
+    const pickup = val("h_pickup");
+    const dropoff = val("h_dropoff");
+    const date = $("h_date").value;
+    const time = val("h_time");
+    if (!pickup) return "Please enter a pickup location.";
+    if (heroState.mode === "one_way" && !dropoff) return "Please enter a destination.";
+    if (!date) return "Please choose a date.";
+    if (!time) return "Please choose a time.";
+    return null;
   }
 
-  function escapeHtml(str){
-    return String(str ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
+  function setHeroSearchLoading(isLoading){
+    const btn = $("heroSearchBtn");
+    btn.disabled = isLoading;
+    btn.textContent = isLoading ? "Searching…" : "Search";
   }
 
-  function estimateHero(vehicleName){
-    const rate = RATES[vehicleName];
-    if (!rate) return { total: null, note: "Unavailable" };
+  $("tabOneWay").addEventListener("click", ()=> setHeroMode("one_way"));
+  $("tabHourly").addEventListener("click", ()=> setHeroMode("hourly"));
 
-    if (heroState.mode === "hourly"){
-      const h = Math.max(3, Number(document.getElementById("h_hours").value || 3));
-      return { total: rate * h, note: `Total for ${h}h (min 3h)` };
-    }
-
-    const transfer = document.getElementById("h_transfer").value;
-    const fee = (transfer === "airport") ? 60 : 40;
-    return { total: (rate * 3) + fee, note: transfer === "airport" ? "Airport transfer estimate" : "Point-to-point estimate" };
-  }
-
-  function renderHeroVehicles(){
-    const list = document.getElementById("heroVehicleList");
-    list.innerHTML = "";
-    heroState.selectedVehicle = "";
-    document.getElementById("heroContinueBtn").disabled = true;
-    document.getElementById("heroContinueBtn").classList.remove("enabled");
-
-    Object.keys(RATES).forEach(name=>{
-      const est = estimateHero(name);
-
-      const card = document.createElement("div");
-      card.className = "vcard";
-      card.innerHTML = `
-        <div class="vtop">
-          <div>
-            <div class="vname">${escapeHtml(name)}</div>
-            <div class="vmeta">${escapeHtml(est.note)}</div>
-          </div>
-          <div class="vprice">
-            <b>${est.total ? formatMoney(est.total) : "—"}</b>
-            <small>${heroState.mode === "hourly" ? "Rate-based" : "3h min + fee"}</small>
-          </div>
-        </div>
-      `;
-
-      card.addEventListener("click", ()=>{
-        document.querySelectorAll(".vcard").forEach(el=>el.classList.remove("selected"));
-        card.classList.add("selected");
-        heroState.selectedVehicle = name;
-        document.getElementById("heroContinueBtn").disabled = false;
-        document.getElementById("heroContinueBtn").classList.add("enabled");
-      });
-
-      list.appendChild(card);
-    });
-  }
-
-  function prefillReserveFromHero(){
-    const pickup = (document.getElementById("h_pickup").value || "").trim();
-    const dropoff = (document.getElementById("h_dropoff").value || "").trim();
-    const date = document.getElementById("h_date").value;
-    const time = document.getElementById("h_time").value;
-
-    document.getElementById("pickup").value = pickup;
-    document.getElementById("date").value = date;
-    document.getElementById("time").value = time;
-
-    if (heroState.mode === "one_way"){
-      document.getElementById("dropoff").value = dropoff;
-      const transfer = document.getElementById("h_transfer").value;
-      document.getElementById("triptype").value = (transfer === "airport") ? "airport" : "point";
-    } else {
-      document.getElementById("triptype").value = "hourly";
-      document.getElementById("hours").value = String(Math.max(3, Number(document.getElementById("h_hours").value || 3)));
-      if (!document.getElementById("dropoff").value) document.getElementById("dropoff").value = "Mont-Tremblant (area)";
-    }
-
-    document.getElementById("vehicle").value = heroState.selectedVehicle;
-
-    syncTriptypeUI();
-    computeEstimate();
-    document.getElementById("contact").scrollIntoView({ behavior:"smooth", block:"start" });
-  }
-
-  document.getElementById("tabOneWay").addEventListener("click", ()=> setHeroMode("one_way"));
-  document.getElementById("tabHourly").addEventListener("click", ()=> setHeroMode("hourly"));
-
-  document.getElementById("heroEditBtn").addEventListener("click", ()=>{
-    document.getElementById("heroResults").style.display = "none";
-    heroClearError();
+  $("heroEditBtn").addEventListener("click", ()=>{
+    $("heroResults").style.display = "none";
+    clearHeroAlert();
+    setStep(1);
   });
 
-  document.getElementById("heroContinueBtn").addEventListener("click", ()=>{
-    if (!heroState.selectedVehicle) return;
+  $("heroContinueBtn").addEventListener("click", ()=>{
+    if (!heroState.selectedVehicleId) return;
     prefillReserveFromHero();
   });
 
-  document.getElementById("heroSearchForm").addEventListener("submit", (e)=>{
+  $("heroSearchForm").addEventListener("submit", async (e)=>{
     e.preventDefault();
-    heroClearError();
+    clearHeroAlert();
 
-    const pickup = (document.getElementById("h_pickup").value || "").trim();
-    const dropoff = (document.getElementById("h_dropoff").value || "").trim();
-    const date = document.getElementById("h_date").value;
-    const time = document.getElementById("h_time").value;
+    const err = validateHeroInputs();
+    if (err) return showHeroAlert(err, "bad");
 
-    if (!pickup) return heroError("Please enter a pickup location.");
-    if (heroState.mode === "one_way" && !dropoff) return heroError("Please enter a destination.");
-    if (!date) return heroError("Please choose a date.");
-    if (!time) return heroError("Please choose a time.");
+    setHeroSearchLoading(true);
 
-    renderHeroVehicles();
-    document.getElementById("heroResults").style.display = "block";
+    try{
+      const live = await fetchLiveQuote();
+      heroState.quoteId = live.quoteId || null;
+      heroState.quoteCurrency = live.currency || "CAD";
+      heroState.vehicles = live.vehicles;
+      renderVehicleResults();
+    }catch(error){
+      console.error(error);
+
+      if (BOOKING_API.allowFallbackLocalEstimates){
+        const fallback = buildLocalFallbackVehicles();
+        heroState.quoteId = null;
+        heroState.quoteCurrency = fallback.currency;
+        heroState.vehicles = fallback.vehicles;
+        showHeroAlert("Live pricing is temporarily unavailable — showing estimated prices.", "bad");
+        renderVehicleResults();
+      } else {
+        showHeroAlert(error?.message || "Unable to get live pricing. Please try again.", "bad");
+      }
+    }finally{
+      setHeroSearchLoading(false);
+    }
   });
 
+  // Reserve estimate updates when user changes selections
   ["triptype","vehicle","hours","roundtrip"].forEach(id=>{
-    const el = document.getElementById(id);
+    const el = $(id);
     if (el) el.addEventListener("change", ()=>{
       syncTriptypeUI();
-      computeEstimate();
+      updateReserveEstimateUI();
     });
   });
 
@@ -1429,20 +1741,70 @@
     });
   });
 
+  // =========================
+  // ✅ Google Places Autocomplete
+  // =========================
+  function initPlaces(){
+    if (!window.google || !google.maps || !google.maps.places) return;
+
+    const opts = {
+      fields: ["formatted_address","geometry","name","place_id"],
+      // Optional: restrict to Canada
+      componentRestrictions: { country: ["ca"] }
+    };
+
+    const ids = ["h_pickup","h_dropoff","pickup","dropoff"];
+    ids.forEach(id=>{
+      const el = $(id);
+      if (!el) return;
+      const ac = new google.maps.places.Autocomplete(el, opts);
+      ac.addListener("place_changed", ()=>{
+        const place = ac.getPlace();
+        // If you want to store place_id/latlng for your API later, do it here.
+        // Example:
+        // el.dataset.placeId = place.place_id || "";
+        // el.dataset.lat = place.geometry?.location?.lat?.();
+        // el.dataset.lng = place.geometry?.location?.lng?.();
+      });
+    });
+  }
+
+  function loadGooglePlaces(){
+    if (!GOOGLE_PLACES_API_KEY || GOOGLE_PLACES_API_KEY.includes("YOUR_GOOGLE_PLACES_KEY")){
+      console.warn("Google Places key missing. Autocomplete will not load.");
+      return;
+    }
+    const s = document.createElement("script");
+    s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_PLACES_API_KEY)}&libraries=places&callback=__initPlacesCB`;
+    s.async = true;
+    s.defer = true;
+    window.__initPlacesCB = initPlaces;
+    document.head.appendChild(s);
+  }
+
+  // =========================
+  // Init
+  // =========================
   window.addEventListener("load", ()=>{
     buildTimeOptions(5, "time");
     buildTimeOptions(5, "h_time");
 
+    // set default date today
     const d = new Date();
     const yyyy = d.getFullYear();
     const mm = String(d.getMonth()+1).padStart(2,"0");
     const dd = String(d.getDate()).padStart(2,"0");
-    document.getElementById("h_date").value = `${yyyy}-${mm}-${dd}`;
+    $("h_date").value = `${yyyy}-${mm}-${dd}`;
 
     setHeroMode("one_way");
     syncTriptypeUI();
-    computeEstimate();
     showPaymentBanner();
+
+    // Load Google Places script
+    loadGooglePlaces();
+
+    // Reserve estimate UI initial
+    updateReserveEstimateUI();
   });
 </script>
 
