@@ -321,7 +321,7 @@
   }
   .alert.bad{ border-color: rgba(176,0,32,.25); background: rgba(176,0,32,.06); color: var(--bad); }
 
-  /* Overlays (Step 2 + Step 3) */
+  /* Overlays */
   .overlay{
     position: fixed;
     inset: 0;
@@ -416,7 +416,9 @@
     overflow: hidden;
     background: #fff;
   }
+
   .vrow{
+    position: relative;
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -424,10 +426,58 @@
     padding: 14px 14px;
     border-top: 1px solid rgba(11,18,32,.10);
     cursor: pointer;
+    transition: transform .12s ease, padding .12s ease, background .12s ease;
   }
   .vrow:first-child{ border-top: none; }
   .vrow:hover{ background: rgba(11,18,32,.03); }
-  .vrow.selected{ outline: 2px solid rgba(255,90,20,.35); background: rgba(255,90,20,.06); }
+
+  /* ✅ checkmark (hidden until selected) */
+  .vcheck{
+    position:absolute;
+    right: 16px;
+    top: 14px;
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size: 13px;
+    font-weight: 950;
+    color: #fff;
+    background: linear-gradient(90deg, var(--gradA), var(--gradB));
+    box-shadow: 0 10px 18px rgba(255,90,20,.20);
+    opacity: 0;
+    transform: scale(.92);
+    transition: opacity .12s ease, transform .12s ease;
+    pointer-events:none;
+  }
+
+  /* ✅ Blacklane-like selected row */
+  .vrow.selected{
+    background: rgba(255,90,20,.06);
+    padding-top: 18px;            /* slightly taller */
+    padding-bottom: 18px;         /* slightly taller */
+    transform: translateY(-1px);  /* tiny lift */
+    z-index: 2;
+  }
+  .vrow.selected .vcheck{
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Closed rounded border */
+  .vrow.selected::after{
+    content:"";
+    position:absolute;
+    inset: 6px;
+    border-radius: 14px;
+    border: 2px solid rgba(255,90,20,.55);
+    pointer-events:none;
+  }
+
+  /* remove flat separator line effect near selection (Safari-safe via JS class) */
+  .vrow.hide-top-border{ border-top-color: transparent; }
 
   .vleft b{ display:block; font-weight: 950; }
   .vleft small{ display:block; margin-top: 2px; color: rgba(11,18,32,.62); font-weight: 800; }
@@ -435,6 +485,7 @@
     text-align:right;
     font-weight: 950;
     white-space: nowrap;
+    padding-right: 26px; /* space so price doesn't collide with checkmark */
   }
 
   .flow-actions{
@@ -487,7 +538,7 @@
   .estimate-sub{margin-top:6px;color:rgba(11,18,32,.68);font-size:12.8px;font-weight:700}
   .tinyhint{margin-top:6px;font-size:12.5px;color:rgba(11,18,32,.62);font-weight:700}
 
-  /* Sections (kept simple) */
+  /* Sections */
   .section{ margin-top: 46px; }
   h2{ font-size: 30px; letter-spacing: -.2px; line-height:1.15; }
   .subtitle{
@@ -576,13 +627,11 @@
         <a href="#fleet">Our fleet</a>
         <a href="#routes">Destinations</a>
         <a href="#faq">FAQ</a>
-        <a href="#contact">Book</a>
       </div>
 
       <div class="header-actions">
         <span class="pill">📞 <a href="tel:+15142933170">+1 (514) 293-3170</a></span>
         <a class="btn" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
-        <a class="btn btn-primary" href="#contact">Book now</a>
       </div>
     </div>
   </div>
@@ -594,7 +643,6 @@
       <div class="hero-title">Luxury chauffeur service in Mont-Tremblant</div>
       <div class="hero-sub">
         Airport transfers, hourly bookings, ski trips, corporate travel and special events.
-        <b>Minimum 3 hours on all vehicles.</b>
       </div>
 
       <div class="hero-badges">
@@ -672,7 +720,7 @@
               <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z" stroke="currentColor" stroke-width="2"/>
             </svg>
             <select id="h_hours">
-              <option value="3">3 hours (minimum)</option>
+              <option value="3">3 hours</option>
               <option value="4">4 hours</option>
               <option value="5">5 hours</option>
               <option value="6">6 hours</option>
@@ -709,7 +757,7 @@
       <div class="summary-pill" id="tripSummary"></div>
 
       <div class="flow-h1">Select a vehicle</div>
-      <div class="flow-sub">Prices shown are estimates. Minimum 3 hours applies.</div>
+      <div class="flow-sub">Prices shown are estimates.</div>
 
       <div class="vlist" id="vehicleOverlayList"></div>
 
@@ -756,7 +804,7 @@
           <b>Total estimate</b>
           <div class="estimate-value" id="checkoutTotal">—</div>
         </div>
-        <div class="estimate-sub" id="checkoutSub">Minimum 3 hours applies.</div>
+        <div class="estimate-sub" id="checkoutSub"></div>
       </div>
 
       <div class="flow-actions" style="margin-top:14px;">
@@ -784,7 +832,7 @@
           <div class="price">$150 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions">
-            <a class="btn btn-primary" href="#contact">Reserve</a>
+            <a class="btn btn-primary" href="#fleet">Reserve</a>
             <a class="btn" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
@@ -798,7 +846,7 @@
           <div class="price">$120 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions">
-            <a class="btn btn-primary" href="#contact">Reserve</a>
+            <a class="btn btn-primary" href="#fleet">Reserve</a>
             <a class="btn" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
@@ -812,7 +860,7 @@
           <div class="price">$120 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions">
-            <a class="btn btn-primary" href="#contact">Reserve</a>
+            <a class="btn btn-primary" href="#fleet">Reserve</a>
             <a class="btn" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
@@ -826,7 +874,7 @@
           <div class="price">$99 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions">
-            <a class="btn btn-primary" href="#contact">Reserve</a>
+            <a class="btn btn-primary" href="#fleet">Reserve</a>
             <a class="btn" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
@@ -840,7 +888,7 @@
           <div class="price">$75 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions">
-            <a class="btn btn-primary" href="#contact">Reserve</a>
+            <a class="btn btn-primary" href="#fleet">Reserve</a>
             <a class="btn" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
@@ -854,33 +902,11 @@
           <div class="price">$250 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions">
-            <a class="btn btn-primary" href="#contact">Reserve</a>
+            <a class="btn btn-primary" href="#fleet">Reserve</a>
             <a class="btn" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
       </div>
-    </div>
-  </section>
-
-  <section id="routes" class="section">
-    <h2>Destinations</h2>
-    <p class="subtitle">Common trips. Long-distance routes and stops can be adjusted by message.</p>
-    <div class="grid2">
-      <div class="card"><div class="card-body"><h3>Montréal (YUL) ↔ Mont-Tremblant</h3><div class="meta">Airport pickups • ski luggage • hotel drops</div></div></div>
-      <div class="card"><div class="card-body"><h3>Montréal Downtown ↔ Mont-Tremblant</h3><div class="meta">Business travel • weekends • events</div></div></div>
-      <div class="card"><div class="card-body"><h3>Québec City ↔ Mont-Tremblant</h3><div class="meta">Private long-distance • comfort ride</div></div></div>
-      <div class="card"><div class="card-body"><h3>Ottawa ↔ Mont-Tremblant</h3><div class="meta">Long-distance comfort • family trips</div></div></div>
-    </div>
-  </section>
-
-  <section id="faq" class="section">
-    <h2>FAQ</h2>
-    <p class="subtitle">Quick answers to the most common questions.</p>
-    <div class="card" style="padding: 0 18px;">
-      <details>
-        <summary style="cursor:pointer; list-style:none; font-weight:900; padding:14px 0;">What is the minimum booking time?</summary>
-        <p style="padding-bottom:14px;color:rgba(11,18,32,.70);font-weight:700;">All vehicles have a <b>3-hour minimum</b>.</p>
-      </details>
     </div>
   </section>
 
@@ -896,7 +922,7 @@
 
   const BUSINESS_WA = "15142933170";
 
-  // ✅ Vehicles with images (your existing images)
+  // Vehicles with images (your existing images)
   const LOCAL_RATES = [
     { id:"escalade", name:"2026 Cadillac Escalade ESV", hourly:150, meta:"Ultra-luxury • VIP airport transfers • ski trips", img:"escalade.jpg" },
     { id:"suburban", name:"2025 Chevrolet Suburban", hourly:120, meta:"Spacious • luggage friendly • long rides", img:"suburban.jpg" },
@@ -1001,15 +1027,20 @@
     return (vehicle.hourly * 3) + fee;
   }
 
+  // ✅ Fixed order + removed min text in note
   function buildVehiclesForTrip(){
+    const ORDER = ["escalade","suburban","denali","qx60","tesla","sprinter"];
+
     const list = LOCAL_RATES.map(v=>{
       const total = calcVehicleTotal(v);
       const note = state.mode === "hourly"
-        ? `Estimated for ${Math.max(3, Number(state.hours||3))}h (min 3h)`
-        : (state.transfer === "airport" ? "Airport estimate (3h min + fee)" : "Point-to-point estimate (3h min + fee)");
+        ? `Estimated for ${Math.max(3, Number(state.hours||3))} hours`
+        : (state.transfer === "airport" ? "Airport estimate" : "Point-to-point estimate");
+
       return { ...v, total, note };
     });
-    list.sort((a,b)=>a.total - b.total);
+
+    list.sort((a,b)=>ORDER.indexOf(a.id) - ORDER.indexOf(b.id));
     return list;
   }
 
@@ -1041,7 +1072,25 @@
     `;
   }
 
-  // ✅ Step 2 list WITH IMAGES
+  function clearRowBorderHelpers(){
+    document.querySelectorAll(".vrow").forEach(r=>{
+      r.classList.remove("hide-top-border");
+    });
+  }
+
+  function applyRowBorderHelpers(selectedRow){
+    clearRowBorderHelpers();
+    if (!selectedRow) return;
+
+    // hide the line above selected row
+    selectedRow.classList.add("hide-top-border");
+
+    // hide the line above next row (so it doesn't look like an open line)
+    const next = selectedRow.nextElementSibling;
+    if (next && next.classList.contains("vrow")) next.classList.add("hide-top-border");
+  }
+
+  // ✅ Step 2 list WITH IMAGES + checkmark element
   function renderVehiclesOverlay(){
     const wrap = $("vehicleOverlayList");
     wrap.innerHTML = "";
@@ -1070,6 +1119,7 @@
           </div>
         </div>
         <div class="vright">${formatMoney(v.total)}</div>
+        <div class="vcheck" aria-hidden="true">✓</div>
       `;
 
       row.addEventListener("click", ()=>{
@@ -1077,6 +1127,9 @@
         row.classList.add("selected");
         state.selectedVehicleId = v.id;
         $("btnVehicleContinue").disabled = false;
+
+        // remove flat line look around selection
+        applyRowBorderHelpers(row);
       });
 
       wrap.appendChild(row);
