@@ -62,17 +62,10 @@
     --ink:#0b1220;
     --muted: rgba(11,18,32,.68);
     --line: rgba(11,18,32,.10);
-
-    --card:#ffffff;
-    --card2:#f6f7f9;
-
     --shadow: 0 18px 55px rgba(0,0,0,.14);
     --shadow2: 0 10px 28px rgba(0,0,0,.10);
-
     --radius: 16px;
     --max: 1160px;
-
-    /* Blacklane-ish button */
     --gradA:#ff2e63;
     --gradB:#ff7a00;
   }
@@ -92,7 +85,6 @@
   section{ scroll-margin-top: 96px; }
   main{padding-bottom: 64px}
 
-  /* ===== Header (clean white like Blacklane) ===== */
   header{
     position: sticky;
     top:0;
@@ -182,7 +174,6 @@
     box-shadow: 0 18px 44px rgba(255,90,20,.22);
   }
 
-  /* ===== Hero (full width image + floating booking widget) ===== */
   .hero-wrap{
     position:relative;
     width:100%;
@@ -240,7 +231,6 @@
     box-shadow: 0 10px 20px rgba(0,0,0,.06);
   }
 
-  /* Booking card (Blacklane-like) */
   .booking-card{
     margin-right: 18px;
     justify-self:end;
@@ -300,17 +290,11 @@
     color: rgba(11,18,32,.90);
   }
   .field input::placeholder{ color: rgba(11,18,32,.50); font-weight:800; }
-  .field small{
-    color: rgba(11,18,32,.55);
-    font-weight: 800;
-    font-size: 12px;
-  }
   .row2{
     display:grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
   }
-
   .note{
     margin: 10px 4px 12px;
     color: rgba(11,18,32,.62);
@@ -329,9 +313,7 @@
     cursor:pointer;
     box-shadow: 0 18px 44px rgba(255,90,20,.22);
   }
-  .search-btn:hover{ filter: brightness(1.02); }
 
-  /* Vehicle results inside card */
   .results{
     display:none;
     margin-top: 12px;
@@ -399,15 +381,8 @@
   }
   .continue-btn.enabled{ opacity: 1; }
 
-  /* ===== Content sections (light cards) ===== */
-  .section{
-    margin-top: 46px;
-  }
-  h2{
-    font-size: 30px;
-    letter-spacing: -.2px;
-    line-height:1.15;
-  }
+  .section{ margin-top: 46px; }
+  h2{ font-size: 30px; letter-spacing: -.2px; line-height:1.15; }
   .subtitle{
     margin-top: 10px;
     color: rgba(11,18,32,.66);
@@ -442,7 +417,6 @@
   .actions{ margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; }
   .actions .btn{ box-shadow:none; }
 
-  /* Existing booking form section - just light styling */
   .book-wrap{
     margin-top: 16px;
     border-radius: 18px;
@@ -459,6 +433,7 @@
   .book-head b{display:block;font-size:15px;font-weight:950}
   .book-head small{display:block;margin-top:6px;color:rgba(11,18,32,.64);font-weight:700}
   .book-body2{padding: 16px 18px 18px}
+
   label{
     display:block;
     margin: 12px 0 6px;
@@ -495,7 +470,7 @@
   .estimate-sub{margin-top:6px;color:rgba(11,18,32,.68);font-size:12.8px;font-weight:700}
 
   .book-actions{margin-top: 12px; display:flex; gap: 10px; flex-wrap:wrap;}
-  .book-actions .btn-primary{width:auto}
+
   .banner{
     margin-top: 12px;
     border-radius: 12px;
@@ -508,7 +483,6 @@
   .banner.good{ border-color: rgba(35,190,120,.25); background: rgba(35,190,120,.08); }
   .banner.bad{ border-color: rgba(240,85,85,.22); background: rgba(240,85,85,.08); }
 
-  /* FAQ */
   details{ border-top: 1px solid rgba(11,18,32,.10); padding: 14px 0; }
   details:first-child{ border-top:none; }
   summary{ cursor:pointer; list-style:none; font-weight: 900; color: rgba(11,18,32,.94); display:flex; align-items:center; justify-content:space-between; gap:10px; }
@@ -526,7 +500,7 @@
     font-weight: 700;
   }
 
-  /* WhatsApp float */
+  /* WhatsApp float (left of Tawk bubble) */
   .whatsapp-float{
     position:fixed;
     right: 96px;
@@ -544,10 +518,10 @@
     .whatsapp-float{ right: 16px; bottom: 96px; }
   }
 
-  /* Responsive */
+  /* Base responsive */
   @media (max-width: 980px){
     .hero-inner{ grid-template-columns: 1fr; align-items:start; }
-    .booking-card{ justify-self:stretch; margin: 14px 18px 0; }
+    .booking-card{ justify-self:stretch; margin: 14px 18px 0; width:auto; border-radius: 14px; }
     .hero-bg{ height: 620px; }
     .hero-title{ max-width: 22ch; }
     .grid3{ grid-template-columns: 1fr; }
@@ -558,6 +532,68 @@
     .pill{ display:inline-flex; }
     .row{ grid-template-columns: 1fr; }
     .header-actions .btn{ display:none; }
+  }
+
+  /* ===== Mobile polish (Blacklane-like) ===== */
+  @media (max-width: 980px){
+    .hero-bg{
+      height: 720px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.88) 0%, rgba(255,255,255,.45) 40%, rgba(255,255,255,0) 75%),
+        url("Tremblant.jpg") center/cover no-repeat;
+    }
+    .hero-left{ padding-top: 18px; }
+    .hero-title{ max-width: 24ch; font-size: clamp(30px, 7.4vw, 44px); }
+    .hero-sub{ font-size: 15.5px; line-height: 1.55; }
+    .hero-badges{ gap: 8px; }
+    .badge{ font-size: 12.5px; padding: 8px 10px; }
+    .tabs .tab{ padding: 14px 10px; font-size: 13.5px; }
+    .field{ padding: 13px 12px; }
+    .field input, .field select{ font-size: 15px; }
+    .row2{ grid-template-columns: 1fr; }
+    .note{ margin: 8px 4px 10px; }
+    .search-btn{ padding: 14px 14px; font-size: 16px; }
+    .results{ padding-top: 14px; }
+    .vtop{ padding: 12px 12px; }
+  }
+
+  @media (max-width: 520px){
+    header .nav{ height: 70px; }
+    .brand{ gap: 10px; }
+    .logo{ width: 34px; height: 34px; border-radius: 12px; }
+    .hero-bg{ height: 760px; }
+    .booking-card{ margin: 12px 14px 0; }
+    .container{ padding: 0 14px; }
+    .grid3, .grid2{ gap: 12px; }
+  }
+
+  /* Mobile sticky booking bar */
+  .mobile-cta-bar{ display:none; }
+  @media (max-width: 860px){
+    .mobile-cta-bar{
+      display:flex;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 80;
+      padding: 10px 12px;
+      gap: 10px;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(11,18,32,.10);
+    }
+    .mobile-cta-bar .btn{
+      flex: 1;
+      width: 100%;
+      border-radius: 12px;
+      padding: 12px 12px;
+      box-shadow: none;
+    }
+    .mobile-cta-bar .btn-primary{
+      box-shadow: 0 16px 34px rgba(255,90,20,.18);
+    }
+    body{ padding-bottom: 72px; }
   }
 </style>
 </head>
@@ -588,7 +624,13 @@
   </div>
 </header>
 
-<!-- Hero -->
+<!-- Mobile sticky bar -->
+<div class="mobile-cta-bar" aria-label="Quick actions">
+  <a class="btn" href="tel:+15142933170">Call</a>
+  <a class="btn" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
+  <a class="btn btn-primary" href="#contact">Book</a>
+</div>
+
 <div class="hero-wrap">
   <div class="hero-bg" aria-hidden="true"></div>
 
@@ -610,7 +652,6 @@
       </div>
     </div>
 
-    <!-- Blacklane-like booking widget -->
     <aside class="booking-card" aria-label="Search booking">
       <div class="tabs">
         <button id="tabOneWay" class="tab active" type="button" aria-selected="true">One way</button>
@@ -681,7 +722,7 @@
             </select>
           </div>
 
-          <div class="note">Chauffeur will wait 15 minutes free of charge (example text).</div>
+          <div class="note">Professional chauffeur • clean premium vehicles.</div>
 
           <button class="search-btn" type="submit">Search</button>
 
@@ -702,8 +743,6 @@
 </div>
 
 <main class="container">
-
-  <!-- Fleet -->
   <section id="fleet" class="section">
     <h2>Our Fleet</h2>
     <p class="subtitle">Premium vehicles for Mont-Tremblant travel. <b>Minimum 3 hours</b> applies to all vehicles.</p>
@@ -795,7 +834,6 @@
     </div>
   </section>
 
-  <!-- Booking (Stripe) -->
   <section id="contact" class="section">
     <h2>Instant Estimate & Reserve</h2>
     <p class="subtitle">Reserve online with full payment via Stripe Checkout. After payment, your reservation is confirmed.</p>
@@ -826,6 +864,7 @@
               <label for="date">Date</label>
               <input id="date" type="date" required />
             </div>
+
             <div>
               <label for="time">Time</label>
               <select id="time" required></select>
@@ -912,7 +951,6 @@
     </div>
   </section>
 
-  <!-- Destinations -->
   <section id="routes" class="section">
     <h2>Destinations</h2>
     <p class="subtitle">Common trips. Long-distance routes and stops can be adjusted by message.</p>
@@ -924,7 +962,6 @@
     </div>
   </section>
 
-  <!-- FAQ -->
   <section id="faq" class="section">
     <h2>FAQ</h2>
     <p class="subtitle">Quick answers to the most common questions.</p>
@@ -1155,6 +1192,38 @@
     return false;
   }
 
+  function collectBookingPayload(){
+    const requiredMap = { name:"Name", date:"Date", time:"Time", pickup:"Pickup", dropoff:"Drop-off", vehicle:"Vehicle" };
+    const missing = [];
+    for (const id of Object.keys(requiredMap)){ if (!v(id)) missing.push(id); }
+    if (missing.length){
+      return { ok:false, error:`Missing: ${missing.map(id=>requiredMap[id]).join(", ")}.` };
+    }
+    const est = computeEstimate();
+    if (!est.total) return { ok:false, error:"Please select trip type and vehicle to generate an estimate." };
+
+    return {
+      ok:true,
+      booking:{
+        name: v("name"),
+        phone: v("phone"),
+        date: v("date"),
+        time: v("time"),
+        pickup: v("pickup"),
+        dropoff: v("dropoff"),
+        triptype: v("triptype"),
+        vehicle: v("vehicle"),
+        hours: v("hours"),
+        roundtrip: v("roundtrip"),
+        notes: v("notes"),
+        estimate_text: est.text,
+        estimate_total_cad: est.total,
+        pay_option: "full",
+        pay_now_cad: est.total
+      }
+    };
+  }
+
   async function startStripeCheckout(){
     const statusEl = document.getElementById("payStatus");
     if (statusEl) statusEl.textContent = "";
@@ -1177,7 +1246,6 @@
 
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "Unable to start checkout.");
-
       window.location.href = data.url;
     }catch(err){
       console.error(err);
@@ -1185,53 +1253,6 @@
       alert(msg);
       if (statusEl) statusEl.textContent = msg;
     }
-  }
-
-  function collectBookingPayload(){
-    const requiredMap = {
-      name: "Name",
-      date: "Date",
-      time: "Time",
-      pickup: "Pickup",
-      dropoff: "Drop-off",
-      vehicle: "Vehicle"
-    };
-
-    const missing = [];
-    for (const id of Object.keys(requiredMap)){
-      if (!v(id)) missing.push(id);
-    }
-
-    if (missing.length){
-      const names = missing.map(id => requiredMap[id]).join(", ");
-      return { ok:false, error:`Missing: ${names}.` };
-    }
-
-    const est = computeEstimate();
-    if (!est.total){
-      return { ok:false, error:"Please select trip type and vehicle to generate an estimate." };
-    }
-
-    return {
-      ok:true,
-      booking: {
-        name: v("name"),
-        phone: v("phone"),
-        date: v("date"),
-        time: v("time"),
-        pickup: v("pickup"),
-        dropoff: v("dropoff"),
-        triptype: v("triptype"),
-        vehicle: v("vehicle"),
-        hours: v("hours"),
-        roundtrip: v("roundtrip"),
-        notes: v("notes"),
-        estimate_text: est.text,
-        estimate_total_cad: est.total,
-        pay_option: "full",
-        pay_now_cad: est.total
-      }
-    };
   }
 
   // ===== Hero widget logic (Search -> show vehicles -> Continue -> prefill reserve) =====
@@ -1264,12 +1285,20 @@
 
     document.getElementById("h_dropoff").required = one;
 
-    // reset results
     document.getElementById("heroResults").style.display = "none";
     document.getElementById("heroVehicleList").innerHTML = "";
     document.getElementById("heroContinueBtn").disabled = true;
     document.getElementById("heroContinueBtn").classList.remove("enabled");
     heroState.selectedVehicle = "";
+  }
+
+  function escapeHtml(str){
+    return String(str ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
   }
 
   function estimateHero(vehicleName){
@@ -1324,7 +1353,6 @@
   }
 
   function prefillReserveFromHero(){
-    // basic validation
     const pickup = (document.getElementById("h_pickup").value || "").trim();
     const dropoff = (document.getElementById("h_dropoff").value || "").trim();
     const date = document.getElementById("h_date").value;
@@ -1341,7 +1369,6 @@
     } else {
       document.getElementById("triptype").value = "hourly";
       document.getElementById("hours").value = String(Math.max(3, Number(document.getElementById("h_hours").value || 3)));
-      // keep dropoff as-is (still required on main form); user can type it if needed
       if (!document.getElementById("dropoff").value) document.getElementById("dropoff").value = "Mont-Tremblant (area)";
     }
 
@@ -1349,17 +1376,7 @@
 
     syncTriptypeUI();
     computeEstimate();
-
     document.getElementById("contact").scrollIntoView({ behavior:"smooth", block:"start" });
-  }
-
-  function escapeHtml(str){
-    return String(str ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
   }
 
   document.getElementById("tabOneWay").addEventListener("click", ()=> setHeroMode("one_way"));
@@ -1401,11 +1418,21 @@
     });
   });
 
+  // Mobile CTA bar smooth scroll
+  document.querySelectorAll('.mobile-cta-bar a[href^="#"]').forEach(a=>{
+    a.addEventListener("click", (e)=>{
+      const id = a.getAttribute("href");
+      const el = document.querySelector(id);
+      if (!el) return;
+      e.preventDefault();
+      el.scrollIntoView({behavior:"smooth", block:"start"});
+    });
+  });
+
   window.addEventListener("load", ()=>{
     buildTimeOptions(5, "time");
     buildTimeOptions(5, "h_time");
 
-    // Default hero date to today
     const d = new Date();
     const yyyy = d.getFullYear();
     const mm = String(d.getMonth()+1).padStart(2,"0");
