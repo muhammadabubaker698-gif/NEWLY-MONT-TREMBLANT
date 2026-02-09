@@ -532,7 +532,13 @@
     gap: 12px;
     justify-content: space-between;
     flex-wrap: wrap;
+
+    /* ✅ iOS Safari paint reliability */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: transform;
   }
+
   .flow-actions .btn{
     border-radius: 14px;
     padding: 12px 14px;
@@ -1157,6 +1163,29 @@
     }catch(e){}
   }
 
+  /* ✅ iOS Safari: force fixed bar to paint immediately (prevents "Continue" missing until refresh) */
+  function forceIOSPaint(overlayId){
+    const overlay = document.getElementById(overlayId);
+    if (!overlay) return;
+
+    const body = overlay.querySelector(".overlay-body");
+    const bar  = overlay.querySelector(".flow-actions");
+
+    if (bar) void bar.offsetHeight;
+    if (body) void body.offsetHeight;
+
+    if (body){
+      const y = body.scrollTop;
+      body.scrollTop = y + 1;
+      body.scrollTop = y;
+    }
+
+    requestAnimationFrame(()=> {
+      if (bar) bar.style.transform = "translateZ(0)";
+      if (bar) void bar.offsetHeight;
+    });
+  }
+
   function openOverlay(id, pushHistory = true){
     lockBodyScroll();
     document.documentElement.classList.add("overlay-open");
@@ -1174,6 +1203,11 @@
     if (pushHistory){
       history.pushState({ overlay: id }, "", "#" + id);
     }
+
+    /* ✅ IMPORTANT: iOS repaint fix */
+    forceIOSPaint(id);
+    setTimeout(()=>forceIOSPaint(id), 0);
+    setTimeout(()=>forceIOSPaint(id), 80);
   }
 
   function closeOverlay(id, popHistory = false){
@@ -1251,17 +1285,14 @@
 
       row.innerHTML = `
         <img class="veh-img" src="${v.img}" alt="${v.name}" />
-
         <div class="vleft">
           <b>${v.name}</b>
           ${underVehicle}
         </div>
-
         <div class="vright">
           <div>${formatMoney(v.total)}</div>
           ${underPrice}
         </div>
-
         <div class="vcheck" aria-hidden="true">✓</div>
       `;
 
@@ -1271,10 +1302,17 @@
         state.selectedVehicleId = v.id;
         $("btnVehicleContinue").disabled = false;
         applyRowBorderHelpers(row);
+
+        /* keep bar visible on iOS after selection */
+        forceIOSPaint("overlayVehicles");
       });
 
       wrap.appendChild(row);
     });
+
+    /* ensure action bar paints after list render */
+    forceIOSPaint("overlayVehicles");
+    setTimeout(()=>forceIOSPaint("overlayVehicles"), 50);
   }
 
   function getChosenVehicle(){
