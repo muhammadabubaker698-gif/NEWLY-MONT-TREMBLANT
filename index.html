@@ -507,7 +507,6 @@
     padding-right: 26px;
   }
 
-  /* vehicle image class (so mobile can resize cleanly) */
   .veh-img{
     width: 96px;
     height: 60px;
@@ -518,7 +517,6 @@
     background: #fff;
   }
 
-  /* ✅ Default desktop/tablet: sticky action bar */
   .flow-actions{
     margin-top: 18px;
     position: sticky;
@@ -533,7 +531,6 @@
     justify-content: space-between;
     flex-wrap: wrap;
 
-    /* ✅ iOS Safari paint reliability */
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
     will-change: transform;
@@ -584,7 +581,6 @@
   .estimate-sub{margin-top:6px;color: rgba(11,18,32,.68);font-size:12.8px;font-weight:700}
   .tinyhint{margin-top:6px;font-size:12.5px;color:rgba(11,18,32,.62);font-weight:700}
 
-  /* Sections */
   .section{ margin-top: 46px; }
   h2{ font-size: 30px; letter-spacing: -.2px; line-height:1.15; }
   .subtitle{
@@ -638,13 +634,11 @@
     border: 1px solid rgba(0,0,0,.14);
   }
 
-  /* ✅ MOBILE FIXES like Blacklane */
   @media (max-width: 680px){
     .overlay-top .container{ padding-left: 12px; padding-right: 12px; }
     .overlay-title{ font-size: 14px; }
     .overlay-close{ padding: 9px 10px; border-radius: 12px; }
 
-    /* Vehicle rows become a clean grid: image | title/meta | price */
     .vrow{
       display: grid;
       grid-template-columns: 76px 1fr auto;
@@ -657,13 +651,12 @@
       border-radius: 12px;
     }
     .vright{
-      padding-right: 18px; /* space for checkmark */
+      padding-right: 18px;
       text-align: right;
     }
     .vleft b{ font-size: 15px; line-height: 1.2; }
     .vleft small{ font-size: 12.5px; }
 
-    /* ✅ iOS Safari: sticky inside overflow is buggy — use FIXED action bar */
     .flow-actions{
       position: fixed;
       left: 0;
@@ -674,12 +667,10 @@
       z-index: 999999;
     }
 
-    /* make room so last items are not hidden behind fixed bar */
     .overlay-body{
       padding-bottom: calc(170px + env(safe-area-inset-bottom));
     }
 
-    /* ensure buttons don't wrap into weird positions */
     .flow-actions .btn{
       flex: 1 1 auto;
       min-width: 140px;
@@ -1126,7 +1117,6 @@
     return list;
   }
 
-  /* iOS-safe scroll lock */
   let __scrollY = 0;
   function lockBodyScroll(){
     __scrollY = window.scrollY || 0;
@@ -1163,7 +1153,7 @@
     }catch(e){}
   }
 
-  /* ✅ iOS Safari: force fixed bar to paint immediately (prevents "Continue" missing until refresh) */
+  /* ✅ Stronger iOS Safari paint fix (works for Hourly too) */
   function forceIOSPaint(overlayId){
     const overlay = document.getElementById(overlayId);
     if (!overlay) return;
@@ -1171,8 +1161,9 @@
     const body = overlay.querySelector(".overlay-body");
     const bar  = overlay.querySelector(".flow-actions");
 
-    if (bar) void bar.offsetHeight;
+    if (overlay) void overlay.offsetHeight;
     if (body) void body.offsetHeight;
+    if (bar) void bar.offsetHeight;
 
     if (body){
       const y = body.scrollTop;
@@ -1180,10 +1171,24 @@
       body.scrollTop = y;
     }
 
-    requestAnimationFrame(()=> {
-      if (bar) bar.style.transform = "translateZ(0)";
-      if (bar) void bar.offsetHeight;
-    });
+    if (bar){
+      const prev = bar.style.display;
+      bar.style.display = "none";
+      void bar.offsetHeight;
+      bar.style.display = prev || "";
+      void bar.offsetHeight;
+
+      bar.style.transform = "translateZ(0)";
+      bar.style.webkitTransform = "translateZ(0)";
+    }
+  }
+
+  function scheduleIOSPaint(overlayId){
+    forceIOSPaint(overlayId);
+    requestAnimationFrame(()=>forceIOSPaint(overlayId));
+    setTimeout(()=>forceIOSPaint(overlayId), 50);
+    setTimeout(()=>forceIOSPaint(overlayId), 150);
+    setTimeout(()=>forceIOSPaint(overlayId), 350);
   }
 
   function openOverlay(id, pushHistory = true){
@@ -1204,10 +1209,7 @@
       history.pushState({ overlay: id }, "", "#" + id);
     }
 
-    /* ✅ IMPORTANT: iOS repaint fix */
-    forceIOSPaint(id);
-    setTimeout(()=>forceIOSPaint(id), 0);
-    setTimeout(()=>forceIOSPaint(id), 80);
+    scheduleIOSPaint(id);
   }
 
   function closeOverlay(id, popHistory = false){
@@ -1302,17 +1304,13 @@
         state.selectedVehicleId = v.id;
         $("btnVehicleContinue").disabled = false;
         applyRowBorderHelpers(row);
-
-        /* keep bar visible on iOS after selection */
-        forceIOSPaint("overlayVehicles");
+        scheduleIOSPaint("overlayVehicles");
       });
 
       wrap.appendChild(row);
     });
 
-    /* ensure action bar paints after list render */
-    forceIOSPaint("overlayVehicles");
-    setTimeout(()=>forceIOSPaint("overlayVehicles"), 50);
+    scheduleIOSPaint("overlayVehicles");
   }
 
   function getChosenVehicle(){
