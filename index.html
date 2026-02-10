@@ -812,6 +812,12 @@
         <form id="heroSearchForm">
           <input type="hidden" id="heroMode" value="one_way" />
 
+          <!-- ✅ store coordinates when user picks a suggestion -->
+          <input type="hidden" id="h_pickup_lat" value="" />
+          <input type="hidden" id="h_pickup_lng" value="" />
+          <input type="hidden" id="h_dropoff_lat" value="" />
+          <input type="hidden" id="h_dropoff_lng" value="" />
+
           <div id="selectedVehicleBanner" class="selected-vehicle" style="display:none;">
             <div class="selected-vehicle-info">
               <img id="selectedVehicleImage" src="" alt="" />
@@ -1107,7 +1113,11 @@
     hours: 3,
     preferredVehicleId: null,
     selectedVehicleId: null,
-    computedVehicles: []
+    computedVehicles: [],
+    pickup_lat: "",
+    pickup_lng: "",
+    dropoff_lat: "",
+    dropoff_lng: ""
   };
 
   function $(id){ return document.getElementById(id); }
@@ -1172,13 +1182,90 @@
       btn.innerHTML = `${item.main}<span class="muted">${item.sub}</span>`;
       btn.addEventListener("mousedown", (e)=>{
         e.preventDefault();
-        onPick(item.value);
+        onPick(item);
         clearAutocompleteList(listEl);
       });
       listEl.appendChild(btn);
     });
 
     listEl.style.display = "block";
+  }
+
+  // ✅ Airport code + airport name lookup (works without Google keys)
+  const AIRPORTS = [
+    { code:"YUL", name:"Montréal–Trudeau International Airport", city:"Montréal (Dorval), QC", country:"Canada", lat:45.4706, lng:-73.7408 },
+    { code:"YMX", name:"Montréal–Mirabel International Airport", city:"Mirabel, QC", country:"Canada", lat:45.6795, lng:-74.0387 },
+    { code:"YHU", name:"Montréal Saint-Hubert Longueuil Airport", city:"Longueuil, QC", country:"Canada", lat:45.5175, lng:-73.4169 },
+    { code:"YYZ", name:"Toronto Pearson International Airport", city:"Toronto, ON", country:"Canada", lat:43.6777, lng:-79.6248 },
+    { code:"YOW", name:"Ottawa International Airport", city:"Ottawa, ON", country:"Canada", lat:45.3225, lng:-75.6692 },
+    { code:"YQB", name:"Québec City Jean Lesage International Airport", city:"Québec City, QC", country:"Canada", lat:46.7911, lng:-71.3933 },
+    { code:"JFK", name:"John F. Kennedy International Airport", city:"New York, NY", country:"USA", lat:40.6413, lng:-73.7781 },
+    { code:"EWR", name:"Newark Liberty International Airport", city:"Newark, NJ", country:"USA", lat:40.6895, lng:-74.1745 },
+    { code:"LGA", name:"LaGuardia Airport", city:"New York, NY", country:"USA", lat:40.7769, lng:-73.8740 },
+    { code:"BOS", name:"Boston Logan International Airport", city:"Boston, MA", country:"USA", lat:42.3656, lng:-71.0096 }
+  ];
+
+  function normalize(s){ return String(s || "").trim().toUpperCase(); }
+
+  function findAirportSuggestions(query){
+    const q = normalize(query);
+    if (!q) return [];
+
+    // If user types exactly 3 letters, treat as IATA first
+    const looksLikeIATA = /^[A-Z]{3}$/.test(q);
+    const tokens = q.split(/\s+/).filter(Boolean);
+
+    const matches = AIRPORTS.filter(a=>{
+      if (looksLikeIATA) return a.code === q;
+      // allow searching by code anywhere ("YUL airport"), or by name/city
+      const hay = `${a.code} ${a.name} ${a.city} ${a.country}`.toUpperCase();
+      return tokens.every(t => hay.includes(t));
+    }).slice(0, 6);
+
+    return matches.map(a=>({
+      type: "airport",
+      main: `${a.name} (${a.code})`,
+      sub: `${a.code} • ${a.city} • ${a.country}`,
+      value: `${a.name} (${a.code}), ${a.city}`,
+      lat: a.lat,
+      lng: a.lng
+    }));
+  }
+
+  // ✅ Better "street address" rendering using Photon properties
+  function formatPhotonFeature(f){
+    const p = f.properties || {};
+    const g = f.geometry || {};
+    const coords = Array.isArray(g.coordinates) ? g.coordinates : null;
+    const lng = coords ? coords[0] : null;
+    const lat = coords ? coords[1] : null;
+
+    const housenumber = p.housenumber || "";
+    const street = p.street || "";
+    const name = p.name || "";
+
+    const line1 = (housenumber || street)
+      ? [housenumber, street].filter(Boolean).join(" ")
+      : (name || p.locality || p.city || p.country || "Address");
+
+    const city = p.city || p.locality || "";
+    const region = p.state || p.region || "";
+    const postcode = p.postcode || "";
+    const country = p.country || "";
+    const subParts = [city, region, postcode, country].filter(Boolean);
+    const sub = subParts.join(", ") || "Select this address";
+
+    const valueParts = [line1, city, region, postcode, country].filter(Boolean);
+    const value = valueParts.join(", ");
+
+    return {
+      type: "address",
+      main: line1,
+      sub,
+      value,
+      lat: (typeof lat === "number" ? lat : null),
+      lng: (typeof lng === "number" ? lng : null)
+    };
   }
 
   async function fetchAddressSuggestions(query){
@@ -1191,20 +1278,24 @@
       if (!res.ok) return [];
       const data = await res.json().catch(()=> ({}));
       const feats = Array.isArray(data.features) ? data.features : [];
-      return feats.map((f)=>{
-        const p = f.properties || {};
-        const name = p.name || p.street || p.city || p.country || "Address";
-        const parts = [p.city, p.state, p.country].filter(Boolean);
-        const sub = parts.join(", ");
-        const value = [name, sub].filter(Boolean).join(", ");
-        return { main: name, sub: sub || "Select this address", value };
-      });
+      return feats.map(formatPhotonFeature);
     }catch(_e){
       return [];
     }
   }
 
-  function setupAutocomplete(inputId, listId){
+  function setCoords(latId, lngId, lat, lng){
+    const latEl = $(latId);
+    const lngEl = $(lngId);
+    if (latEl) latEl.value = (lat ?? "");
+    if (lngEl) lngEl.value = (lng ?? "");
+  }
+
+  function clearCoords(latId, lngId){
+    setCoords(latId, lngId, "", "");
+  }
+
+  function setupAutocomplete(inputId, listId, latId, lngId){
     const input = $(inputId);
     const list = $(listId);
     if (!input || !list) return;
@@ -1212,24 +1303,57 @@
     let timer = null;
     let token = 0;
 
-    input.addEventListener("input", ()=>{
-      if (timer) clearTimeout(timer);
-      const q = input.value;
-      if (q.trim().length < 3){
+    const onPick = (item)=>{
+      input.value = item.value;
+      setCoords(latId, lngId, item.lat, item.lng);
+    };
+
+    const doSearch = async ()=>{
+      const q = input.value.trim();
+      if (q.length < 2){
         clearAutocompleteList(list);
         return;
       }
-      timer = setTimeout(async ()=>{
-        const current = ++token;
-        const items = await fetchAddressSuggestions(q);
-        if (current !== token) return;
-        renderAutocompleteList(list, items, (picked)=>{ input.value = picked; });
-      }, 200);
+
+      const current = ++token;
+
+      // Airports first (so typing YUL instantly works)
+      const airportItems = findAirportSuggestions(q);
+
+      // Addresses second (street addresses / hotels / POIs)
+      const addressItems = (q.length >= 3) ? await fetchAddressSuggestions(q) : [];
+
+      if (current !== token) return;
+
+      // de-dupe by value
+      const seen = new Set();
+      const merged = [];
+      [...airportItems, ...addressItems].forEach(it=>{
+        const k = (it.value || "").toLowerCase();
+        if (!k || seen.has(k)) return;
+        seen.add(k);
+        merged.push(it);
+      });
+
+      renderAutocompleteList(list, merged.slice(0, 8), onPick);
+    };
+
+    input.addEventListener("input", ()=>{
+      // if user edits manually after choosing a suggestion, clear coordinates
+      clearCoords(latId, lngId);
+
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(doSearch, 120);
     });
 
     input.addEventListener("blur", ()=> setTimeout(()=> clearAutocompleteList(list), 120));
     input.addEventListener("focus", ()=>{
-      if (input.value.trim().length >= 3) input.dispatchEvent(new Event("input"));
+      if (input.value.trim().length >= 2) doSearch();
+    });
+
+    // close list on Esc
+    input.addEventListener("keydown", (e)=>{
+      if (e.key === "Escape") clearAutocompleteList(list);
     });
   }
 
@@ -1706,6 +1830,12 @@
     state.transfer = val("h_transfer") || "point";
     state.hours = Math.max(3, Number(val("h_hours") || 3));
 
+    // ✅ capture coords (if user picked from suggestions)
+    state.pickup_lat = val("h_pickup_lat");
+    state.pickup_lng = val("h_pickup_lng");
+    state.dropoff_lat = val("h_dropoff_lat");
+    state.dropoff_lng = val("h_dropoff_lng");
+
     setHeroSearchLoading(true);
 
     state.computedVehicles = buildVehiclesForTrip();
@@ -1723,8 +1853,10 @@
 
     syncViewportHeight();
     buildTimeOptions(5, "h_time");
-    setupAutocomplete("h_pickup", "h_pickup_list");
-    setupAutocomplete("h_dropoff", "h_dropoff_list");
+
+    // ✅ Works for both one-way + hourly (pickup) and one-way dropoff
+    setupAutocomplete("h_pickup", "h_pickup_list", "h_pickup_lat", "h_pickup_lng");
+    setupAutocomplete("h_dropoff", "h_dropoff_list", "h_dropoff_lat", "h_dropoff_lng");
 
     const d = new Date();
     const yyyy = d.getFullYear();
