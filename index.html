@@ -54,8 +54,7 @@
     --good:#0f9d58;
     --bad:#b00020;
 
-    /* ✅ NEW: actual fixed action bar height (JS updates this) */
-    --flowbar-h: 180px; /* safe fallback */
+    --flowbar-h: 180px;
     --vh: 100vh;
   }
 
@@ -301,6 +300,39 @@
     min-width: 0;
   }
   .field input::placeholder{ color: rgba(11,18,32,.50); font-weight:800; }
+
+  /* ✅ Autocomplete UI */
+  .autocomplete-wrap{ position:relative; }
+  .autocomplete-list{
+    position:absolute;
+    top: calc(100% - 8px);
+    left:0;
+    right:0;
+    z-index:30;
+    background:#fff;
+    border:1px solid rgba(11,18,32,.12);
+    border-radius: 12px;
+    box-shadow: 0 16px 28px rgba(0,0,0,.12);
+    display:none;
+    max-height: 220px;
+    overflow:auto;
+  }
+  .autocomplete-list button{
+    width:100%;
+    border:none;
+    border-top:1px solid rgba(11,18,32,.08);
+    background:#fff;
+    text-align:left;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-weight:700;
+    color: rgba(11,18,32,.84);
+    cursor:pointer;
+  }
+  .autocomplete-list button:first-child{ border-top:none; }
+  .autocomplete-list button:hover{ background: rgba(11,18,32,.04); }
+  .autocomplete-list .muted{ color: rgba(11,18,32,.55); font-size:12px; display:block; margin-top:2px; }
+
   .row2{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .note{ margin: 8px 4px 10px; color: rgba(11,18,32,.62); font-size: 12.8px; font-weight: 800; }
 
@@ -330,9 +362,6 @@
   }
   .alert.bad{ border-color: rgba(176,0,32,.25); background: rgba(176,0,32,.06); color: var(--bad); }
 
-  /* ===========================
-     OVERLAYS (iOS-safe scrolling)
-  ============================ */
   .overlay{
     position: fixed;
     inset: 0;
@@ -372,10 +401,9 @@
     cursor: pointer;
   }
 
-  /* ✅ UPDATED: add iOS fallback height + use CSS var padding bottom */
   .overlay-body{
     height: calc(var(--vh) - 76px);
-    height: calc(-webkit-fill-available - 76px); /* iOS fallback */
+    height: calc(-webkit-fill-available - 76px);
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
@@ -487,10 +515,7 @@
     transform: translateY(-1px);
     z-index: 2;
   }
-  .vrow.selected .vcheck{
-    opacity: 1;
-    transform: scale(1);
-  }
+  .vrow.selected .vcheck{ opacity: 1; transform: scale(1); }
   .vrow.selected::after{
     content:"";
     position:absolute;
@@ -534,7 +559,6 @@
     gap: 12px;
     justify-content: space-between;
     flex-wrap: wrap;
-
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
     will-change: transform;
@@ -706,7 +730,6 @@
     .vleft b{ font-size: 15px; line-height: 1.2; }
     .vleft small{ font-size: 12.5px; }
 
-    /* fixed footer bar on mobile */
     .flow-actions{
       position: fixed;
       left: 0;
@@ -717,8 +740,6 @@
       z-index: 999999;
     }
 
-    /* ✅ REMOVED: old hard-coded overlay-body padding.
-       overlay-body padding is now handled globally via --flowbar-h */
     .flow-actions .btn{
       flex: 1 1 auto;
       min-width: 140px;
@@ -740,7 +761,6 @@
 </head>
 
 <body>
-
 <header>
   <div class="container">
     <div class="nav">
@@ -767,9 +787,7 @@
   <div class="hero-inner container">
     <div class="hero-left">
       <div class="hero-title">Luxury chauffeur service in Mont-Tremblant</div>
-      <div class="hero-sub">
-        Airport transfers, hourly bookings, ski trips, corporate travel and special events.
-      </div>
+      <div class="hero-sub">Airport transfers, hourly bookings, ski trips, corporate travel and special events.</div>
 
       <div class="hero-badges">
         <span class="badge">24/7 booking</span>
@@ -802,20 +820,28 @@
             <button id="clearSelectedVehicle" type="button">Clear</button>
           </div>
 
-          <div class="field">
-            <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11Z" stroke="currentColor" stroke-width="2"/>
-              <path d="M12 10.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke="currentColor" stroke-width="2"/>
-            </svg>
-            <input id="h_pickup" placeholder="From: address, airport, hotel…" autocomplete="off" required />
+          <!-- Pickup -->
+          <div class="autocomplete-wrap">
+            <div class="field">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 10.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              <input id="h_pickup" placeholder="From: address, airport, hotel…" autocomplete="off" required />
+            </div>
+            <div id="h_pickup_list" class="autocomplete-list" role="listbox" aria-label="Pickup suggestions"></div>
           </div>
 
-          <div id="heroDropoffWrap" class="field">
-            <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11Z" stroke="currentColor" stroke-width="2"/>
-              <path d="M12 10.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke="currentColor" stroke-width="2"/>
-            </svg>
-            <input id="h_dropoff" placeholder="To: address, airport, hotel…" autocomplete="off" required />
+          <!-- Dropoff -->
+          <div id="heroDropoffWrap" class="autocomplete-wrap">
+            <div class="field">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 10.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              <input id="h_dropoff" placeholder="To: address, airport, hotel…" autocomplete="off" required />
+            </div>
+            <div id="h_dropoff_list" class="autocomplete-list" role="listbox" aria-label="Dropoff suggestions"></div>
           </div>
 
           <div class="row2">
@@ -1126,6 +1152,87 @@
     timeEl.value = `${pad(hh)}:${pad(mm)}`;
   }
 
+  function clearAutocompleteList(listEl){
+    if (!listEl) return;
+    listEl.innerHTML = "";
+    listEl.style.display = "none";
+  }
+
+  function renderAutocompleteList(listEl, items, onPick){
+    if (!listEl) return;
+    listEl.innerHTML = "";
+    if (!items.length){
+      listEl.style.display = "none";
+      return;
+    }
+
+    items.forEach((item)=>{
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.innerHTML = `${item.main}<span class="muted">${item.sub}</span>`;
+      btn.addEventListener("mousedown", (e)=>{
+        e.preventDefault();
+        onPick(item.value);
+        clearAutocompleteList(listEl);
+      });
+      listEl.appendChild(btn);
+    });
+
+    listEl.style.display = "block";
+  }
+
+  async function fetchAddressSuggestions(query){
+    const q = query.trim();
+    if (q.length < 3) return [];
+
+    const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=6&lang=en`;
+    try{
+      const res = await fetch(url, { headers: { "Accept":"application/json" } });
+      if (!res.ok) return [];
+      const data = await res.json().catch(()=> ({}));
+      const feats = Array.isArray(data.features) ? data.features : [];
+      return feats.map((f)=>{
+        const p = f.properties || {};
+        const name = p.name || p.street || p.city || p.country || "Address";
+        const parts = [p.city, p.state, p.country].filter(Boolean);
+        const sub = parts.join(", ");
+        const value = [name, sub].filter(Boolean).join(", ");
+        return { main: name, sub: sub || "Select this address", value };
+      });
+    }catch(_e){
+      return [];
+    }
+  }
+
+  function setupAutocomplete(inputId, listId){
+    const input = $(inputId);
+    const list = $(listId);
+    if (!input || !list) return;
+
+    let timer = null;
+    let token = 0;
+
+    input.addEventListener("input", ()=>{
+      if (timer) clearTimeout(timer);
+      const q = input.value;
+      if (q.trim().length < 3){
+        clearAutocompleteList(list);
+        return;
+      }
+      timer = setTimeout(async ()=>{
+        const current = ++token;
+        const items = await fetchAddressSuggestions(q);
+        if (current !== token) return;
+        renderAutocompleteList(list, items, (picked)=>{ input.value = picked; });
+      }, 200);
+    });
+
+    input.addEventListener("blur", ()=> setTimeout(()=> clearAutocompleteList(list), 120));
+    input.addEventListener("focus", ()=>{
+      if (input.value.trim().length >= 3) input.dispatchEvent(new Event("input"));
+    });
+  }
+
   function setHeroMode(mode){
     state.mode = mode;
     $("heroMode").value = mode;
@@ -1240,8 +1347,6 @@
     }catch(e){}
   }
 
-  /* ✅ NEW: measure fixed action bar height and set CSS var
-     This guarantees the "Total estimate" never hides behind the fixed buttons. */
   function syncFlowBarHeight(overlayId){
     const overlay = document.getElementById(overlayId);
     if (!overlay) return;
@@ -1256,7 +1361,6 @@
     if (vh) document.documentElement.style.setProperty("--vh", vh + "px");
   }
 
-  /* ✅ Stronger iOS Safari paint fix (works for Hourly too) */
   function forceIOSPaint(overlayId){
     const overlay = document.getElementById(overlayId);
     if (!overlay) return;
@@ -1312,7 +1416,7 @@
       history.pushState({ overlay: id }, "", "#" + id);
     }
 
-    syncFlowBarHeight(id);     // ✅ NEW
+    syncFlowBarHeight(id);
     scheduleIOSPaint(id);
   }
 
@@ -1346,7 +1450,6 @@
     }
   });
 
-  /* ✅ NEW: keep bar height correct when phone rotates / viewport changes */
   window.addEventListener("resize", ()=>{
     syncViewportHeight();
     if (document.getElementById("overlayVehicles")?.classList.contains("show")) syncFlowBarHeight("overlayVehicles");
@@ -1419,8 +1522,7 @@
         state.selectedVehicleId = v.id;
         $("btnVehicleContinue").disabled = false;
         applyRowBorderHelpers(row);
-
-        syncFlowBarHeight("overlayVehicles"); // ✅ NEW
+        syncFlowBarHeight("overlayVehicles");
         scheduleIOSPaint("overlayVehicles");
       });
 
@@ -1433,7 +1535,7 @@
       preferredRow.scrollIntoView({ block: "center" });
     }
 
-    syncFlowBarHeight("overlayVehicles"); // ✅ NEW
+    syncFlowBarHeight("overlayVehicles");
     scheduleIOSPaint("overlayVehicles");
   }
 
@@ -1458,10 +1560,14 @@
     `;
 
     $("checkoutTotal").textContent = chosen ? formatMoney(chosen.total) : "—";
-    $("checkoutSub").textContent = chosen ? (state.mode === "hourly" ? `Total ${formatMoney(chosen.total)} for ${Math.max(3, Number(state.hours||3))} hours` : chosen.note) : "";
+    $("checkoutSub").textContent = chosen
+      ? (state.mode === "hourly"
+          ? `Total ${formatMoney(chosen.total)} for ${Math.max(3, Number(state.hours||3))} hours`
+          : chosen.note)
+      : "";
 
     openOverlay("overlayCheckout", true);
-    syncFlowBarHeight("overlayCheckout"); // ✅ NEW (after content updates)
+    syncFlowBarHeight("overlayCheckout");
   }
 
   function buildWhatsAppMessage(payload){
@@ -1617,6 +1723,8 @@
 
     syncViewportHeight();
     buildTimeOptions(5, "h_time");
+    setupAutocomplete("h_pickup", "h_pickup_list");
+    setupAutocomplete("h_dropoff", "h_dropoff_list");
 
     const d = new Date();
     const yyyy = d.getFullYear();
