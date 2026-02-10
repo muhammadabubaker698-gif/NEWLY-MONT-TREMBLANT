@@ -634,6 +634,21 @@
     font-weight: 800;
     color: rgba(11,18,32,.8);
   }
+  .selected-vehicle-info{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-width: 0;
+  }
+  .selected-vehicle-info img{
+    width: 44px;
+    height: 32px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid rgba(11,18,32,.12);
+    background: #fff;
+    flex: 0 0 auto;
+  }
   .selected-vehicle button{
     border: 1px solid rgba(11,18,32,.16);
     background: #fff;
@@ -778,7 +793,10 @@
           <input type="hidden" id="heroMode" value="one_way" />
 
           <div id="selectedVehicleBanner" class="selected-vehicle" style="display:none;">
-            <span>Selected vehicle: <b id="selectedVehicleName"></b></span>
+            <div class="selected-vehicle-info">
+              <img id="selectedVehicleImage" src="" alt="" />
+              <span>Selected vehicle: <b id="selectedVehicleName"></b></span>
+            </div>
             <button id="clearSelectedVehicle" type="button">Clear</button>
           </div>
 
@@ -1126,12 +1144,21 @@
     const vehicle = LOCAL_RATES.find(v=>v.id === state.preferredVehicleId);
     const banner = $("selectedVehicleBanner");
     const nameEl = $("selectedVehicleName");
+    const imageEl = $("selectedVehicleImage");
     if (!banner || !nameEl) return;
     if (vehicle){
       nameEl.textContent = vehicle.name;
+      if (imageEl){
+        imageEl.src = vehicle.img;
+        imageEl.alt = vehicle.name;
+      }
       banner.style.display = "flex";
     }else{
       nameEl.textContent = "";
+      if (imageEl){
+        imageEl.src = "";
+        imageEl.alt = "";
+      }
       banner.style.display = "none";
     }
   }
