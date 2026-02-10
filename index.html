@@ -56,6 +56,7 @@
 
     /* ✅ NEW: actual fixed action bar height (JS updates this) */
     --flowbar-h: 180px; /* safe fallback */
+    --vh: 100vh;
   }
 
   *{box-sizing:border-box;margin:0;padding:0}
@@ -294,7 +295,7 @@
     border:none;
     outline:none;
     background: transparent;
-    font-size: 14.5px;
+    font-size: 16px;
     font-weight: 800;
     color: rgba(11,18,32,.90);
     min-width: 0;
@@ -373,7 +374,7 @@
 
   /* ✅ UPDATED: add iOS fallback height + use CSS var padding bottom */
   .overlay-body{
-    height: calc(100dvh - 76px);
+    height: calc(var(--vh) - 76px);
     height: calc(-webkit-fill-available - 76px); /* iOS fallback */
     overflow-y: auto;
     overflow-x: hidden;
@@ -568,6 +569,7 @@
     color: rgba(11,18,32,.92);
     outline:none;
     font-weight: 800;
+    font-size: 16px;
   }
   textarea{min-height: 92px; resize: vertical}
 
@@ -1208,7 +1210,7 @@
     document.body.style.position = "fixed";
     document.body.style.top = `-${__scrollY}px`;
     document.body.style.left = "0";
-    document.body.style.right = "0";
+    document.body.style.right = "";
     document.body.style.width = "100%";
   }
   function unlockBodyScroll(){
@@ -1247,6 +1249,11 @@
     if (!bar) return;
     const h = Math.ceil(bar.getBoundingClientRect().height);
     if (h > 0) document.documentElement.style.setProperty("--flowbar-h", h + "px");
+  }
+
+  function syncViewportHeight(){
+    const vh = (window.visualViewport?.height || window.innerHeight || 0);
+    if (vh) document.documentElement.style.setProperty("--vh", vh + "px");
   }
 
   /* ✅ Stronger iOS Safari paint fix (works for Hourly too) */
@@ -1341,9 +1348,12 @@
 
   /* ✅ NEW: keep bar height correct when phone rotates / viewport changes */
   window.addEventListener("resize", ()=>{
+    syncViewportHeight();
     if (document.getElementById("overlayVehicles")?.classList.contains("show")) syncFlowBarHeight("overlayVehicles");
     if (document.getElementById("overlayCheckout")?.classList.contains("show")) syncFlowBarHeight("overlayCheckout");
   });
+  window.visualViewport?.addEventListener("resize", syncViewportHeight);
+  window.visualViewport?.addEventListener("scroll", syncViewportHeight);
 
   function backToSearch(){ history.back(); }
   function backToVehicles(){ history.back(); }
@@ -1605,6 +1615,7 @@
       history.replaceState({ page: "home" }, "", location.pathname + location.search + (location.hash || ""));
     }
 
+    syncViewportHeight();
     buildTimeOptions(5, "h_time");
 
     const d = new Date();
