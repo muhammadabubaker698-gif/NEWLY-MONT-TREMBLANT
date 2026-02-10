@@ -637,9 +637,34 @@
   .meta{ margin-top: 6px; color: rgba(11,18,32,.66); font-weight:700; font-size: 13.5px; }
   .price{ margin-top: 10px; font-weight: 950; }
   .min{ margin-top: 3px; color: rgba(11,18,32,.58); font-weight: 800; font-size: 12.5px; }
+
+  /* ✅ ACTIONS layout:
+     - Mobile stays stacked (as before)
+     - Desktop shows the two reserve buttons on one line */
   .actions{ margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; }
   .actions .btn{ box-shadow:none; }
+
+  .actions-reserve{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
   .actions-reserve .btn{ font-size: 13.5px; padding: 10px 14px; }
+
+  @media (min-width: 981px){
+    /* first two buttons (reserve buttons) side-by-side */
+    .actions-reserve .reserve-btn{
+      flex: 1 1 0;
+      min-width: 0;
+      justify-content: center;
+    }
+    /* WhatsApp stays on its own line */
+    .actions-reserve .btn-whatsapp{
+      flex: 1 1 100%;
+      justify-content: center;
+    }
+  }
+
   .btn-whatsapp{
     border: none;
     color: #fff;
@@ -812,7 +837,6 @@
         <form id="heroSearchForm">
           <input type="hidden" id="heroMode" value="one_way" />
 
-          <!-- ✅ store coordinates when user picks a suggestion -->
           <input type="hidden" id="h_pickup_lat" value="" />
           <input type="hidden" id="h_pickup_lng" value="" />
           <input type="hidden" id="h_dropoff_lat" value="" />
@@ -998,7 +1022,7 @@
           <div class="price">$150 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions actions-reserve">
-            <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="escalade" data-mode="one_way">Reserve Point A to Point B</a>
+            <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="escalade" data-mode="one_way">Reserve From Point A to Point B</a>
             <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="escalade" data-mode="hourly">Reserve by hour</a>
             <a class="btn btn-whatsapp" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
@@ -1013,7 +1037,7 @@
           <div class="price">$120 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions actions-reserve">
-            <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="suburban" data-mode="one_way">Reserve Point A to Point B</a>
+            <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="suburban" data-mode="one_way">Reserve From Point A to Point B</a>
             <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="suburban" data-mode="hourly">Reserve by hour</a>
             <a class="btn btn-whatsapp" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
@@ -1028,7 +1052,7 @@
           <div class="price">$120 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions actions-reserve">
-            <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="denali" data-mode="one_way">Reserve Point A to Point B</a>
+            <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="denali" data-mode="one_way">Reserve From Point A to Point B</a>
             <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="denali" data-mode="hourly">Reserve by hour</a>
             <a class="btn btn-whatsapp" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
@@ -1043,7 +1067,7 @@
           <div class="price">$99 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions actions-reserve">
-            <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="qx60" data-mode="one_way">Reserve Point A to Point B</a>
+            <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="qx60" data-mode="one_way">Reserve From Point A to Point B</a>
             <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="qx60" data-mode="hourly">Reserve by hour</a>
             <a class="btn btn-whatsapp" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
@@ -1058,7 +1082,7 @@
           <div class="price">$75 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions actions-reserve">
-            <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="tesla" data-mode="one_way">Reserve Point A to Point B</a>
+            <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="tesla" data-mode="one_way">Reserve From Point A to Point B</a>
             <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="tesla" data-mode="hourly">Reserve by hour</a>
             <a class="btn btn-whatsapp" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
@@ -1073,7 +1097,7 @@
           <div class="price">$250 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions actions-reserve">
-            <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="sprinter" data-mode="one_way">Reserve Point A to Point B</a>
+            <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="sprinter" data-mode="one_way">Reserve From Point A to Point B</a>
             <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="sprinter" data-mode="hourly">Reserve by hour</a>
             <a class="btn btn-whatsapp" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
@@ -1191,7 +1215,6 @@
     listEl.style.display = "block";
   }
 
-  // ✅ Airport code + airport name lookup (works without Google keys)
   const AIRPORTS = [
     { code:"YUL", name:"Montréal–Trudeau International Airport", city:"Montréal (Dorval), QC", country:"Canada", lat:45.4706, lng:-73.7408 },
     { code:"YMX", name:"Montréal–Mirabel International Airport", city:"Mirabel, QC", country:"Canada", lat:45.6795, lng:-74.0387 },
@@ -1210,14 +1233,11 @@
   function findAirportSuggestions(query){
     const q = normalize(query);
     if (!q) return [];
-
-    // If user types exactly 3 letters, treat as IATA first
     const looksLikeIATA = /^[A-Z]{3}$/.test(q);
     const tokens = q.split(/\s+/).filter(Boolean);
 
     const matches = AIRPORTS.filter(a=>{
       if (looksLikeIATA) return a.code === q;
-      // allow searching by code anywhere ("YUL airport"), or by name/city
       const hay = `${a.code} ${a.name} ${a.city} ${a.country}`.toUpperCase();
       return tokens.every(t => hay.includes(t));
     }).slice(0, 6);
@@ -1232,7 +1252,6 @@
     }));
   }
 
-  // ✅ Better "street address" rendering using Photon properties
   function formatPhotonFeature(f){
     const p = f.properties || {};
     const g = f.geometry || {};
@@ -1317,15 +1336,11 @@
 
       const current = ++token;
 
-      // Airports first (so typing YUL instantly works)
       const airportItems = findAirportSuggestions(q);
-
-      // Addresses second (street addresses / hotels / POIs)
       const addressItems = (q.length >= 3) ? await fetchAddressSuggestions(q) : [];
 
       if (current !== token) return;
 
-      // de-dupe by value
       const seen = new Set();
       const merged = [];
       [...airportItems, ...addressItems].forEach(it=>{
@@ -1339,9 +1354,7 @@
     };
 
     input.addEventListener("input", ()=>{
-      // if user edits manually after choosing a suggestion, clear coordinates
       clearCoords(latId, lngId);
-
       if (timer) clearTimeout(timer);
       timer = setTimeout(doSearch, 120);
     });
@@ -1351,7 +1364,6 @@
       if (input.value.trim().length >= 2) doSearch();
     });
 
-    // close list on Esc
     input.addEventListener("keydown", (e)=>{
       if (e.key === "Escape") clearAutocompleteList(list);
     });
@@ -1801,7 +1813,6 @@
 
   $("tabOneWay").addEventListener("click", ()=> setHeroMode("one_way"));
   $("tabHourly").addEventListener("click", ()=> setHeroMode("hourly"));
-  $("clearSelectedVehicle").addEventListener("click", ()=> setPreferredVehicle(null));
 
   document.querySelectorAll(".reserve-btn").forEach(btn=>{
     btn.addEventListener("click", (e)=>{
@@ -1830,7 +1841,6 @@
     state.transfer = val("h_transfer") || "point";
     state.hours = Math.max(3, Number(val("h_hours") || 3));
 
-    // ✅ capture coords (if user picked from suggestions)
     state.pickup_lat = val("h_pickup_lat");
     state.pickup_lng = val("h_pickup_lng");
     state.dropoff_lat = val("h_dropoff_lat");
@@ -1854,7 +1864,6 @@
     syncViewportHeight();
     buildTimeOptions(5, "h_time");
 
-    // ✅ Works for both one-way + hourly (pickup) and one-way dropoff
     setupAutocomplete("h_pickup", "h_pickup_list", "h_pickup_lat", "h_pickup_lng");
     setupAutocomplete("h_dropoff", "h_dropoff_list", "h_dropoff_lat", "h_dropoff_lng");
 
@@ -1863,20 +1872,9 @@
     const mm = String(d.getMonth()+1).padStart(2,"0");
     const dd = String(d.getDate()).padStart(2,"0");
     $("h_date").value = `${yyyy}-${mm}-${dd}`;
-
-    const params = new URLSearchParams(window.location.search);
-    const preferredVehicle = params.get("vehicle");
-    const preferredMode = params.get("mode");
-    if (preferredVehicle){
-      setHeroMode(preferredMode || "one_way");
-      setPreferredVehicle(preferredVehicle);
-      document.getElementById("booking")?.scrollIntoView({ behavior: "smooth", block: "start" });
-      setTimeout(()=> $("h_pickup")?.focus(), 300);
-    }else{
-      setHeroMode("one_way");
-      setPreferredVehicle(null);
-    }
     document.getElementById("year").textContent = yyyy;
+
+    setHeroMode("one_way");
 
     if (location.hash === "#overlayVehicles") openOverlay("overlayVehicles", false);
     if (location.hash === "#overlayCheckout") openOverlay("overlayCheckout", false);
