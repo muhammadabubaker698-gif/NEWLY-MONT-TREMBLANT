@@ -362,254 +362,6 @@
   }
   .alert.bad{ border-color: rgba(176,0,32,.25); background: rgba(176,0,32,.06); color: var(--bad); }
 
-  .overlay{
-    position: fixed;
-    inset: 0;
-    z-index: 99999;
-    background: rgba(255,255,255,.96);
-    display: none;
-    overflow: hidden;
-    overscroll-behavior: contain;
-  }
-  .overlay.show{ display: block; }
-
-  .overlay-top{
-    height: 76px;
-    border-bottom: 1px solid rgba(11,18,32,.10);
-    background: rgba(255,255,255,.92);
-    backdrop-filter: blur(10px);
-    display:flex;
-    align-items:center;
-  }
-  .overlay-top .container{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap: 12px;
-    width: 100%;
-  }
-  .overlay-title{
-    font-weight: 950;
-    letter-spacing: .2px;
-  }
-  .overlay-close{
-    border: 1px solid rgba(11,18,32,.14);
-    background: #fff;
-    border-radius: 12px;
-    padding: 10px 12px;
-    font-weight: 900;
-    cursor: pointer;
-  }
-
-  .overlay-body{
-    height: calc(var(--vh) - 76px);
-    height: calc(-webkit-fill-available - 76px);
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
-    padding: 26px 0 calc(var(--flowbar-h) + env(safe-area-inset-bottom) + 16px);
-    touch-action: pan-y;
-  }
-
-  .flow-wrap{
-    max-width: 760px;
-    width: 100%;
-    margin: 0 auto;
-    padding: 0 18px;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-  }
-
-  .flow-steps{
-    display:flex;
-    gap: 18px;
-    align-items:center;
-    justify-content:center;
-    color: rgba(11,18,32,.55);
-    font-weight: 900;
-    font-size: 13px;
-    margin-bottom: 14px;
-    flex-wrap: wrap;
-    text-align:center;
-  }
-  .flow-steps .on{ color: rgba(11,18,32,.92); }
-
-  .summary-pill{
-    border: 1px solid rgba(11,18,32,.12);
-    border-radius: 16px;
-    background: #fbfbfc;
-    padding: 14px 16px;
-    font-weight: 800;
-    color: rgba(11,18,32,.82);
-  }
-  .summary-pill small{
-    display:block;
-    color: rgba(11,18,32,.62);
-    font-weight: 800;
-    margin-top: 4px;
-  }
-
-  .flow-h1{
-    margin-top: 18px;
-    font-size: 28px;
-    line-height: 1.15;
-    letter-spacing: -.2px;
-    font-weight: 950;
-  }
-  .flow-sub{
-    margin-top: 8px;
-    color: rgba(11,18,32,.66);
-    font-weight: 750;
-  }
-
-  .vlist{
-    margin-top: 16px;
-    border: 1px solid rgba(11,18,32,.12);
-    border-radius: 16px;
-    overflow: hidden;
-    background: #fff;
-  }
-
-  .vrow{
-    position: relative;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap: 14px;
-    padding: 14px 14px;
-    border-top: 1px solid rgba(11,18,32,.10);
-    cursor: pointer;
-    transition: transform .12s ease, padding .12s ease, background .12s ease;
-    min-width: 0;
-  }
-  .vrow:first-child{ border-top: none; }
-  .vrow:hover{ background: rgba(11,18,32,.03); }
-
-  .vcheck{
-    position:absolute;
-    right: 16px;
-    top: 14px;
-    width: 22px;
-    height: 22px;
-    border-radius: 999px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size: 13px;
-    font-weight: 950;
-    color: #fff;
-    background: linear-gradient(90deg, var(--gradA), var(--gradB));
-    box-shadow: 0 10px 18px rgba(255,90,20,.20);
-    opacity: 0;
-    transform: scale(.92);
-    transition: opacity .12s ease, transform .12s ease;
-    pointer-events:none;
-  }
-
-  .vrow.selected{
-    background: rgba(255,90,20,.06);
-    padding-top: 18px;
-    padding-bottom: 18px;
-    transform: translateY(-1px);
-    z-index: 2;
-  }
-  .vrow.selected .vcheck{ opacity: 1; transform: scale(1); }
-  .vrow.selected::after{
-    content:"";
-    position:absolute;
-    inset: 6px;
-    border-radius: 14px;
-    border: 2px solid rgba(255,90,20,.55);
-    pointer-events:none;
-  }
-  .vrow.hide-top-border{ border-top-color: transparent; }
-
-  .vleft, .vright{ min-width:0; }
-  .vleft b{ display:block; font-weight: 950; word-break: break-word; }
-  .vleft small{ display:block; margin-top: 2px; color: rgba(11,18,32,.62); font-weight: 800; }
-  .vright{
-    text-align:right;
-    font-weight: 950;
-    white-space: nowrap;
-    padding-right: 26px;
-  }
-
-  .veh-img{
-    width: 96px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 10px;
-    border: 1px solid rgba(0,0,0,.08);
-    flex: 0 0 auto;
-    background: #fff;
-  }
-
-  .flow-actions{
-    margin-top: 18px;
-    position: sticky;
-    bottom: 0;
-    z-index: 5;
-    background: rgba(255,255,255,.96);
-    backdrop-filter: blur(8px);
-    border-top: 1px solid rgba(11,18,32,.10);
-    padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
-    display:flex;
-    gap: 12px;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    will-change: transform;
-  }
-
-  .flow-actions .btn{
-    border-radius: 14px;
-    padding: 12px 14px;
-    box-shadow:none;
-  }
-  .flow-actions .btn-primary{
-    box-shadow: 0 16px 34px rgba(255,90,20,.18);
-  }
-  .btn:disabled{ opacity:.55; cursor:not-allowed; }
-
-  html.overlay-open .whatsapp-float{ display:none !important; }
-
-  label{
-    display:block;
-    margin: 12px 0 6px;
-    font-size: 12.5px;
-    font-weight: 900;
-    color: rgba(11,18,32,.74);
-    letter-spacing: .18px;
-  }
-  input, select, textarea{
-    width:100%;
-    padding: 12px 12px;
-    border-radius: 12px;
-    border: 1px solid rgba(11,18,32,.14);
-    background: #f4f5f7;
-    color: rgba(11,18,32,.92);
-    outline:none;
-    font-weight: 800;
-    font-size: 16px;
-  }
-  textarea{min-height: 92px; resize: vertical}
-
-  .estimate-box{
-    margin-top: 12px;
-    border-radius: 12px;
-    border: 1px solid rgba(11,18,32,.12);
-    background: #fbfbfc;
-    padding: 12px;
-  }
-  .estimate-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
-  .estimate-top b{font-size:13.5px}
-  .estimate-value{font-weight:950}
-  .estimate-sub{margin-top:6px;color: rgba(11,18,32,.68);font-size:12.8px;font-weight:700}
-  .tinyhint{margin-top:6px;font-size:12.5px;color:rgba(11,18,32,.62);font-weight:700}
-
   .section{ margin-top: 46px; }
   h2{ font-size: 30px; letter-spacing: -.2px; line-height:1.15; }
   .subtitle{
@@ -638,10 +390,10 @@
   .price{ margin-top: 10px; font-weight: 950; }
   .min{ margin-top: 3px; color: rgba(11,18,32,.58); font-weight: 800; font-size: 12.5px; }
 
-  /* ✅ ACTIONS layout (merged fix):
-     - Reserve buttons always same line (desktop + mobile)
-     - Long text fits inside button
-     - WhatsApp full width under them */
+  /* ✅ ACTIONS layout (final):
+     - Reserve buttons always on same line (desktop + mobile)
+     - Fix overflow on desktop (min-width:0 + overflow hidden)
+     - Long text fits in the button */
   .actions{ margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; }
   .actions .btn{ box-shadow:none; }
 
@@ -655,18 +407,19 @@
   .actions-reserve .btn{
     width: 100%;
     justify-content: center;
+    min-width: 0;              /* ✅ allow shrink inside grid */
+    overflow: hidden;          /* ✅ prevent push outside card */
+    text-overflow: ellipsis;   /* ✅ safety */
   }
 
   .actions-reserve .reserve-btn{
-    font-size: clamp(11px, 2.6vw, 13.5px);
+    font-size: clamp(11px, 1.1vw, 13.5px); /* ✅ slightly smaller on desktop too */
     padding: 10px 10px;
     line-height: 1.1;
     white-space: nowrap;
-  }
-
-  .actions-reserve .btn-whatsapp{
-    grid-column: 1 / -1;
-    justify-content: center;
+    min-width: 0;               /* ✅ important */
+    overflow: hidden;           /* ✅ important */
+    text-overflow: ellipsis;    /* ✅ safety */
   }
 
   .btn-whatsapp{
@@ -676,41 +429,9 @@
     box-shadow: 0 16px 34px rgba(34,197,94,.22);
   }
 
-  .selected-vehicle{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    padding: 10px 12px;
-    border-radius: 12px;
-    border: 1px solid rgba(11,18,32,.12);
-    background: #f5f6f8;
-    font-size: 13px;
-    font-weight: 800;
-    color: rgba(11,18,32,.8);
-  }
-  .selected-vehicle-info{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    min-width: 0;
-  }
-  .selected-vehicle-info img{
-    width: 44px;
-    height: 32px;
-    object-fit: cover;
-    border-radius: 8px;
-    border: 1px solid rgba(11,18,32,.12);
-    background: #fff;
-    flex: 0 0 auto;
-  }
-  .selected-vehicle button{
-    border: 1px solid rgba(11,18,32,.16);
-    background: #fff;
-    border-radius: 999px;
-    padding: 6px 12px;
-    font-weight: 800;
-    cursor:pointer;
+  .actions-reserve .btn-whatsapp{
+    grid-column: 1 / -1;
+    justify-content: center;
   }
 
   footer{
@@ -734,45 +455,6 @@
     box-shadow: 0 16px 38px rgba(0,0,0,.16);
     z-index:60;
     border: 1px solid rgba(0,0,0,.14);
-  }
-
-  @media (max-width: 680px){
-    .overlay-top .container{ padding-left: 12px; padding-right: 12px; }
-    .overlay-title{ font-size: 14px; }
-    .overlay-close{ padding: 9px 10px; border-radius: 12px; }
-
-    .vrow{
-      display: grid;
-      grid-template-columns: 76px 1fr auto;
-      align-items: center;
-      gap: 12px;
-    }
-    .veh-img{
-      width: 76px;
-      height: 52px;
-      border-radius: 12px;
-    }
-    .vright{
-      padding-right: 18px;
-      text-align: right;
-    }
-    .vleft b{ font-size: 15px; line-height: 1.2; }
-    .vleft small{ font-size: 12.5px; }
-
-    .flow-actions{
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      margin-top: 0;
-      padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
-      z-index: 999999;
-    }
-
-    .flow-actions .btn{
-      flex: 1 1 auto;
-      min-width: 140px;
-    }
   }
 
   @media (max-width: 980px){
@@ -845,14 +527,6 @@
           <input type="hidden" id="h_pickup_lng" value="" />
           <input type="hidden" id="h_dropoff_lat" value="" />
           <input type="hidden" id="h_dropoff_lng" value="" />
-
-          <div id="selectedVehicleBanner" class="selected-vehicle" style="display:none;">
-            <div class="selected-vehicle-info">
-              <img id="selectedVehicleImage" src="" alt="" />
-              <span>Selected vehicle: <b id="selectedVehicleName"></b></span>
-            </div>
-            <button id="clearSelectedVehicle" type="button">Clear</button>
-          </div>
 
           <!-- Pickup -->
           <div class="autocomplete-wrap">
@@ -929,86 +603,6 @@
         </form>
       </div>
     </aside>
-  </div>
-</div>
-
-<!-- STEP 2: Vehicle selection -->
-<div id="overlayVehicles" class="overlay" aria-hidden="true">
-  <div class="overlay-top">
-    <div class="container">
-      <div class="overlay-title">Mont Tremblant Limo • Booking</div>
-      <button class="overlay-close" type="button" onclick="closeOverlay('overlayVehicles', true)">Close</button>
-    </div>
-  </div>
-  <div class="overlay-body">
-    <div class="flow-wrap">
-      <div class="flow-steps">
-        <span>Search</span> <span>›</span>
-        <span class="on">Service Class</span> <span>›</span>
-        <span>Checkout</span>
-      </div>
-
-      <div class="summary-pill" id="tripSummary"></div>
-
-      <div class="flow-h1">Select a vehicle</div>
-      <div class="flow-sub">Prices shown are estimates.</div>
-
-      <div class="vlist" id="vehicleOverlayList"></div>
-
-      <div class="flow-actions">
-        <button class="btn" type="button" onclick="backToSearch()">Edit search</button>
-        <button id="btnVehicleContinue" class="btn btn-primary" type="button" disabled onclick="goToCheckoutOverlay()">Continue</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- STEP 3: Checkout -->
-<div id="overlayCheckout" class="overlay" aria-hidden="true">
-  <div class="overlay-top">
-    <div class="container">
-      <div class="overlay-title">Mont Tremblant Limo • Checkout</div>
-      <button class="overlay-close" type="button" onclick="closeOverlay('overlayCheckout', true)">Close</button>
-    </div>
-  </div>
-  <div class="overlay-body">
-    <div class="flow-wrap">
-      <div class="flow-steps">
-        <span>Search</span> <span>›</span>
-        <span>Service Class</span> <span>›</span>
-        <span class="on">Checkout</span>
-      </div>
-
-      <div class="summary-pill" id="checkoutSummary"></div>
-
-      <div class="flow-h1">Your details</div>
-      <div class="flow-sub">Enter your name and phone, then pay securely via Stripe.</div>
-
-      <label for="c_name">Name</label>
-      <input id="c_name" placeholder="Your name" />
-
-      <label for="c_phone">Phone</label>
-      <input id="c_phone" placeholder="+1 ..." />
-
-      <label for="c_notes">Notes (optional)</label>
-      <textarea id="c_notes" placeholder="Passengers, luggage, flight #, stops…"></textarea>
-
-      <div class="estimate-box" style="margin-top:14px;">
-        <div class="estimate-top">
-          <b>Total estimate</b>
-          <div class="estimate-value" id="checkoutTotal">—</div>
-        </div>
-        <div class="estimate-sub" id="checkoutSub"></div>
-      </div>
-
-      <div class="flow-actions" style="margin-top:14px;">
-        <button class="btn" type="button" onclick="backToVehicles()">Back</button>
-        <button class="btn btn-primary" type="button" onclick="startStripeCheckoutFromOverlay()">Pay with Stripe</button>
-        <button class="btn" type="button" onclick="sendWhatsAppFromOverlay()">WhatsApp</button>
-      </div>
-
-      <div class="tinyhint" id="checkoutStatus" style="margin-top:10px;"></div>
-    </div>
   </div>
 </div>
 
@@ -1120,105 +714,6 @@
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  const BUSINESS_WA = "15142933170";
-
-  const LOCAL_RATES = [
-    { id:"escalade", name:"2026 Cadillac Escalade ESV", hourly:150, meta:"Ultra-luxury • VIP airport transfers • ski trips", img:"escalade.jpg" },
-    { id:"suburban", name:"2025 Chevrolet Suburban", hourly:120, meta:"Spacious • luggage friendly • long rides", img:"suburban.jpg" },
-    { id:"denali", name:"2026 GMC Yukon Denali", hourly:120, meta:"Premium comfort • smooth ride • executive travel", img:"denali.jpg" },
-    { id:"qx60", name:"2024 Infiniti QX60", hourly:99, meta:"Comfort + value • airport transfers • city rides", img:"qx60.jpg" },
-    { id:"tesla", name:"2023 Tesla Model Y", hourly:75, meta:"Quiet • modern • eco-friendly", img:"tesla.jpg" },
-    { id:"sprinter", name:"Mercedes Sprinter (Group Van)", hourly:250, meta:"Groups • events • ski luggage", img:"sprinter.jpg" }
-  ];
-
-  const state = {
-    mode: "one_way",
-    pickup: "",
-    dropoff: "",
-    date: "",
-    time: "",
-    transfer: "point",
-    hours: 3,
-    preferredVehicleId: null,
-    selectedVehicleId: null,
-    computedVehicles: [],
-    pickup_lat: "",
-    pickup_lng: "",
-    dropoff_lat: "",
-    dropoff_lng: ""
-  };
-
-  function $(id){ return document.getElementById(id); }
-  function val(id){ return ($(id)?.value || "").trim(); }
-
-  function formatMoney(n){
-    if (!Number.isFinite(Number(n))) return "—";
-    return "CA$" + Math.round(Number(n));
-  }
-
-  function buildTimeOptions(stepMinutes = 5, selectId){
-    const timeEl = document.getElementById(selectId);
-    if (!timeEl || timeEl.tagName !== "SELECT") return;
-
-    timeEl.innerHTML = "";
-    const ph = document.createElement("option");
-    ph.value = "";
-    ph.textContent = "Select time";
-    ph.selected = true;
-    ph.disabled = true;
-    timeEl.appendChild(ph);
-
-    const pad = (n)=> String(n).padStart(2,"0");
-    for (let minutes = 0; minutes < 24 * 60; minutes += stepMinutes){
-      const hh = Math.floor(minutes / 60);
-      const mm = minutes % 60;
-      const value = `${pad(hh)}:${pad(mm)}`;
-      const hour12 = ((hh + 11) % 12) + 1;
-      const ampm = hh < 12 ? "AM" : "PM";
-      const label = `${hour12}:${pad(mm)} ${ampm}`;
-      const opt = document.createElement("option");
-      opt.value = value;
-      opt.textContent = label;
-      timeEl.appendChild(opt);
-    }
-    const now = new Date();
-    let mins = now.getHours() * 60 + now.getMinutes();
-    mins = Math.ceil(mins / stepMinutes) * stepMinutes;
-    if (mins >= 24*60) mins = 0;
-    const hh = Math.floor(mins / 60);
-    const mm = mins % 60;
-    timeEl.value = `${pad(hh)}:${pad(mm)}`;
-  }
-
-  function clearAutocompleteList(listEl){
-    if (!listEl) return;
-    listEl.innerHTML = "";
-    listEl.style.display = "none";
-  }
-
-  function renderAutocompleteList(listEl, items, onPick){
-    if (!listEl) return;
-    listEl.innerHTML = "";
-    if (!items.length){
-      listEl.style.display = "none";
-      return;
-    }
-
-    items.forEach((item)=>{
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.innerHTML = `${item.main}<span class="muted">${item.sub}</span>`;
-      btn.addEventListener("mousedown", (e)=>{
-        e.preventDefault();
-        onPick(item);
-        clearAutocompleteList(listEl);
-      });
-      listEl.appendChild(btn);
-    });
-
-    listEl.style.display = "block";
-  }
-
   const AIRPORTS = [
     { code:"YUL", name:"Montréal–Trudeau International Airport", city:"Montréal (Dorval), QC", country:"Canada", lat:45.4706, lng:-73.7408 },
     { code:"YMX", name:"Montréal–Mirabel International Airport", city:"Mirabel, QC", country:"Canada", lat:45.6795, lng:-74.0387 },
@@ -1231,6 +726,8 @@
     { code:"LGA", name:"LaGuardia Airport", city:"New York, NY", country:"USA", lat:40.7769, lng:-73.8740 },
     { code:"BOS", name:"Boston Logan International Airport", city:"Boston, MA", country:"USA", lat:42.3656, lng:-71.0096 }
   ];
+
+  function $(id){ return document.getElementById(id); }
 
   function normalize(s){ return String(s || "").trim().toUpperCase(); }
 
@@ -1247,7 +744,6 @@
     }).slice(0, 6);
 
     return matches.map(a=>({
-      type: "airport",
       main: `${a.name} (${a.code})`,
       sub: `${a.code} • ${a.city} • ${a.country}`,
       value: `${a.name} (${a.code}), ${a.city}`,
@@ -1282,7 +778,6 @@
     const value = valueParts.join(", ");
 
     return {
-      type: "address",
       main: line1,
       sub,
       value,
@@ -1305,6 +800,35 @@
     }catch(_e){
       return [];
     }
+  }
+
+  function clearAutocompleteList(listEl){
+    if (!listEl) return;
+    listEl.innerHTML = "";
+    listEl.style.display = "none";
+  }
+
+  function renderAutocompleteList(listEl, items, onPick){
+    if (!listEl) return;
+    listEl.innerHTML = "";
+    if (!items.length){
+      listEl.style.display = "none";
+      return;
+    }
+
+    items.forEach((item)=>{
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.innerHTML = `${item.main}<span class="muted">${item.sub}</span>`;
+      btn.addEventListener("mousedown", (e)=>{
+        e.preventDefault();
+        onPick(item);
+        clearAutocompleteList(listEl);
+      });
+      listEl.appendChild(btn);
+    });
+
+    listEl.style.display = "block";
   }
 
   function setCoords(latId, lngId, lat, lng){
@@ -1367,497 +891,24 @@
     input.addEventListener("focus", ()=>{
       if (input.value.trim().length >= 2) doSearch();
     });
-
-    input.addEventListener("keydown", (e)=>{
-      if (e.key === "Escape") clearAutocompleteList(list);
-    });
   }
-
-  function setHeroMode(mode){
-    state.mode = mode;
-    $("heroMode").value = mode;
-
-    const one = mode === "one_way";
-    $("tabOneWay").classList.toggle("active", one);
-    $("tabHourly").classList.toggle("active", !one);
-
-    $("heroDropoffWrap").style.display = one ? "" : "none";
-    $("heroTransferWrap").style.display = one ? "" : "none";
-    $("heroHoursWrap").style.display = one ? "none" : "";
-
-    $("h_dropoff").required = one;
-  }
-
-  function showHeroAlert(message){
-    const el = $("heroAlert");
-    el.style.display = "block";
-    el.textContent = message;
-  }
-  function clearHeroAlert(){
-    const el = $("heroAlert");
-    el.style.display = "none";
-    el.textContent = "";
-  }
-
-  function validateHero(){
-    if (!val("h_pickup")) return "Please enter a pickup location.";
-    if (state.mode === "one_way" && !val("h_dropoff")) return "Please enter a destination.";
-    if (!$("h_date").value) return "Please choose a date.";
-    if (!val("h_time")) return "Please choose a time.";
-    return null;
-  }
-
-  function calcVehicleTotal(vehicle){
-    const h = Math.max(3, Number(state.hours || 3));
-    if (state.mode === "hourly") return vehicle.hourly * h;
-    const fee = state.transfer === "airport" ? 60 : 40;
-    return (vehicle.hourly * 3) + fee;
-  }
-
-  function buildVehiclesForTrip(){
-    const ORDER = ["escalade","suburban","denali","qx60","tesla","sprinter"];
-    const list = LOCAL_RATES.map(v=>{
-      const total = calcVehicleTotal(v);
-      const note = state.mode === "hourly"
-        ? `Total ${formatMoney(total)} for ${Math.max(3, Number(state.hours||3))} hours`
-        : (state.transfer === "airport" ? "Airport estimate" : "Point-to-point estimate");
-      return { ...v, total, note };
-    });
-    list.sort((a,b)=>ORDER.indexOf(a.id) - ORDER.indexOf(b.id));
-    return list;
-  }
-
-  let __scrollY = 0;
-  function lockBodyScroll(){
-    __scrollY = window.scrollY || 0;
-    document.body.style.position = "fixed";
-    document.body.style.top = `-${__scrollY}px`;
-    document.body.style.left = "0";
-    document.body.style.right = "";
-    document.body.style.width = "100%";
-  }
-  function unlockBodyScroll(){
-    document.body.style.position = "";
-    document.body.style.top = "";
-    document.body.style.left = "";
-    document.body.style.right = "";
-    document.body.style.width = "";
-    window.scrollTo(0, __scrollY);
-  }
-
-  function anyOverlayOpen(){
-    return !!document.querySelector(".overlay.show");
-  }
-
-  function closeAllOverlaysVisual(){
-    document.querySelectorAll(".overlay.show").forEach(el=>{
-      el.classList.remove("show");
-      el.setAttribute("aria-hidden","true");
-    });
-    document.documentElement.classList.remove("overlay-open");
-    unlockBodyScroll();
-    try{
-      if (window.Tawk_API && typeof window.Tawk_API.showWidget === "function") {
-        window.Tawk_API.showWidget();
-      }
-    }catch(e){}
-  }
-
-  function syncFlowBarHeight(overlayId){
-    const overlay = document.getElementById(overlayId);
-    if (!overlay) return;
-    const bar = overlay.querySelector(".flow-actions");
-    if (!bar) return;
-    const h = Math.ceil(bar.getBoundingClientRect().height);
-    if (h > 0) document.documentElement.style.setProperty("--flowbar-h", h + "px");
-  }
-
-  function syncViewportHeight(){
-    const vh = (window.visualViewport?.height || window.innerHeight || 0);
-    if (vh) document.documentElement.style.setProperty("--vh", vh + "px");
-  }
-
-  function forceIOSPaint(overlayId){
-    const overlay = document.getElementById(overlayId);
-    if (!overlay) return;
-
-    const body = overlay.querySelector(".overlay-body");
-    const bar  = overlay.querySelector(".flow-actions");
-
-    if (overlay) void overlay.offsetHeight;
-    if (body) void body.offsetHeight;
-    if (bar) void bar.offsetHeight;
-
-    if (body){
-      const y = body.scrollTop;
-      body.scrollTop = y + 1;
-      body.scrollTop = y;
-    }
-
-    if (bar){
-      const prev = bar.style.display;
-      bar.style.display = "none";
-      void bar.offsetHeight;
-      bar.style.display = prev || "";
-      void bar.offsetHeight;
-
-      bar.style.transform = "translateZ(0)";
-      bar.style.webkitTransform = "translateZ(0)";
-    }
-  }
-
-  function scheduleIOSPaint(overlayId){
-    forceIOSPaint(overlayId);
-    requestAnimationFrame(()=>forceIOSPaint(overlayId));
-    setTimeout(()=>forceIOSPaint(overlayId), 50);
-    setTimeout(()=>forceIOSPaint(overlayId), 150);
-    setTimeout(()=>forceIOSPaint(overlayId), 350);
-  }
-
-  function openOverlay(id, pushHistory = true){
-    lockBodyScroll();
-    document.documentElement.classList.add("overlay-open");
-
-    const el = $(id);
-    el.classList.add("show");
-    el.setAttribute("aria-hidden","false");
-
-    try{
-      if (window.Tawk_API && typeof window.Tawk_API.hideWidget === "function") {
-        window.Tawk_API.hideWidget();
-      }
-    }catch(e){}
-
-    if (pushHistory){
-      history.pushState({ overlay: id }, "", "#" + id);
-    }
-
-    syncFlowBarHeight(id);
-    scheduleIOSPaint(id);
-  }
-
-  function closeOverlay(id, popHistory = false){
-    const el = $(id);
-    el.classList.remove("show");
-    el.setAttribute("aria-hidden","true");
-
-    if (!anyOverlayOpen()){
-      document.documentElement.classList.remove("overlay-open");
-      unlockBodyScroll();
-      try{
-        if (window.Tawk_API && typeof window.Tawk_API.showWidget === "function") {
-          window.Tawk_API.showWidget();
-        }
-      }catch(e){}
-      if (location.hash === "#overlayVehicles" || location.hash === "#overlayCheckout"){
-        history.replaceState({ page: "home" }, "", location.pathname + location.search);
-      }
-    }
-
-    if (popHistory && history.state && history.state.overlay){
-      history.back();
-    }
-  }
-
-  window.addEventListener("popstate", (e)=>{
-    closeAllOverlaysVisual();
-    if (e.state && e.state.overlay){
-      openOverlay(e.state.overlay, false);
-    }
-  });
-
-  window.addEventListener("resize", ()=>{
-    syncViewportHeight();
-    if (document.getElementById("overlayVehicles")?.classList.contains("show")) syncFlowBarHeight("overlayVehicles");
-    if (document.getElementById("overlayCheckout")?.classList.contains("show")) syncFlowBarHeight("overlayCheckout");
-  });
-  window.visualViewport?.addEventListener("resize", syncViewportHeight);
-  window.visualViewport?.addEventListener("scroll", syncViewportHeight);
-
-  function backToSearch(){ history.back(); }
-  function backToVehicles(){ history.back(); }
-
-  function renderTripSummary(){
-    const when = `${state.date} at ${state.time}`;
-    const route = state.mode === "hourly"
-      ? `${state.pickup} → Hourly (Mont-Tremblant area)`
-      : `${state.pickup} → ${state.dropoff}`;
-
-    $("tripSummary").innerHTML = `
-      <div><b>${when}</b></div>
-      <small>${route}</small>
-    `;
-  }
-
-  function clearRowBorderHelpers(){
-    document.querySelectorAll(".vrow").forEach(r=> r.classList.remove("hide-top-border"));
-  }
-  function applyRowBorderHelpers(selectedRow){
-    clearRowBorderHelpers();
-    if (!selectedRow) return;
-    selectedRow.classList.add("hide-top-border");
-    const next = selectedRow.nextElementSibling;
-    if (next && next.classList.contains("vrow")) next.classList.add("hide-top-border");
-  }
-
-  function renderVehiclesOverlay(){
-    const wrap = $("vehicleOverlayList");
-    wrap.innerHTML = "";
-    state.selectedVehicleId = null;
-    $("btnVehicleContinue").disabled = true;
-
-    const hours = Math.max(3, Number(state.hours || 3));
-    let preferredRow = null;
-
-    state.computedVehicles.forEach(v=>{
-      const row = document.createElement("div");
-      row.className = "vrow";
-      row.dataset.vehicleId = v.id;
-
-      const underVehicle = (state.mode === "hourly") ? "" : `<small>${v.note}</small>`;
-      const underPrice = (state.mode === "hourly")
-        ? `<small style="display:block;margin-top:2px;color:rgba(11,18,32,.62);font-weight:800;">Total ${formatMoney(v.total)} for ${hours} hours</small>`
-        : `<small style="display:block;margin-top:2px;color:rgba(11,18,32,.62);font-weight:800;">${v.note}</small>`;
-
-      row.innerHTML = `
-        <img class="veh-img" src="${v.img}" alt="${v.name}" />
-        <div class="vleft">
-          <b>${v.name}</b>
-          ${underVehicle}
-        </div>
-        <div class="vright">
-          <div>${formatMoney(v.total)}</div>
-          ${underPrice}
-        </div>
-        <div class="vcheck" aria-hidden="true">✓</div>
-      `;
-
-      row.addEventListener("click", ()=>{
-        document.querySelectorAll(".vrow").forEach(x=>x.classList.remove("selected"));
-        row.classList.add("selected");
-        state.selectedVehicleId = v.id;
-        $("btnVehicleContinue").disabled = false;
-        applyRowBorderHelpers(row);
-        syncFlowBarHeight("overlayVehicles");
-        scheduleIOSPaint("overlayVehicles");
-      });
-
-      wrap.appendChild(row);
-      if (state.preferredVehicleId && state.preferredVehicleId === v.id) preferredRow = row;
-    });
-
-    if (preferredRow){
-      preferredRow.click();
-      preferredRow.scrollIntoView({ block: "center" });
-    }
-
-    syncFlowBarHeight("overlayVehicles");
-    scheduleIOSPaint("overlayVehicles");
-  }
-
-  function getChosenVehicle(){
-    return state.computedVehicles.find(v=>v.id === state.selectedVehicleId) || null;
-  }
-
-  function goToCheckoutOverlay(){
-    if (!state.selectedVehicleId) return;
-
-    closeOverlay("overlayVehicles", false);
-
-    const chosen = getChosenVehicle();
-    const when = `${state.date} at ${state.time}`;
-    const route = state.mode === "hourly"
-      ? `${state.pickup} → Hourly (Mont-Tremblant area)`
-      : `${state.pickup} → ${state.dropoff}`;
-
-    $("checkoutSummary").innerHTML = `
-      <div><b>${when}</b></div>
-      <small>${route} • ${chosen?.name || ""}</small>
-    `;
-
-    $("checkoutTotal").textContent = chosen ? formatMoney(chosen.total) : "—";
-    $("checkoutSub").textContent = chosen
-      ? (state.mode === "hourly"
-          ? `Total ${formatMoney(chosen.total)} for ${Math.max(3, Number(state.hours||3))} hours`
-          : chosen.note)
-      : "";
-
-    openOverlay("overlayCheckout", true);
-    syncFlowBarHeight("overlayCheckout");
-  }
-
-  function buildWhatsAppMessage(payload){
-    const lines = [];
-    lines.push("Booking Request - Mont Tremblant Limo Services");
-    lines.push(`Name: ${payload.name || ""}`);
-    if (payload.phone) lines.push(`Phone: ${payload.phone}`);
-    lines.push(`Date: ${payload.date}`);
-    lines.push(`Time: ${payload.time}`);
-    lines.push(`Pickup: ${payload.pickup}`);
-    lines.push(`Drop-off: ${payload.dropoff}`);
-    lines.push(`Trip type: ${payload.triptype}`);
-    lines.push(`Vehicle: ${payload.vehicle}`);
-    lines.push(`Estimate: ${payload.estimate_text}`);
-    if (payload.notes) lines.push(`Notes: ${payload.notes}`);
-    return encodeURIComponent(lines.join("\n"));
-  }
-
-  function sendWhatsAppFromOverlay(){
-    const chosen = getChosenVehicle();
-    if (!chosen) return;
-
-    const name = val("c_name");
-    const phone = val("c_phone");
-    const notes = val("c_notes");
-    const triptype = (state.mode === "hourly") ? "Hourly" : (state.transfer === "airport" ? "Airport transfer" : "Point-to-point");
-
-    const estimateText = (state.mode === "hourly")
-      ? `Total ${formatMoney(chosen.total)} for ${Math.max(3, Number(state.hours||3))} hours`
-      : `${formatMoney(chosen.total)} (${chosen.note})`;
-
-    const payload = {
-      name, phone,
-      date: state.date,
-      time: state.time,
-      pickup: state.pickup,
-      dropoff: (state.mode === "hourly") ? "Mont-Tremblant (area)" : state.dropoff,
-      triptype,
-      vehicle: chosen.name,
-      estimate_text: estimateText,
-      notes
-    };
-
-    window.open("https://wa.me/" + BUSINESS_WA + "?text=" + buildWhatsAppMessage(payload), "_blank", "noreferrer");
-  }
-
-  async function startStripeCheckoutFromOverlay(){
-    const statusEl = $("checkoutStatus");
-    statusEl.textContent = "";
-
-    const chosen = getChosenVehicle();
-    if (!chosen){
-      statusEl.textContent = "Please choose a vehicle first.";
-      return;
-    }
-
-    const name = val("c_name");
-    if (!name){
-      statusEl.textContent = "Please enter your name.";
-      return;
-    }
-
-    const booking = {
-      name: name,
-      phone: val("c_phone"),
-      date: state.date,
-      time: state.time,
-      pickup: state.pickup,
-      dropoff: (state.mode === "hourly") ? "Mont-Tremblant (area)" : state.dropoff,
-      triptype: (state.mode === "hourly") ? "hourly" : (state.transfer === "airport" ? "airport" : "point"),
-      vehicle: chosen.name,
-      vehicle_id: chosen.id,
-      hours: String(Math.max(3, Number(state.hours||3))),
-      roundtrip: "no",
-      notes: val("c_notes"),
-      estimate_text: (state.mode === "hourly")
-        ? `Total ${formatMoney(chosen.total)} for ${Math.max(3, Number(state.hours||3))} hours`
-        : `${formatMoney(chosen.total)} (${chosen.note})`,
-      estimate_total_cad: chosen.total,
-      pay_option: "full",
-      pay_now_cad: chosen.total
-    };
-
-    try{
-      statusEl.textContent = "Starting secure checkout…";
-      const res = await fetch("/api/create-checkout-session", {
-        method: "POST",
-        headers: { "Content-Type":"application/json" },
-        body: JSON.stringify(booking)
-      });
-      const data = await res.json().catch(()=> ({}));
-      if (!res.ok) throw new Error(data?.error || "Unable to start checkout.");
-      if (!data?.url) throw new Error("Missing checkout URL from server.");
-      window.location.href = data.url;
-    }catch(err){
-      console.error(err);
-      statusEl.textContent = "Stripe checkout error: " + (err.message || "Unknown error");
-      alert("Stripe checkout error: " + (err.message || "Unknown error"));
-    }
-  }
-
-  function setHeroSearchLoading(isLoading){
-    const btn = $("heroSearchBtn");
-    btn.disabled = isLoading;
-    btn.textContent = isLoading ? "Searching…" : "Search";
-  }
-
-  $("tabOneWay").addEventListener("click", ()=> setHeroMode("one_way"));
-  $("tabHourly").addEventListener("click", ()=> setHeroMode("hourly"));
-
-  document.querySelectorAll(".reserve-btn").forEach(btn=>{
-    btn.addEventListener("click", (e)=>{
-      e.preventDefault();
-      const vehicleId = btn.dataset.vehicle;
-      const mode = btn.dataset.mode || "one_way";
-      const url = new URL(window.location.href);
-      url.searchParams.set("vehicle", vehicleId);
-      url.searchParams.set("mode", mode);
-      url.hash = "booking";
-      window.location.href = url.toString();
-    });
-  });
-
-  $("heroSearchForm").addEventListener("submit", (e)=>{
-    e.preventDefault();
-    clearHeroAlert();
-
-    const err = validateHero();
-    if (err) return showHeroAlert(err);
-
-    state.pickup = val("h_pickup");
-    state.dropoff = val("h_dropoff");
-    state.date = $("h_date").value;
-    state.time = val("h_time");
-    state.transfer = val("h_transfer") || "point";
-    state.hours = Math.max(3, Number(val("h_hours") || 3));
-
-    state.pickup_lat = val("h_pickup_lat");
-    state.pickup_lng = val("h_pickup_lng");
-    state.dropoff_lat = val("h_dropoff_lat");
-    state.dropoff_lng = val("h_dropoff_lng");
-
-    setHeroSearchLoading(true);
-
-    state.computedVehicles = buildVehiclesForTrip();
-    renderTripSummary();
-    renderVehiclesOverlay();
-
-    setHeroSearchLoading(false);
-    openOverlay("overlayVehicles", true);
-  });
 
   window.addEventListener("load", ()=>{
-    if (!history.state){
-      history.replaceState({ page: "home" }, "", location.pathname + location.search + (location.hash || ""));
-    }
-
-    syncViewportHeight();
-    buildTimeOptions(5, "h_time");
-
     setupAutocomplete("h_pickup", "h_pickup_list", "h_pickup_lat", "h_pickup_lng");
     setupAutocomplete("h_dropoff", "h_dropoff_list", "h_dropoff_lat", "h_dropoff_lng");
 
-    const d = new Date();
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth()+1).padStart(2,"0");
-    const dd = String(d.getDate()).padStart(2,"0");
-    $("h_date").value = `${yyyy}-${mm}-${dd}`;
-    document.getElementById("year").textContent = yyyy;
-
-    setHeroMode("one_way");
-
-    if (location.hash === "#overlayVehicles") openOverlay("overlayVehicles", false);
-    if (location.hash === "#overlayCheckout") openOverlay("overlayCheckout", false);
+    document.querySelectorAll(".reserve-btn").forEach(btn=>{
+      btn.addEventListener("click", (e)=>{
+        e.preventDefault();
+        const vehicleId = btn.dataset.vehicle;
+        const mode = btn.dataset.mode || "one_way";
+        const url = new URL(window.location.href);
+        url.searchParams.set("vehicle", vehicleId);
+        url.searchParams.set("mode", mode);
+        url.hash = "booking";
+        window.location.href = url.toString();
+      });
+    });
   });
 </script>
 
