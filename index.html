@@ -390,48 +390,46 @@
   .price{ margin-top: 10px; font-weight: 950; }
   .min{ margin-top: 3px; color: rgba(11,18,32,.58); font-weight: 800; font-size: 12.5px; }
 
-  /* ✅ ACTIONS layout (final):
-     - Reserve buttons always on same line (desktop + mobile)
-     - Fix overflow on desktop (min-width:0 + overflow hidden)
-     - Long text fits in the button */
+  /* ✅ Reserve buttons: SAME ROW on desktop + mobile, NO ellipsis, allow 2-line wrap */
   .actions{ margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; }
   .actions .btn{ box-shadow:none; }
 
   .actions-reserve{
-    display: grid;
+    display:grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap:10px;
     align-items: stretch;
   }
 
   .actions-reserve .btn{
-    width: 100%;
-    justify-content: center;
-    min-width: 0;              /* ✅ allow shrink inside grid */
-    overflow: hidden;          /* ✅ prevent push outside card */
-    text-overflow: ellipsis;   /* ✅ safety */
+    width:100%;
+    justify-content:center;
+    min-width:0;          /* ✅ prevents overflow outside card */
+    text-align:center;
   }
 
   .actions-reserve .reserve-btn{
-    font-size: clamp(11px, 1.1vw, 13.5px); /* ✅ slightly smaller on desktop too */
+    font-size: clamp(11px, 1.05vw, 13.5px);
     padding: 10px 10px;
-    line-height: 1.1;
-    white-space: nowrap;
-    min-width: 0;               /* ✅ important */
-    overflow: hidden;           /* ✅ important */
-    text-overflow: ellipsis;    /* ✅ safety */
+    line-height: 1.15;
+
+    /* ✅ wrap to 2 lines if needed (no dots) */
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+
+    min-width: 0;
   }
 
   .btn-whatsapp{
-    border: none;
-    color: #fff;
+    border:none;
+    color:#fff;
     background: linear-gradient(90deg, #22c55e, #16a34a);
     box-shadow: 0 16px 34px rgba(34,197,94,.22);
   }
-
   .actions-reserve .btn-whatsapp{
     grid-column: 1 / -1;
-    justify-content: center;
+    justify-content:center;
   }
 
   footer{
@@ -728,7 +726,6 @@
   ];
 
   function $(id){ return document.getElementById(id); }
-
   function normalize(s){ return String(s || "").trim().toUpperCase(); }
 
   function findAirportSuggestions(query){
