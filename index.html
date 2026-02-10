@@ -11,6 +11,34 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"LocalBusiness",
+  "name":"Mont Tremblant Limo Services",
+  "url":"https://monttremblantlimoservices.com/",
+  "telephone":"+1-514-293-3170",
+  "description":"Luxury chauffeur service in Mont-Tremblant. Premium vehicles for airport transfers, hourly bookings, ski trips, corporate travel, and special events. Minimum 3 hours.",
+  "areaServed":[
+    {"@type":"City","name":"Mont-Tremblant"},
+    {"@type":"City","name":"Montréal"},
+    {"@type":"City","name":"Ottawa"},
+    {"@type":"City","name":"Québec City"},
+    {"@type":"City","name":"New York"},
+    {"@type":"City","name":"Boston"},
+    {"@type":"AdministrativeArea","name":"New Jersey"}
+  ],
+  "address":{
+    "@type":"PostalAddress",
+    "addressLocality":"Mont-Tremblant",
+    "addressRegion":"QC",
+    "addressCountry":"CA"
+  },
+  "image":[ "https://monttremblantlimoservices.com/Tremblant.jpg" ],
+  "sameAs":[ "https://wa.me/15142933170" ]
+}
+</script>
+
 <style>
   :root{
     --bg:#ffffff;
@@ -25,6 +53,9 @@
     --gradB:#ff7a00;
     --good:#0f9d58;
     --bad:#b00020;
+
+    --flowbar-h: 180px;
+    --vh: 100vh;
   }
 
   *{box-sizing:border-box;margin:0;padding:0}
@@ -37,6 +68,10 @@
     font-size: 16px;
     overflow-x:hidden;
   }
+
+  html, body{ width:100%; max-width:100%; overflow-x:hidden; }
+  img, video, canvas, svg{ max-width:100%; height:auto; }
+
   a{color:inherit;text-decoration:none}
   .container{max-width:var(--max);margin:0 auto;padding: 0 18px}
   section{ scroll-margin-top: 96px; }
@@ -90,7 +125,11 @@
   }
   .links a:hover{ background: rgba(11,18,32,.06); color: rgba(11,18,32,.92); }
 
-  .header-actions{ display:flex; gap:10px; align-items:center; }
+  .header-actions{
+    display:flex;
+    gap:10px;
+    align-items:center;
+  }
   .pill{
     display:none;
     font-size: 13px;
@@ -187,7 +226,11 @@
     border: 1px solid rgba(11,18,32,.10);
     overflow:hidden;
   }
-  .tabs{ display:flex; background:#fff; border-bottom: 1px solid rgba(11,18,32,.08); }
+  .tabs{
+    display:flex;
+    background: #fff;
+    border-bottom: 1px solid rgba(11,18,32,.08);
+  }
   .tab{
     flex:1;
     padding: 14px 14px;
@@ -198,9 +241,41 @@
     border:none;
     cursor:pointer;
   }
-  .tab.active{ background:#f4f5f7; color: rgba(11,18,32,.94); }
+  .tab.active{
+    background: #f4f5f7;
+    color: rgba(11,18,32,.94);
+  }
 
-  .book-body{ padding: 14px; background:#fff; }
+  .book-body{ padding: 14px; background: #fff; }
+
+  .stepbar{
+    display:flex;
+    gap: 8px;
+    align-items:center;
+    justify-content:space-between;
+    margin: 6px 0 12px;
+  }
+  .stepdot{
+    flex: 1;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(11,18,32,.10);
+    overflow:hidden;
+    position:relative;
+  }
+  .stepdot > i{
+    position:absolute; inset:0;
+    width: 33%;
+    background: linear-gradient(90deg, var(--gradA), var(--gradB));
+    border-radius: 999px;
+  }
+  .steptext{
+    font-size: 12.5px;
+    color: rgba(11,18,32,.65);
+    font-weight: 900;
+    white-space:nowrap;
+    margin-left: 10px;
+  }
 
   .field{
     display:flex;
@@ -224,7 +299,9 @@
     color: rgba(11,18,32,.90);
     min-width: 0;
   }
+  .field input::placeholder{ color: rgba(11,18,32,.50); font-weight:800; }
 
+  /* ✅ Autocomplete UI */
   .autocomplete-wrap{ position:relative; }
   .autocomplete-list{
     position:absolute;
@@ -271,6 +348,19 @@
     cursor:pointer;
     box-shadow: 0 18px 44px rgba(255,90,20,.22);
   }
+  .search-btn[disabled]{ opacity:.65; cursor:not-allowed; box-shadow:none; }
+
+  .alert{
+    display:none;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(11,18,32,.12);
+    background: #fbfbfc;
+    font-weight: 850;
+    font-size: 13px;
+  }
+  .alert.bad{ border-color: rgba(176,0,32,.25); background: rgba(176,0,32,.06); color: var(--bad); }
 
   .section{ margin-top: 46px; }
   h2{ font-size: 30px; letter-spacing: -.2px; line-height:1.15; }
@@ -280,7 +370,6 @@
     font-weight: 700;
     max-width: 920px;
   }
-
   .grid3{
     margin-top: 16px;
     display:grid;
@@ -301,56 +390,48 @@
   .price{ margin-top: 10px; font-weight: 950; }
   .min{ margin-top: 3px; color: rgba(11,18,32,.58); font-weight: 800; font-size: 12.5px; }
 
-  /* ✅ Reserve buttons layout (same row) */
+  /* ✅ ACTIONS layout (final):
+     - Reserve buttons always on same line (desktop + mobile)
+     - Fix overflow on desktop (min-width:0 + overflow hidden)
+     - Long text fits in the button */
   .actions{ margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; }
   .actions .btn{ box-shadow:none; }
 
   .actions-reserve{
-    display:grid;
+    display: grid;
     grid-template-columns: 1fr 1fr;
-    gap:10px;
+    gap: 10px;
     align-items: stretch;
   }
+
   .actions-reserve .btn{
-    width:100%;
-    justify-content:center;
-    min-width:0;
-    text-align:center;
-    align-self: stretch;
-    height: 100%;
+    width: 100%;
+    justify-content: center;
+    min-width: 0;              /* ✅ allow shrink inside grid */
+    overflow: hidden;          /* ✅ prevent push outside card */
+    text-overflow: ellipsis;   /* ✅ safety */
   }
 
-  /* ✅ Desktop: allow wrap to 2 lines (no dots) */
   .actions-reserve .reserve-btn{
-    font-size: clamp(11px, 1.05vw, 13.5px);
+    font-size: clamp(11px, 1.1vw, 13.5px); /* ✅ slightly smaller on desktop too */
     padding: 10px 10px;
-    line-height: 1.15;
-    white-space: normal;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    min-width: 0;
-  }
-
-  /* ✅ Mobile: force single line */
-  @media (max-width: 640px){
-    .actions-reserve .reserve-btn{
-      white-space: nowrap;
-      overflow: hidden;          /* no ellipsis */
-      text-overflow: clip;
-      font-size: 12px;
-      padding: 10px 8px;
-    }
+    line-height: 1.1;
+    white-space: nowrap;
+    min-width: 0;               /* ✅ important */
+    overflow: hidden;           /* ✅ important */
+    text-overflow: ellipsis;    /* ✅ safety */
   }
 
   .btn-whatsapp{
-    border:none;
-    color:#fff;
+    border: none;
+    color: #fff;
     background: linear-gradient(90deg, #22c55e, #16a34a);
     box-shadow: 0 16px 34px rgba(34,197,94,.22);
   }
+
   .actions-reserve .btn-whatsapp{
     grid-column: 1 / -1;
-    justify-content:center;
+    justify-content: center;
   }
 
   footer{
@@ -374,67 +455,6 @@
     box-shadow: 0 16px 38px rgba(0,0,0,.16);
     z-index:60;
     border: 1px solid rgba(0,0,0,.14);
-  }
-
-  /* ✅ Booking "new page" */
-  .booking-page{ display:none; padding: 26px 0 60px; }
-  body.booking-only .booking-page{ display:block; }
-  body.booking-only .hero-wrap,
-  body.booking-only main,
-  body.booking-only .whatsapp-float{ display:none; }
-
-  .booking-topbar{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    padding: 14px 0;
-  }
-  .booking-topbar h1{
-    font-size: 20px;
-    font-weight: 950;
-    letter-spacing: -.2px;
-  }
-  .booking-shell{
-    max-width: 760px;
-    margin: 0 auto;
-  }
-  .selected-vehicle{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    padding: 10px 12px;
-    border-radius: 12px;
-    border: 1px solid rgba(11,18,32,.12);
-    background: #f5f6f8;
-    font-size: 13px;
-    font-weight: 800;
-    color: rgba(11,18,32,.8);
-    margin-bottom: 10px;
-  }
-  .selected-vehicle-info{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    min-width: 0;
-  }
-  .selected-vehicle-info img{
-    width: 56px;
-    height: 40px;
-    object-fit: cover;
-    border-radius: 10px;
-    border: 1px solid rgba(11,18,32,.12);
-    background: #fff;
-    flex: 0 0 auto;
-  }
-  .selected-vehicle button{
-    border: 1px solid rgba(11,18,32,.16);
-    background: #fff;
-    border-radius: 999px;
-    padding: 6px 12px;
-    font-weight: 800;
-    cursor:pointer;
   }
 
   @media (max-width: 980px){
@@ -474,109 +494,6 @@
   </div>
 </header>
 
-<!-- ✅ Booking "new page" -->
-<section class="booking-page">
-  <div class="container booking-shell">
-    <div class="booking-topbar">
-      <h1>Booking</h1>
-      <a class="btn" href="./">← Back</a>
-    </div>
-
-    <div id="bookingSelectedVehicleBanner" class="selected-vehicle" style="display:none;">
-      <div class="selected-vehicle-info">
-        <img id="bookingSelectedVehicleImage" src="" alt="" />
-        <span>Selected vehicle: <b id="bookingSelectedVehicleName"></b></span>
-      </div>
-      <button id="bookingClearVehicle" type="button">Clear</button>
-    </div>
-
-    <aside class="booking-card" aria-label="Booking form">
-      <div class="tabs">
-        <button id="b_tabOneWay" class="tab active" type="button" aria-selected="true">One way</button>
-        <button id="b_tabHourly" class="tab" type="button" aria-selected="false">By the hour</button>
-      </div>
-
-      <div class="book-body">
-        <form id="bookingForm">
-          <input type="hidden" id="b_mode" value="one_way" />
-
-          <!-- Pickup -->
-          <div class="autocomplete-wrap">
-            <div class="field">
-              <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11Z" stroke="currentColor" stroke-width="2"/>
-                <path d="M12 10.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke="currentColor" stroke-width="2"/>
-              </svg>
-              <input id="b_pickup" placeholder="From: address, airport, hotel…" autocomplete="off" required />
-            </div>
-            <div id="b_pickup_list" class="autocomplete-list" role="listbox" aria-label="Pickup suggestions"></div>
-          </div>
-
-          <!-- Dropoff -->
-          <div id="b_dropoff_wrap" class="autocomplete-wrap">
-            <div class="field">
-              <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11Z" stroke="currentColor" stroke-width="2"/>
-                <path d="M12 10.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke="currentColor" stroke-width="2"/>
-              </svg>
-              <input id="b_dropoff" placeholder="To: address, airport, hotel…" autocomplete="off" required />
-            </div>
-            <div id="b_dropoff_list" class="autocomplete-list" role="listbox" aria-label="Dropoff suggestions"></div>
-          </div>
-
-          <div class="row2">
-            <div class="field">
-              <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M7 2v3M17 2v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                <path d="M3 9h18" stroke="currentColor" stroke-width="2"/>
-                <path d="M5 5h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="2"/>
-              </svg>
-              <input id="b_date" type="date" required />
-            </div>
-
-            <div class="field">
-              <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M12 8v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z" stroke="currentColor" stroke-width="2"/>
-              </svg>
-              <select id="b_time" required></select>
-            </div>
-          </div>
-
-          <div id="b_transfer_wrap" class="field" style="margin-top:10px">
-            <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M3 11h18M6 11V7a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M7 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke="currentColor" stroke-width="2"/>
-            </svg>
-            <select id="b_transfer">
-              <option value="point" selected>City / Point-to-point</option>
-              <option value="airport">Airport transfer</option>
-            </select>
-          </div>
-
-          <div id="b_hours_wrap" class="field" style="display:none; margin-top:10px">
-            <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M12 8v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z" stroke="currentColor" stroke-width="2"/>
-            </svg>
-            <select id="b_hours">
-              <option value="3">3 hours</option>
-              <option value="4">4 hours</option>
-              <option value="5">5 hours</option>
-              <option value="6">6 hours</option>
-              <option value="8">8 hours</option>
-            </select>
-          </div>
-
-          <div class="note">Fill your trip details, then we confirm quickly on WhatsApp.</div>
-          <button class="search-btn" type="submit">Continue</button>
-        </form>
-      </div>
-    </aside>
-  </div>
-</section>
-
-<!-- HOME -->
 <div class="hero-wrap">
   <div class="hero-inner container">
     <div class="hero-left">
@@ -591,9 +508,99 @@
       </div>
     </div>
 
-    <aside class="booking-card" aria-label="Quick booking">
+    <aside id="booking" class="booking-card" aria-label="Search booking">
+      <div class="tabs">
+        <button id="tabOneWay" class="tab active" type="button" aria-selected="true">One way</button>
+        <button id="tabHourly" class="tab" type="button" aria-selected="false">By the hour</button>
+      </div>
+
       <div class="book-body">
-        <div class="note" style="margin-top:0">Choose a vehicle below to start booking.</div>
+        <div class="stepbar" aria-hidden="true">
+          <div class="stepdot"><i></i></div>
+          <div class="steptext">Step 1 of 3</div>
+        </div>
+
+        <form id="heroSearchForm">
+          <input type="hidden" id="heroMode" value="one_way" />
+
+          <input type="hidden" id="h_pickup_lat" value="" />
+          <input type="hidden" id="h_pickup_lng" value="" />
+          <input type="hidden" id="h_dropoff_lat" value="" />
+          <input type="hidden" id="h_dropoff_lng" value="" />
+
+          <!-- Pickup -->
+          <div class="autocomplete-wrap">
+            <div class="field">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 10.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              <input id="h_pickup" placeholder="From: address, airport, hotel…" autocomplete="off" required />
+            </div>
+            <div id="h_pickup_list" class="autocomplete-list" role="listbox" aria-label="Pickup suggestions"></div>
+          </div>
+
+          <!-- Dropoff -->
+          <div id="heroDropoffWrap" class="autocomplete-wrap">
+            <div class="field">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 10.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              <input id="h_dropoff" placeholder="To: address, airport, hotel…" autocomplete="off" required />
+            </div>
+            <div id="h_dropoff_list" class="autocomplete-list" role="listbox" aria-label="Dropoff suggestions"></div>
+          </div>
+
+          <div class="row2">
+            <div class="field">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M7 2v3M17 2v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M3 9h18" stroke="currentColor" stroke-width="2"/>
+                <path d="M5 5h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              <input id="h_date" type="date" required />
+            </div>
+
+            <div class="field">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 8v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              <select id="h_time" required></select>
+            </div>
+          </div>
+
+          <div id="heroTransferWrap" class="field" style="margin-top:10px">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M3 11h18M6 11V7a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M7 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            <select id="h_transfer">
+              <option value="point" selected>City / Point-to-point</option>
+              <option value="airport">Airport transfer</option>
+            </select>
+          </div>
+
+          <div id="heroHoursWrap" class="field" style="display:none; margin-top:10px">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 8v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            <select id="h_hours">
+              <option value="3">3 hours</option>
+              <option value="4">4 hours</option>
+              <option value="5">5 hours</option>
+              <option value="6">6 hours</option>
+              <option value="8">8 hours</option>
+            </select>
+          </div>
+
+          <div class="note">Professional chauffeur • clean premium vehicles.</div>
+
+          <button id="heroSearchBtn" class="search-btn" type="submit">Search</button>
+          <div id="heroAlert" class="alert bad"></div>
+        </form>
       </div>
     </aside>
   </div>
@@ -613,8 +620,8 @@
           <div class="price">$150 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions actions-reserve">
-            <a class="btn btn-primary reserve-btn" href="#" data-vehicle="escalade" data-mode="one_way">Reserve From Point A to Point B</a>
-            <a class="btn btn-primary reserve-btn" href="#" data-vehicle="escalade" data-mode="hourly">Reserve by hour</a>
+            <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="escalade" data-mode="one_way">Reserve From Point A to Point B</a>
+            <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="escalade" data-mode="hourly">Reserve by hour</a>
             <a class="btn btn-whatsapp" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
@@ -628,8 +635,8 @@
           <div class="price">$120 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions actions-reserve">
-            <a class="btn btn-primary reserve-btn" href="#" data-vehicle="suburban" data-mode="one_way">Reserve From Point A to Point B</a>
-            <a class="btn btn-primary reserve-btn" href="#" data-vehicle="suburban" data-mode="hourly">Reserve by hour</a>
+            <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="suburban" data-mode="one_way">Reserve From Point A to Point B</a>
+            <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="suburban" data-mode="hourly">Reserve by hour</a>
             <a class="btn btn-whatsapp" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
@@ -643,8 +650,8 @@
           <div class="price">$120 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions actions-reserve">
-            <a class="btn btn-primary reserve-btn" href="#" data-vehicle="denali" data-mode="one_way">Reserve From Point A to Point B</a>
-            <a class="btn btn-primary reserve-btn" href="#" data-vehicle="denali" data-mode="hourly">Reserve by hour</a>
+            <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="denali" data-mode="one_way">Reserve From Point A to Point B</a>
+            <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="denali" data-mode="hourly">Reserve by hour</a>
             <a class="btn btn-whatsapp" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
@@ -658,8 +665,8 @@
           <div class="price">$99 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions actions-reserve">
-            <a class="btn btn-primary reserve-btn" href="#" data-vehicle="qx60" data-mode="one_way">Reserve From Point A to Point B</a>
-            <a class="btn btn-primary reserve-btn" href="#" data-vehicle="qx60" data-mode="hourly">Reserve by hour</a>
+            <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="qx60" data-mode="one_way">Reserve From Point A to Point B</a>
+            <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="qx60" data-mode="hourly">Reserve by hour</a>
             <a class="btn btn-whatsapp" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
@@ -673,8 +680,8 @@
           <div class="price">$75 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions actions-reserve">
-            <a class="btn btn-primary reserve-btn" href="#" data-vehicle="tesla" data-mode="one_way">Reserve From Point A to Point B</a>
-            <a class="btn btn-primary reserve-btn" href="#" data-vehicle="tesla" data-mode="hourly">Reserve by hour</a>
+            <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="tesla" data-mode="one_way">Reserve From Point A to Point B</a>
+            <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="tesla" data-mode="hourly">Reserve by hour</a>
             <a class="btn btn-whatsapp" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
@@ -688,8 +695,8 @@
           <div class="price">$250 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions actions-reserve">
-            <a class="btn btn-primary reserve-btn" href="#" data-vehicle="sprinter" data-mode="one_way">Reserve From Point A to Point B</a>
-            <a class="btn btn-primary reserve-btn" href="#" data-vehicle="sprinter" data-mode="hourly">Reserve by hour</a>
+            <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="sprinter" data-mode="one_way">Reserve From Point A to Point B</a>
+            <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="sprinter" data-mode="hourly">Reserve by hour</a>
             <a class="btn btn-whatsapp" href="https://wa.me/15142933170" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
@@ -707,15 +714,6 @@
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  const VEHICLES = [
-    { id:"escalade", name:"2026 Cadillac Escalade ESV", img:"escalade.jpg" },
-    { id:"suburban", name:"2025 Chevrolet Suburban", img:"suburban.jpg" },
-    { id:"denali",   name:"2026 GMC Yukon Denali", img:"denali.jpg" },
-    { id:"qx60",     name:"2024 Infiniti QX60", img:"qx60.jpg" },
-    { id:"tesla",    name:"2023 Tesla Model Y", img:"tesla.jpg" },
-    { id:"sprinter", name:"Mercedes Sprinter (Group Van)", img:"sprinter.jpg" }
-  ];
-
   const AIRPORTS = [
     { code:"YUL", name:"Montréal–Trudeau International Airport", city:"Montréal (Dorval), QC", country:"Canada", lat:45.4706, lng:-73.7408 },
     { code:"YMX", name:"Montréal–Mirabel International Airport", city:"Mirabel, QC", country:"Canada", lat:45.6795, lng:-74.0387 },
@@ -730,41 +728,78 @@
   ];
 
   function $(id){ return document.getElementById(id); }
+
   function normalize(s){ return String(s || "").trim().toUpperCase(); }
 
-  function buildTimeOptions(stepMinutes, selectId){
-    const timeEl = $(selectId);
-    if (!timeEl) return;
+  function findAirportSuggestions(query){
+    const q = normalize(query);
+    if (!q) return [];
+    const looksLikeIATA = /^[A-Z]{3}$/.test(q);
+    const tokens = q.split(/\s+/).filter(Boolean);
 
-    timeEl.innerHTML = "";
-    const ph = document.createElement("option");
-    ph.value = "";
-    ph.textContent = "Select time";
-    ph.selected = true;
-    ph.disabled = true;
-    timeEl.appendChild(ph);
+    const matches = AIRPORTS.filter(a=>{
+      if (looksLikeIATA) return a.code === q;
+      const hay = `${a.code} ${a.name} ${a.city} ${a.country}`.toUpperCase();
+      return tokens.every(t => hay.includes(t));
+    }).slice(0, 6);
 
-    const pad = (n)=> String(n).padStart(2,"0");
-    for (let minutes = 0; minutes < 24 * 60; minutes += stepMinutes){
-      const hh = Math.floor(minutes / 60);
-      const mm = minutes % 60;
-      const value = `${pad(hh)}:${pad(mm)}`;
-      const hour12 = ((hh + 11) % 12) + 1;
-      const ampm = hh < 12 ? "AM" : "PM";
-      const label = `${hour12}:${pad(mm)} ${ampm}`;
-      const opt = document.createElement("option");
-      opt.value = value;
-      opt.textContent = label;
-      timeEl.appendChild(opt);
+    return matches.map(a=>({
+      main: `${a.name} (${a.code})`,
+      sub: `${a.code} • ${a.city} • ${a.country}`,
+      value: `${a.name} (${a.code}), ${a.city}`,
+      lat: a.lat,
+      lng: a.lng
+    }));
+  }
+
+  function formatPhotonFeature(f){
+    const p = f.properties || {};
+    const g = f.geometry || {};
+    const coords = Array.isArray(g.coordinates) ? g.coordinates : null;
+    const lng = coords ? coords[0] : null;
+    const lat = coords ? coords[1] : null;
+
+    const housenumber = p.housenumber || "";
+    const street = p.street || "";
+    const name = p.name || "";
+
+    const line1 = (housenumber || street)
+      ? [housenumber, street].filter(Boolean).join(" ")
+      : (name || p.locality || p.city || p.country || "Address");
+
+    const city = p.city || p.locality || "";
+    const region = p.state || p.region || "";
+    const postcode = p.postcode || "";
+    const country = p.country || "";
+    const subParts = [city, region, postcode, country].filter(Boolean);
+    const sub = subParts.join(", ") || "Select this address";
+
+    const valueParts = [line1, city, region, postcode, country].filter(Boolean);
+    const value = valueParts.join(", ");
+
+    return {
+      main: line1,
+      sub,
+      value,
+      lat: (typeof lat === "number" ? lat : null),
+      lng: (typeof lng === "number" ? lng : null)
+    };
+  }
+
+  async function fetchAddressSuggestions(query){
+    const q = query.trim();
+    if (q.length < 3) return [];
+
+    const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=6&lang=en`;
+    try{
+      const res = await fetch(url, { headers: { "Accept":"application/json" } });
+      if (!res.ok) return [];
+      const data = await res.json().catch(()=> ({}));
+      const feats = Array.isArray(data.features) ? data.features : [];
+      return feats.map(formatPhotonFeature);
+    }catch(_e){
+      return [];
     }
-
-    const now = new Date();
-    let mins = now.getHours() * 60 + now.getMinutes();
-    mins = Math.ceil(mins / stepMinutes) * stepMinutes;
-    if (mins >= 24*60) mins = 0;
-    const hh = Math.floor(mins / 60);
-    const mm = mins % 60;
-    timeEl.value = `${pad(hh)}:${pad(mm)}`;
   }
 
   function clearAutocompleteList(listEl){
@@ -796,68 +831,29 @@
     listEl.style.display = "block";
   }
 
-  function findAirportSuggestions(query){
-    const q = normalize(query);
-    if (!q) return [];
-    const looksLikeIATA = /^[A-Z]{3}$/.test(q);
-    const tokens = q.split(/\s+/).filter(Boolean);
-
-    const matches = AIRPORTS.filter(a=>{
-      if (looksLikeIATA) return a.code === q;
-      const hay = `${a.code} ${a.name} ${a.city} ${a.country}`.toUpperCase();
-      return tokens.every(t => hay.includes(t));
-    }).slice(0, 6);
-
-    return matches.map(a=>({
-      main: `${a.name} (${a.code})`,
-      sub: `${a.code} • ${a.city} • ${a.country}`,
-      value: `${a.name} (${a.code}), ${a.city}`
-    }));
+  function setCoords(latId, lngId, lat, lng){
+    const latEl = $(latId);
+    const lngEl = $(lngId);
+    if (latEl) latEl.value = (lat ?? "");
+    if (lngEl) lngEl.value = (lng ?? "");
   }
 
-  async function fetchAddressSuggestions(query){
-    const q = query.trim();
-    if (q.length < 3) return [];
-
-    const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=6&lang=en`;
-    try{
-      const res = await fetch(url, { headers: { "Accept":"application/json" } });
-      if (!res.ok) return [];
-      const data = await res.json().catch(()=> ({}));
-      const feats = Array.isArray(data.features) ? data.features : [];
-      return feats.map((f)=>{
-        const p = f.properties || {};
-        const housenumber = p.housenumber || "";
-        const street = p.street || "";
-        const name = p.name || "";
-        const line1 = (housenumber || street)
-          ? [housenumber, street].filter(Boolean).join(" ")
-          : (name || p.locality || p.city || p.country || "Address");
-
-        const city = p.city || p.locality || "";
-        const region = p.state || p.region || "";
-        const postcode = p.postcode || "";
-        const country = p.country || "";
-        const subParts = [city, region, postcode, country].filter(Boolean);
-        const sub = subParts.join(", ") || "Select this address";
-
-        const valueParts = [line1, city, region, postcode, country].filter(Boolean);
-        const value = valueParts.join(", ");
-
-        return { main: line1, sub, value };
-      });
-    }catch(_e){
-      return [];
-    }
+  function clearCoords(latId, lngId){
+    setCoords(latId, lngId, "", "");
   }
 
-  function setupAutocomplete(inputId, listId){
+  function setupAutocomplete(inputId, listId, latId, lngId){
     const input = $(inputId);
     const list = $(listId);
     if (!input || !list) return;
 
     let timer = null;
     let token = 0;
+
+    const onPick = (item)=>{
+      input.value = item.value;
+      setCoords(latId, lngId, item.lat, item.lng);
+    };
 
     const doSearch = async ()=>{
       const q = input.value.trim();
@@ -867,8 +863,10 @@
       }
 
       const current = ++token;
+
       const airportItems = findAirportSuggestions(q);
       const addressItems = (q.length >= 3) ? await fetchAddressSuggestions(q) : [];
+
       if (current !== token) return;
 
       const seen = new Set();
@@ -880,12 +878,11 @@
         merged.push(it);
       });
 
-      renderAutocompleteList(list, merged.slice(0, 8), (picked)=>{
-        input.value = picked.value;
-      });
+      renderAutocompleteList(list, merged.slice(0, 8), onPick);
     };
 
     input.addEventListener("input", ()=>{
+      clearCoords(latId, lngId);
       if (timer) clearTimeout(timer);
       timer = setTimeout(doSearch, 120);
     });
@@ -896,90 +893,21 @@
     });
   }
 
-  function setBookingMode(mode){
-    $("b_mode").value = mode;
-
-    const one = mode === "one_way";
-    $("b_tabOneWay").classList.toggle("active", one);
-    $("b_tabHourly").classList.toggle("active", !one);
-
-    $("b_dropoff_wrap").style.display = one ? "" : "none";
-    $("b_transfer_wrap").style.display = one ? "" : "none";
-    $("b_hours_wrap").style.display = one ? "none" : "";
-
-    $("b_dropoff").required = one;
-  }
-
-  function setSelectedVehicle(vehicleId){
-    const v = VEHICLES.find(x=>x.id === vehicleId);
-    const banner = $("bookingSelectedVehicleBanner");
-    if (!v){
-      banner.style.display = "none";
-      $("bookingSelectedVehicleName").textContent = "";
-      $("bookingSelectedVehicleImage").src = "";
-      $("bookingSelectedVehicleImage").alt = "";
-      return;
-    }
-
-    $("bookingSelectedVehicleName").textContent = v.name;
-    $("bookingSelectedVehicleImage").src = v.img;
-    $("bookingSelectedVehicleImage").alt = v.name;
-    banner.style.display = "flex";
-  }
-
-  function initBookingPageFromParams(){
-    const params = new URLSearchParams(location.search);
-    const book = params.get("book");
-    const vehicle = params.get("vehicle");
-    const mode = params.get("mode");
-
-    if (book === "1"){
-      document.body.classList.add("booking-only");
-
-      // date default
-      const d = new Date();
-      const yyyy = d.getFullYear();
-      const mm = String(d.getMonth()+1).padStart(2,"0");
-      const dd = String(d.getDate()).padStart(2,"0");
-      $("b_date").value = `${yyyy}-${mm}-${dd}`;
-
-      buildTimeOptions(5, "b_time");
-
-      setupAutocomplete("b_pickup", "b_pickup_list");
-      setupAutocomplete("b_dropoff", "b_dropoff_list");
-
-      setBookingMode(mode === "hourly" ? "hourly" : "one_way");
-      setSelectedVehicle(vehicle);
-
-      setTimeout(()=> $("b_pickup")?.focus(), 200);
-    }
-  }
-
   window.addEventListener("load", ()=>{
-    initBookingPageFromParams();
+    setupAutocomplete("h_pickup", "h_pickup_list", "h_pickup_lat", "h_pickup_lng");
+    setupAutocomplete("h_dropoff", "h_dropoff_list", "h_dropoff_lat", "h_dropoff_lng");
 
-    // Reserve buttons -> open "new page" (same file) with params
     document.querySelectorAll(".reserve-btn").forEach(btn=>{
       btn.addEventListener("click", (e)=>{
         e.preventDefault();
         const vehicleId = btn.dataset.vehicle;
         const mode = btn.dataset.mode || "one_way";
         const url = new URL(window.location.href);
-        url.searchParams.set("book", "1");
         url.searchParams.set("vehicle", vehicleId);
         url.searchParams.set("mode", mode);
+        url.hash = "booking";
         window.location.href = url.toString();
       });
-    });
-
-    $("b_tabOneWay")?.addEventListener("click", ()=> setBookingMode("one_way"));
-    $("b_tabHourly")?.addEventListener("click", ()=> setBookingMode("hourly"));
-    $("bookingClearVehicle")?.addEventListener("click", ()=> setSelectedVehicle(null));
-
-    $("bookingForm")?.addEventListener("submit", (e)=>{
-      e.preventDefault();
-      // For now we just confirm you can continue; you can connect to your next step (checkout/WhatsApp/Stripe).
-      alert("Trip details saved. Next step: connect this to WhatsApp/Stripe checkout.");
     });
   });
 </script>
