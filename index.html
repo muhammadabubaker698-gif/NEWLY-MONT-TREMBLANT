@@ -638,31 +638,35 @@
   .price{ margin-top: 10px; font-weight: 950; }
   .min{ margin-top: 3px; color: rgba(11,18,32,.58); font-weight: 800; font-size: 12.5px; }
 
-  /* ✅ ACTIONS layout:
-     - Mobile stays stacked (as before)
-     - Desktop shows the two reserve buttons on one line */
+  /* ✅ ACTIONS layout (merged fix):
+     - Reserve buttons always same line (desktop + mobile)
+     - Long text fits inside button
+     - WhatsApp full width under them */
   .actions{ margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; }
   .actions .btn{ box-shadow:none; }
 
   .actions-reserve{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    align-items: stretch;
   }
-  .actions-reserve .btn{ font-size: 13.5px; padding: 10px 14px; }
 
-  @media (min-width: 981px){
-    /* first two buttons (reserve buttons) side-by-side */
-    .actions-reserve .reserve-btn{
-      flex: 1 1 0;
-      min-width: 0;
-      justify-content: center;
-    }
-    /* WhatsApp stays on its own line */
-    .actions-reserve .btn-whatsapp{
-      flex: 1 1 100%;
-      justify-content: center;
-    }
+  .actions-reserve .btn{
+    width: 100%;
+    justify-content: center;
+  }
+
+  .actions-reserve .reserve-btn{
+    font-size: clamp(11px, 2.6vw, 13.5px);
+    padding: 10px 10px;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  .actions-reserve .btn-whatsapp{
+    grid-column: 1 / -1;
+    justify-content: center;
   }
 
   .btn-whatsapp{
@@ -1382,30 +1386,6 @@
     $("heroHoursWrap").style.display = one ? "none" : "";
 
     $("h_dropoff").required = one;
-  }
-
-  function setPreferredVehicle(vehicleId){
-    state.preferredVehicleId = vehicleId || null;
-    const vehicle = LOCAL_RATES.find(v=>v.id === state.preferredVehicleId);
-    const banner = $("selectedVehicleBanner");
-    const nameEl = $("selectedVehicleName");
-    const imageEl = $("selectedVehicleImage");
-    if (!banner || !nameEl) return;
-    if (vehicle){
-      nameEl.textContent = vehicle.name;
-      if (imageEl){
-        imageEl.src = vehicle.img;
-        imageEl.alt = vehicle.name;
-      }
-      banner.style.display = "flex";
-    }else{
-      nameEl.textContent = "";
-      if (imageEl){
-        imageEl.src = "";
-        imageEl.alt = "";
-      }
-      banner.style.display = "none";
-    }
   }
 
   function showHeroAlert(message){
