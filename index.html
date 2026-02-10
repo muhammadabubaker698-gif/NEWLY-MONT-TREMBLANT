@@ -53,6 +53,9 @@
     --gradB:#ff7a00;
     --good:#0f9d58;
     --bad:#b00020;
+
+    /* ✅ NEW: actual fixed action bar height (JS updates this) */
+    --flowbar-h: 180px; /* safe fallback */
   }
 
   *{box-sizing:border-box;margin:0;padding:0}
@@ -66,7 +69,6 @@
     overflow-x:hidden;
   }
 
-  /* prevent horizontal overflow/zoom */
   html, body{ width:100%; max-width:100%; overflow-x:hidden; }
   img, video, canvas, svg{ max-width:100%; height:auto; }
 
@@ -164,7 +166,6 @@
     box-shadow: 0 18px 44px rgba(255,90,20,.22);
   }
 
-  /* HERO (Safari-safe) */
   .hero-wrap{
     position:relative;
     border-bottom: 1px solid var(--line);
@@ -370,13 +371,15 @@
     cursor: pointer;
   }
 
+  /* ✅ UPDATED: add iOS fallback height + use CSS var padding bottom */
   .overlay-body{
     height: calc(100dvh - 76px);
+    height: calc(-webkit-fill-available - 76px); /* iOS fallback */
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
-    padding: 26px 0 calc(24px + env(safe-area-inset-bottom));
+    padding: 26px 0 calc(var(--flowbar-h) + env(safe-area-inset-bottom) + 16px);
     touch-action: pan-y;
   }
 
@@ -657,6 +660,7 @@
     .vleft b{ font-size: 15px; line-height: 1.2; }
     .vleft small{ font-size: 12.5px; }
 
+    /* fixed footer bar on mobile */
     .flow-actions{
       position: fixed;
       left: 0;
@@ -667,10 +671,8 @@
       z-index: 999999;
     }
 
-    .overlay-body{
-      padding-bottom: calc(170px + env(safe-area-inset-bottom));
-    }
-
+    /* ✅ REMOVED: old hard-coded overlay-body padding.
+       overlay-body padding is now handled globally via --flowbar-h */
     .flow-actions .btn{
       flex: 1 1 auto;
       min-width: 140px;
@@ -1153,6 +1155,17 @@
     }catch(e){}
   }
 
+  /* ✅ NEW: measure fixed action bar height and set CSS var
+     This guarantees the "Total estimate" never hides behind the fixed buttons. */
+  function syncFlowBarHeight(overlayId){
+    const overlay = document.getElementById(overlayId);
+    if (!overlay) return;
+    const bar = overlay.querySelector(".flow-actions");
+    if (!bar) return;
+    const h = Math.ceil(bar.getBoundingClientRect().height);
+    if (h > 0) document.documentElement.style.setProperty("--flowbar-h", h + "px");
+  }
+
   /* ✅ Stronger iOS Safari paint fix (works for Hourly too) */
   function forceIOSPaint(overlayId){
     const overlay = document.getElementById(overlayId);
@@ -1209,6 +1222,7 @@
       history.pushState({ overlay: id }, "", "#" + id);
     }
 
+    syncFlowBarHeight(id);     // ✅ NEW
     scheduleIOSPaint(id);
   }
 
@@ -1240,6 +1254,12 @@
     if (e.state && e.state.overlay){
       openOverlay(e.state.overlay, false);
     }
+  });
+
+  /* ✅ NEW: keep bar height correct when phone rotates / viewport changes */
+  window.addEventListener("resize", ()=>{
+    if (document.getElementById("overlayVehicles")?.classList.contains("show")) syncFlowBarHeight("overlayVehicles");
+    if (document.getElementById("overlayCheckout")?.classList.contains("show")) syncFlowBarHeight("overlayCheckout");
   });
 
   function backToSearch(){ history.back(); }
@@ -1304,12 +1324,15 @@
         state.selectedVehicleId = v.id;
         $("btnVehicleContinue").disabled = false;
         applyRowBorderHelpers(row);
+
+        syncFlowBarHeight("overlayVehicles"); // ✅ NEW
         scheduleIOSPaint("overlayVehicles");
       });
 
       wrap.appendChild(row);
     });
 
+    syncFlowBarHeight("overlayVehicles"); // ✅ NEW
     scheduleIOSPaint("overlayVehicles");
   }
 
@@ -1337,6 +1360,7 @@
     $("checkoutSub").textContent = chosen ? (state.mode === "hourly" ? `Total ${formatMoney(chosen.total)} for ${Math.max(3, Number(state.hours||3))} hours` : chosen.note) : "";
 
     openOverlay("overlayCheckout", true);
+    syncFlowBarHeight("overlayCheckout"); // ✅ NEW (after content updates)
   }
 
   function buildWhatsAppMessage(payload){
