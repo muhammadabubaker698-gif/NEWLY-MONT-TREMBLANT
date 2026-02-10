@@ -226,6 +226,7 @@
     border: 1px solid rgba(11,18,32,.10);
     overflow:hidden;
   }
+
   .tabs{
     display:flex;
     background: #fff;
@@ -301,7 +302,6 @@
   }
   .field input::placeholder{ color: rgba(11,18,32,.50); font-weight:800; }
 
-  /* ✅ Autocomplete UI */
   .autocomplete-wrap{ position:relative; }
   .autocomplete-list{
     position:absolute;
@@ -390,7 +390,7 @@
   .price{ margin-top: 10px; font-weight: 950; }
   .min{ margin-top: 3px; color: rgba(11,18,32,.58); font-weight: 800; font-size: 12.5px; }
 
-  /* ✅ Reserve buttons: SAME ROW on desktop + mobile, NO ellipsis, allow 2-line wrap */
+  /* ✅ Reserve buttons: same row + wrap + equal height */
   .actions{ margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; }
   .actions .btn{ box-shadow:none; }
 
@@ -404,20 +404,19 @@
   .actions-reserve .btn{
     width:100%;
     justify-content:center;
-    min-width:0;          /* ✅ prevents overflow outside card */
+    min-width:0;
     text-align:center;
+    align-self: stretch;         /* ✅ equal height */
+    height: 100%;               /* ✅ equal height */
   }
 
   .actions-reserve .reserve-btn{
     font-size: clamp(11px, 1.05vw, 13.5px);
     padding: 10px 10px;
     line-height: 1.15;
-
-    /* ✅ wrap to 2 lines if needed (no dots) */
     white-space: normal;
     overflow-wrap: anywhere;
     word-break: break-word;
-
     min-width: 0;
   }
 
@@ -526,7 +525,6 @@
           <input type="hidden" id="h_dropoff_lat" value="" />
           <input type="hidden" id="h_dropoff_lng" value="" />
 
-          <!-- Pickup -->
           <div class="autocomplete-wrap">
             <div class="field">
               <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -538,7 +536,6 @@
             <div id="h_pickup_list" class="autocomplete-list" role="listbox" aria-label="Pickup suggestions"></div>
           </div>
 
-          <!-- Dropoff -->
           <div id="heroDropoffWrap" class="autocomplete-wrap">
             <div class="field">
               <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -749,40 +746,6 @@
     }));
   }
 
-  function formatPhotonFeature(f){
-    const p = f.properties || {};
-    const g = f.geometry || {};
-    const coords = Array.isArray(g.coordinates) ? g.coordinates : null;
-    const lng = coords ? coords[0] : null;
-    const lat = coords ? coords[1] : null;
-
-    const housenumber = p.housenumber || "";
-    const street = p.street || "";
-    const name = p.name || "";
-
-    const line1 = (housenumber || street)
-      ? [housenumber, street].filter(Boolean).join(" ")
-      : (name || p.locality || p.city || p.country || "Address");
-
-    const city = p.city || p.locality || "";
-    const region = p.state || p.region || "";
-    const postcode = p.postcode || "";
-    const country = p.country || "";
-    const subParts = [city, region, postcode, country].filter(Boolean);
-    const sub = subParts.join(", ") || "Select this address";
-
-    const valueParts = [line1, city, region, postcode, country].filter(Boolean);
-    const value = valueParts.join(", ");
-
-    return {
-      main: line1,
-      sub,
-      value,
-      lat: (typeof lat === "number" ? lat : null),
-      lng: (typeof lng === "number" ? lng : null)
-    };
-  }
-
   async function fetchAddressSuggestions(query){
     const q = query.trim();
     if (q.length < 3) return [];
@@ -793,7 +756,38 @@
       if (!res.ok) return [];
       const data = await res.json().catch(()=> ({}));
       const feats = Array.isArray(data.features) ? data.features : [];
-      return feats.map(formatPhotonFeature);
+      return feats.map((f)=>{
+        const p = f.properties || {};
+        const g = f.geometry || {};
+        const coords = Array.isArray(g.coordinates) ? g.coordinates : null;
+        const lng = coords ? coords[0] : null;
+        const lat = coords ? coords[1] : null;
+
+        const housenumber = p.housenumber || "";
+        const street = p.street || "";
+        const name = p.name || "";
+        const line1 = (housenumber || street)
+          ? [housenumber, street].filter(Boolean).join(" ")
+          : (name || p.locality || p.city || p.country || "Address");
+
+        const city = p.city || p.locality || "";
+        const region = p.state || p.region || "";
+        const postcode = p.postcode || "";
+        const country = p.country || "";
+        const subParts = [city, region, postcode, country].filter(Boolean);
+        const sub = subParts.join(", ") || "Select this address";
+
+        const valueParts = [line1, city, region, postcode, country].filter(Boolean);
+        const value = valueParts.join(", ");
+
+        return {
+          main: line1,
+          sub,
+          value,
+          lat: (typeof lat === "number" ? lat : null),
+          lng: (typeof lng === "number" ? lng : null)
+        };
+      });
     }catch(_e){
       return [];
     }
