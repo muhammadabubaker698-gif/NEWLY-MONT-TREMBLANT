@@ -1275,19 +1275,42 @@
   const q = (query || "").trim();
   if (q.length < 2) return [];
 
-  // We use two free providers:
-  // - Photon (fast, great for addresses)
-  // - Nominatim (better for POIs like hotels, venues, landmarks)
-  //
-  // NOTE: Free services have rate limits — we debounce requests in setupAutocomplete.
-  const photonUrl = `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=6&lang=en`;
-  const nominatimUrl =
+  // Region bias: Montreal / Mont-Tremblant / Ottawa corridor (no API key).
+  const BIAS_CENTER = { lat: 45.5017, lng: -73.5673 }; // Montréal
+  // Loose bounding box: Ottawa (-76) to Québec City (-71) and south to north.
+  const VIEWBOX = { left: -76.2, top: 46.9, right: -70.8, bottom: 44.8 };
+
+  const photonUrl = `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=10&lang=en&lat=${BIAS_CENTER.lat}&lon=${BIAS_CENTER.lng}`;
+  const nominatimUrlBounded =
     `https://nominatim.openstreetmap.org/search?` +
     `q=${encodeURIComponent(q)}` +
-    `&format=jsonv2&addressdetails=1&namedetails=1&limit=6` +
-    `&accept-language=en&countrycodes=ca,us`;
+    `&format=jsonv2&addressdetails=1&namedetails=1&limit=10` +
+    `&accept-language=en&countrycodes=ca` +
+    `&viewbox=${VIEWBOX.left},${VIEWBOX.top},${VIEWBOX.right},${VIEWBOX.bottom}&bounded=1`;
+
+  const nominatimUrlCanada =
+    `https://nominatim.openstreetmap.org/search?` +
+    `q=${encodeURIComponent(q)}` +
+    `&format=jsonv2&addressdetails=1&namedetails=1&limit=10` +
+    `&accept-language=en&countrycodes=ca`;
+
+  const haversineKm = (aLat, aLng, bLat, bLng) => {
+    const R = 6371;
+    const toRad = (x)=> (x * Math.PI / 180);
+    const dLat = toRad(bLat - aLat);
+    const dLng = toRad(bLng - aLng);
+    const s1 = Math.sin(dLat/2), s2 = Math.sin(dLng/2);
+    const aa = s1*s1 + Math.cos(toRad(aLat))*Math.cos(toRad(bLat))*s2*s2;
+    return 2 * R * Math.asin(Math.min(1, Math.sqrt(aa)));
+  };
+
+  const scoreByDistance = (item) => {
+    if (!item || !Number.isFinite(item.lat) || !Number.isFinite(item.lng)) return 999999;
+    return haversineKm(BIAS_CENTER.lat, BIAS_CENTER.lng, item.lat, item.lng);
+  };
 
   const [photonItems, nominatimItems] = await Promise.allSettled([
+([
     (async ()=>{
       if (q.length < 3) return [];
       const res = await fetch(photonUrl, { headers: { "Accept":"application/json" } });
@@ -1297,15 +1320,18 @@
       return feats.map(formatPhotonFeature);
     })(),
     (async ()=>{
-      const res = await fetch(nominatimUrl, {
-        headers: {
-          "Accept":"application/json"
-        }
-      });
-      if (!res.ok) return [];
-      const data = await res.json().catch(()=> ([]));
-      const arr = Array.isArray(data) ? data : [];
-      return arr.map(formatNominatimItem);
+      const fetchNomi = async (url)=>{
+        const res = await fetch(url, { headers: { "Accept":"application/json" } });
+        if (!res.ok) return [];
+        const data = await res.json().catch(()=> ([]));
+        const arr = Array.isArray(data) ? data : [];
+        return arr.map(formatNominatimItem);
+      };
+
+      // Try bounded corridor first (better for local POIs like hotels), then fall back to Canada-wide.
+      let items = await fetchNomi(nominatimUrlBounded);
+      if (!items.length && q.length >= 3) items = await fetchNomi(nominatimUrlCanada);
+      return items;
     })()
   ]);
 
@@ -1322,7 +1348,12 @@
     seen.add(k);
     out.push(it);
   }
-  return out.slice(0, 8);
+
+  // Bias results to the local service area first.
+  out.sort((x, y) => scoreByDistance(x) - scoreByDistance(y));
+
+  // If everything is extremely far (e.g., user typed something unrelated), still show a few.
+  return out.slice(0, 6);
 }
 
 function formatNominatimItem(item){
@@ -1357,20 +1388,35 @@ async function geocodeFirst(query){
   const q = (query || "").trim();
   if (!q) return null;
 
-  // One-shot geocode used on form submit if the user didn't click a suggestion
-  const url =
+  // One-shot geocode used on form submit if the user didn't click a suggestion.
+  // Try a local corridor first, then fall back to Canada-wide.
+  const viewbox = { left: -76.2, top: 46.9, right: -70.8, bottom: 44.8 };
+
+  const urlBounded =
     `https://nominatim.openstreetmap.org/search?` +
     `q=${encodeURIComponent(q)}` +
     `&format=jsonv2&addressdetails=1&namedetails=1&limit=1` +
-    `&accept-language=en&countrycodes=ca,us`;
+    `&accept-language=en&countrycodes=ca` +
+    `&viewbox=${viewbox.left},${viewbox.top},${viewbox.right},${viewbox.bottom}&bounded=1`;
+
+  const urlCanada =
+    `https://nominatim.openstreetmap.org/search?` +
+    `q=${encodeURIComponent(q)}` +
+    `&format=jsonv2&addressdetails=1&namedetails=1&limit=1` +
+    `&accept-language=en&countrycodes=ca`;
 
   try{
-    const res = await fetch(url, { headers: { "Accept":"application/json" } });
-    if (!res.ok) return null;
-    const data = await res.json().catch(()=> ([]));
-    const item = Array.isArray(data) ? data[0] : null;
-    if (!item) return null;
-    return formatNominatimItem(item);
+    const fetchOne = async (url)=>{
+      const res = await fetch(url, { headers: { "Accept":"application/json" } });
+      if (!res.ok) return null;
+      const data = await res.json().catch(()=> ([]));
+      const item = Array.isArray(data) ? data[0] : null;
+      return item ? formatNominatimItem(item) : null;
+    };
+
+    let hit = await fetchOne(urlBounded);
+    if (!hit) hit = await fetchOne(urlCanada);
+    return hit;
   }catch(_e){
     return null;
   }
