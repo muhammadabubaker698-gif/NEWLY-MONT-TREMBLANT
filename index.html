@@ -1275,23 +1275,16 @@
   const q = (query || "").trim();
   if (q.length < 2) return [];
 
-  // Region bias: Montreal / Mont-Tremblant / Ottawa corridor (no API key).
+  // Bias toward Montreal / Mont‑Tremblant / Ottawa corridor (no API key).
   const BIAS_CENTER = { lat: 45.5017, lng: -73.5673 }; // Montréal
-  // Loose bounding box: Ottawa (-76) to Québec City (-71) and south to north.
-  const VIEWBOX = { left: -76.2, top: 46.9, right: -70.8, bottom: 44.8 };
 
-  const photonUrl = `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=10&lang=en&lat=${BIAS_CENTER.lat}&lon=${BIAS_CENTER.lng}`;
-  const nominatimUrlBounded =
+  const photonUrl =
+    `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=12&lang=en&lat=${BIAS_CENTER.lat}&lon=${BIAS_CENTER.lng}`;
+
+  const nominatimUrl =
     `https://nominatim.openstreetmap.org/search?` +
     `q=${encodeURIComponent(q)}` +
-    `&format=jsonv2&addressdetails=1&namedetails=1&limit=10` +
-    `&accept-language=en&countrycodes=ca` +
-    `&viewbox=${VIEWBOX.left},${VIEWBOX.top},${VIEWBOX.right},${VIEWBOX.bottom}&bounded=1`;
-
-  const nominatimUrlCanada =
-    `https://nominatim.openstreetmap.org/search?` +
-    `q=${encodeURIComponent(q)}` +
-    `&format=jsonv2&addressdetails=1&namedetails=1&limit=10` +
+    `&format=jsonv2&addressdetails=1&namedetails=1&limit=12` +
     `&accept-language=en&countrycodes=ca`;
 
   const haversineKm = (aLat, aLng, bLat, bLng) => {
@@ -1304,57 +1297,72 @@
     return 2 * R * Math.asin(Math.min(1, Math.sqrt(aa)));
   };
 
-  const scoreByDistance = (item) => {
-    if (!item || !Number.isFinite(item.lat) || !Number.isFinite(item.lng)) return 999999;
-    return haversineKm(BIAS_CENTER.lat, BIAS_CENTER.lng, item.lat, item.lng);
+  const fetchPhoton = async ()=>{
+    if (q.length < 3) return [];
+    const res = await fetch(photonUrl, { headers: { "Accept":"application/json" } });
+    if (!res.ok) return [];
+    const data = await res.json().catch(()=> ({}));
+    const feats = Array.isArray(data.features) ? data.features : [];
+    return feats.map(formatPhotonFeature);
   };
 
-  const [photonItems, nominatimItems] = await Promise.allSettled([
-([
-    (async ()=>{
-      if (q.length < 3) return [];
-      const res = await fetch(photonUrl, { headers: { "Accept":"application/json" } });
-      if (!res.ok) return [];
-      const data = await res.json().catch(()=> ({}));
-      const feats = Array.isArray(data.features) ? data.features : [];
-      return feats.map(formatPhotonFeature);
-    })(),
-    (async ()=>{
-      const fetchNomi = async (url)=>{
-        const res = await fetch(url, { headers: { "Accept":"application/json" } });
-        if (!res.ok) return [];
-        const data = await res.json().catch(()=> ([]));
-        const arr = Array.isArray(data) ? data : [];
-        return arr.map(formatNominatimItem);
-      };
+  const fetchNomi = async ()=>{
+    const res = await fetch(nominatimUrl, { headers: { "Accept":"application/json" } });
+    if (!res.ok) return [];
+    const data = await res.json().catch(()=> ([]));
+    const arr = Array.isArray(data) ? data : [];
+    return arr.map(formatNominatimItem);
+  };
 
-      // Try bounded corridor first (better for local POIs like hotels), then fall back to Canada-wide.
-      let items = await fetchNomi(nominatimUrlBounded);
-      if (!items.length && q.length >= 3) items = await fetchNomi(nominatimUrlCanada);
-      return items;
-    })()
-  ]);
+  const [nomiRes, photonRes] = await Promise.allSettled([fetchNomi(), fetchPhoton()]);
+  const nomiItems = (nomiRes.status === "fulfilled") ? (nomiRes.value || []) : [];
+  const photonItems = (photonRes.status === "fulfilled") ? (photonRes.value || []) : [];
 
-  const a = (photonItems.status === "fulfilled") ? photonItems.value : [];
-  const b = (nominatimItems.status === "fulfilled") ? nominatimItems.value : [];
-  const merged = [...b, ...a]; // Nominatim first (POIs), then Photon (addresses)
-
-  // de-dupe by (value + lat/lng)
+  // Merge (Nominatim first for POIs), de-dupe by value + coords
+  const merged = [];
   const seen = new Set();
-  const out = [];
-  for (const it of merged){
-    const k = `${(it.value||"").toLowerCase()}|${it.lat||""}|${it.lng||""}`;
-    if (!it.value || seen.has(k)) continue;
-    seen.add(k);
-    out.push(it);
-  }
+  const pushUniq = (it)=>{
+    if (!it || !it.value) return;
+    const key = `${(it.value||"").toLowerCase()}|${Number(it.lat).toFixed(6)}|${Number(it.lng).toFixed(6)}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    merged.push(it);
+  };
+  [...nomiItems, ...photonItems].forEach(pushUniq);
 
-  // Bias results to the local service area first.
-  out.sort((x, y) => scoreByDistance(x) - scoreByDistance(y));
+  // Score: prefer QC/ON + closer to Montreal + query matches
+  const queryLower = q.toLowerCase();
+  const score = (it)=>{
+    let s = 0;
 
-  // If everything is extremely far (e.g., user typed something unrelated), still show a few.
-  return out.slice(0, 6);
+    // Province boost (best effort)
+    const hay = (it.value || "").toLowerCase();
+    if (hay.includes("québec") || hay.includes("quebec") || hay.includes("qc")) s += 60;
+    if (hay.includes("ontario") || hay.includes("on")) s += 15;
+
+    // City boosts
+    if (hay.includes("montréal") || hay.includes("montreal")) s += 50;
+    if (hay.includes("mont-tremblant") || hay.includes("tremblant")) s += 35;
+    if (hay.includes("ottawa")) s += 20;
+
+    // Query token match
+    queryLower.split(/\s+/).filter(Boolean).forEach(tok=>{
+      if (tok.length >= 3 && hay.includes(tok)) s += 6;
+    });
+
+    // Distance penalty (closer to Montreal ranks higher)
+    if (Number.isFinite(it.lat) && Number.isFinite(it.lng)){
+      const d = haversineKm(BIAS_CENTER.lat, BIAS_CENTER.lng, it.lat, it.lng);
+      s -= Math.min(120, d); // cap penalty
+    }
+
+    return s;
+  };
+
+  merged.sort((a,b)=> score(b) - score(a));
+  return merged.slice(0, 10);
 }
+
 
 function formatNominatimItem(item){
   const lat = Number(item?.lat);
