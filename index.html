@@ -1118,6 +1118,9 @@
     pickup_lng: "",
     dropoff_lat: "",
     dropoff_lng: ""
+  ,    route_seconds: null,
+    route_distance_km: null,
+    route_billable_hours: null
   };
 
   function $(id){ return document.getElementById(id); }
@@ -1269,19 +1272,147 @@
   }
 
   async function fetchAddressSuggestions(query){
-    const q = query.trim();
-    if (q.length < 3) return [];
+  const q = (query || "").trim();
+  if (q.length < 2) return [];
 
-    const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=6&lang=en`;
-    try{
-      const res = await fetch(url, { headers: { "Accept":"application/json" } });
+  // We use two free providers:
+  // - Photon (fast, great for addresses)
+  // - Nominatim (better for POIs like hotels, venues, landmarks)
+  //
+  // NOTE: Free services have rate limits — we debounce requests in setupAutocomplete.
+  const photonUrl = `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=6&lang=en`;
+  const nominatimUrl =
+    `https://nominatim.openstreetmap.org/search?` +
+    `q=${encodeURIComponent(q)}` +
+    `&format=jsonv2&addressdetails=1&namedetails=1&limit=6` +
+    `&accept-language=en&countrycodes=ca,us`;
+
+  const [photonItems, nominatimItems] = await Promise.allSettled([
+    (async ()=>{
+      if (q.length < 3) return [];
+      const res = await fetch(photonUrl, { headers: { "Accept":"application/json" } });
       if (!res.ok) return [];
       const data = await res.json().catch(()=> ({}));
       const feats = Array.isArray(data.features) ? data.features : [];
       return feats.map(formatPhotonFeature);
-    }catch(_e){
-      return [];
-    }
+    })(),
+    (async ()=>{
+      const res = await fetch(nominatimUrl, {
+        headers: {
+          "Accept":"application/json"
+        }
+      });
+      if (!res.ok) return [];
+      const data = await res.json().catch(()=> ([]));
+      const arr = Array.isArray(data) ? data : [];
+      return arr.map(formatNominatimItem);
+    })()
+  ]);
+
+  const a = (photonItems.status === "fulfilled") ? photonItems.value : [];
+  const b = (nominatimItems.status === "fulfilled") ? nominatimItems.value : [];
+  const merged = [...b, ...a]; // Nominatim first (POIs), then Photon (addresses)
+
+  // de-dupe by (value + lat/lng)
+  const seen = new Set();
+  const out = [];
+  for (const it of merged){
+    const k = `${(it.value||"").toLowerCase()}|${it.lat||""}|${it.lng||""}`;
+    if (!it.value || seen.has(k)) continue;
+    seen.add(k);
+    out.push(it);
+  }
+  return out.slice(0, 8);
+}
+
+function formatNominatimItem(item){
+  const lat = Number(item?.lat);
+  const lng = Number(item?.lon);
+  const addr = item?.address || {};
+  const namedetails = item?.namedetails || {};
+  const name = namedetails?.name || item?.name || "";
+
+  const city = addr.city || addr.town || addr.village || addr.hamlet || "";
+  const region = addr.state || addr.region || "";
+  const postcode = addr.postcode || "";
+  const country = addr.country || "";
+  const road = addr.road || addr.pedestrian || addr.footway || "";
+  const house = addr.house_number || "";
+
+  const line1 = name || ([house, road].filter(Boolean).join(" ") || (item?.display_name ? String(item.display_name).split(",")[0] : "Address"));
+  const sub = [city, region, postcode, country].filter(Boolean).join(", ") || "Select this place";
+  const value = item?.display_name ? String(item.display_name) : [line1, city, region, postcode, country].filter(Boolean).join(", ");
+
+  return {
+    type: "poi",
+    main: line1,
+    sub,
+    value,
+    lat: Number.isFinite(lat) ? lat : null,
+    lng: Number.isFinite(lng) ? lng : null
+  };
+}
+
+async function geocodeFirst(query){
+  const q = (query || "").trim();
+  if (!q) return null;
+
+  // One-shot geocode used on form submit if the user didn't click a suggestion
+  const url =
+    `https://nominatim.openstreetmap.org/search?` +
+    `q=${encodeURIComponent(q)}` +
+    `&format=jsonv2&addressdetails=1&namedetails=1&limit=1` +
+    `&accept-language=en&countrycodes=ca,us`;
+
+  try{
+    const res = await fetch(url, { headers: { "Accept":"application/json" } });
+    if (!res.ok) return null;
+    const data = await res.json().catch(()=> ([]));
+    const item = Array.isArray(data) ? data[0] : null;
+    if (!item) return null;
+    return formatNominatimItem(item);
+  }catch(_e){
+    return null;
+  }
+}
+
+async function fetchRouteOSRM(pickLat, pickLng, dropLat, dropLng){
+  const lat1 = Number(pickLat), lng1 = Number(pickLng);
+  const lat2 = Number(dropLat), lng2 = Number(dropLng);
+  if (![lat1,lng1,lat2,lng2].every(Number.isFinite)) return null;
+
+  const url = `https://router.project-osrm.org/route/v1/driving/${lng1},${lat1};${lng2},${lat2}?overview=false&alternatives=false&steps=false`;
+  try{
+    const res = await fetch(url, { headers: { "Accept":"application/json" } });
+    if (!res.ok) return null;
+    const data = await res.json().catch(()=> ({}));
+    const route = Array.isArray(data?.routes) ? data.routes[0] : null;
+    if (!route) return null;
+    const seconds = Number(route.duration);
+    const distanceKm = Number(route.distance) / 1000;
+    if (!Number.isFinite(seconds) || !Number.isFinite(distanceKm)) return null;
+    return { seconds, distanceKm };
+  }catch(_e){
+    return null;
+  }
+}
+
+function roundUpTo(n, step){
+  const x = Number(n);
+  const s = Number(step);
+  if (!Number.isFinite(x) || !Number.isFinite(s) || s <= 0) return x;
+  return Math.ceil(x / s) * s;
+}
+
+function formatDuration(seconds){
+  const s = Math.max(0, Math.round(Number(seconds) || 0));
+  const h = Math.floor(s / 3600);
+  const m = Math.round((s % 3600) / 60);
+  if (h <= 0) return `${m} min`;
+  if (m <= 0) return `${h} hr`;
+  return `${h} hr ${m} min`;
+}
+
   }
 
   function setCoords(latId, lngId, lat, lng){
@@ -1416,24 +1547,49 @@
   }
 
   function calcVehicleTotal(vehicle){
-    const h = Math.max(3, Number(state.hours || 3));
-    if (state.mode === "hourly") return vehicle.hourly * h;
-    const fee = state.transfer === "airport" ? 60 : 40;
-    return (vehicle.hourly * 3) + fee;
+  const h = Math.max(3, Number(state.hours || 3));
+  if (state.mode === "hourly") return vehicle.hourly * h;
+
+  // One-way live pricing:
+  // bill based on estimated drive time (rounded up to 30 minutes), minimum 3 hours.
+  const fee = state.transfer === "airport" ? 60 : 40;
+
+  if (Number.isFinite(Number(state.route_seconds))){
+    const driveHours = Number(state.route_seconds) / 3600;
+    const billable = Math.max(3, roundUpTo(driveHours, 0.5));
+    state.route_billable_hours = billable;
+    return (vehicle.hourly * billable) + fee;
   }
 
+  // Fallback if we can't compute a route (e.g., no coords)
+  return (vehicle.hourly * 3) + fee;
+}
+
   function buildVehiclesForTrip(){
-    const ORDER = ["escalade","suburban","denali","qx60","tesla","sprinter"];
-    const list = LOCAL_RATES.map(v=>{
-      const total = calcVehicleTotal(v);
-      const note = state.mode === "hourly"
-        ? `Total ${formatMoney(total)} for ${Math.max(3, Number(state.hours||3))} hours`
-        : (state.transfer === "airport" ? "Airport estimate" : "Point-to-point estimate");
-      return { ...v, total, note };
-    });
-    list.sort((a,b)=>ORDER.indexOf(a.id) - ORDER.indexOf(b.id));
-    return list;
-  }
+  const ORDER = ["escalade","suburban","denali","qx60","tesla","sprinter"];
+  const hours = Math.max(3, Number(state.hours || 3));
+
+  const routePart = (state.mode !== "hourly" && Number.isFinite(Number(state.route_seconds)))
+    ? `Drive ~${formatDuration(state.route_seconds)} • ${Math.round(Number(state.route_distance_km||0))} km`
+    : null;
+
+  const billedPart = (state.mode !== "hourly" && Number.isFinite(Number(state.route_billable_hours)))
+    ? `Billed ${Number(state.route_billable_hours).toFixed(1).replace(/\.0$/,"")} hrs`
+    : null;
+
+  const list = LOCAL_RATES.map(v=>{
+    const total = calcVehicleTotal(v);
+
+    const note = (state.mode === "hourly")
+      ? `Total ${formatMoney(total)} for ${hours} hours`
+      : ([ (state.transfer === "airport" ? "Airport transfer" : "Point-to-point"), routePart, billedPart ].filter(Boolean).join(" • ") || "Estimate");
+
+    return { ...v, total, note };
+  });
+
+  list.sort((a,b)=>ORDER.indexOf(a.id) - ORDER.indexOf(b.id));
+  return list;
+}
 
   let __scrollY = 0;
   function lockBodyScroll(){
@@ -1816,35 +1972,76 @@
     });
   });
 
-  $("heroSearchForm").addEventListener("submit", (e)=>{
-    e.preventDefault();
-    clearHeroAlert();
+  $("heroSearchForm").addEventListener("submit", async (e)=>{
+  e.preventDefault();
+  clearHeroAlert();
 
-    const err = validateHero();
-    if (err) return showHeroAlert(err);
+  const err = validateHero();
+  if (err) return showHeroAlert(err);
 
-    state.pickup = val("h_pickup");
-    state.dropoff = val("h_dropoff");
-    state.date = $("h_date").value;
-    state.time = val("h_time");
-    state.transfer = val("h_transfer") || "point";
-    state.hours = Math.max(3, Number(val("h_hours") || 3));
+  state.pickup = val("h_pickup");
+  state.dropoff = val("h_dropoff");
+  state.date = $("h_date").value;
+  state.time = val("h_time");
+  state.transfer = val("h_transfer") || "point";
+  state.hours = Math.max(3, Number(val("h_hours") || 3));
 
-    // ✅ capture coords (if user picked from suggestions)
-    state.pickup_lat = val("h_pickup_lat");
-    state.pickup_lng = val("h_pickup_lng");
-    state.dropoff_lat = val("h_dropoff_lat");
-    state.dropoff_lng = val("h_dropoff_lng");
+  // capture coords (if user picked from suggestions)
+  state.pickup_lat = val("h_pickup_lat");
+  state.pickup_lng = val("h_pickup_lng");
+  state.dropoff_lat = val("h_dropoff_lat");
+  state.dropoff_lng = val("h_dropoff_lng");
 
-    setHeroSearchLoading(true);
+  // reset route cache each submit
+  state.route_seconds = null;
+  state.route_distance_km = null;
+  state.route_billable_hours = null;
+
+  setHeroSearchLoading(true);
+
+  try{
+    // If user typed a place name (e.g., "Four Seasons Hotel Montreal") but didn't click a suggestion,
+    // do a one-shot geocode so we still get coordinates.
+    if (!state.pickup_lat || !state.pickup_lng){
+      const g = await geocodeFirst(state.pickup);
+      if (g?.lat && g?.lng){
+        state.pickup_lat = String(g.lat);
+        state.pickup_lng = String(g.lng);
+        setCoords("h_pickup_lat", "h_pickup_lng", g.lat, g.lng);
+      }
+    }
+
+    if (state.mode === "one_way"){
+      if (!state.dropoff_lat || !state.dropoff_lng){
+        const g = await geocodeFirst(state.dropoff);
+        if (g?.lat && g?.lng){
+          state.dropoff_lat = String(g.lat);
+          state.dropoff_lng = String(g.lng);
+          setCoords("h_dropoff_lat", "h_dropoff_lng", g.lat, g.lng);
+        }
+      }
+
+      // Live pricing needs route duration; compute it when we have both points.
+      const route = await fetchRouteOSRM(state.pickup_lat, state.pickup_lng, state.dropoff_lat, state.dropoff_lng);
+      if (route){
+        state.route_seconds = route.seconds;
+        state.route_distance_km = route.distanceKm;
+      }
+    }
 
     state.computedVehicles = buildVehiclesForTrip();
     renderTripSummary();
     renderVehiclesOverlay();
 
-    setHeroSearchLoading(false);
     openOverlay("overlayVehicles", true);
-  });
+  }catch(ex){
+    console.error(ex);
+    showHeroAlert("Sorry — we couldn't calculate the trip right now. Please try again.");
+  }finally{
+    setHeroSearchLoading(false);
+  }
+});
+
 
   window.addEventListener("load", ()=>{
     if (!history.state){
