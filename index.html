@@ -1118,9 +1118,6 @@
     pickup_lng: "",
     dropoff_lat: "",
     dropoff_lng: ""
-  ,    route_seconds: null,
-    route_distance_km: null,
-    route_billable_hours: null
   };
 
   function $(id){ return document.getElementById(id); }
@@ -1272,241 +1269,92 @@
   }
 
   async function fetchAddressSuggestions(query){
-  const raw = (query || "").trim();
-  if (raw.length < 2) return [];
+    let q = (query || "").trim();
+    if (q.length < 3) return [];
 
-  // --- Strong local bias (no API key) ---
-  // Corridor bbox: Ottawa ↔ Montréal ↔ Québec City
-  const CORRIDOR = { minLat: 44.0, maxLat: 47.7, minLon: -76.9, maxLon: -69.5 };
-  // Tight Montréal bbox
-  const MTL = { minLat: 45.35, maxLat: 45.75, minLon: -74.35, maxLon: -73.10 };
-  const BIAS_CENTER = { lat: 45.5017, lng: -73.5673 }; // Montréal
+    // light normalization (people often type "four season" instead of "four seasons")
+    q = q.replace(/\bfour\s+season\b/i, "four seasons");
 
-  const hasMontreal = /\bmontreal\b|\bmontréal\b/i.test(raw);
+    const centerLat = 45.5019;     // Montréal
+    const centerLon = -73.5674;
 
-  // Fix common user typo: "four season" → "four seasons"
-  const normalized = raw.replace(/\bfour\s+season\b/ig, "four seasons");
+    // Prefer the Ottawa ↔ Montréal ↔ Québec City corridor, but DO NOT hard-restrict results
+    const viewbox = "-76.50,46.90,-70.40,44.70"; // left,top,right,bottom
 
-  // If user already typed "montreal", strengthen the query slightly for Canada results
-  const q1 = normalized;
-  const q2 = hasMontreal ? normalized : `${normalized} Montreal Quebec Canada`;
+    const photonUrl =
+      `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=8&lang=en` +
+      `&lat=${centerLat}&lon=${centerLon}`;
 
-  const makePhotonUrl = (q)=> {
-    const bbox = hasMontreal
-      ? `${MTL.minLon},${MTL.minLat},${MTL.maxLon},${MTL.maxLat}`
-      : `${CORRIDOR.minLon},${CORRIDOR.minLat},${CORRIDOR.maxLon},${CORRIDOR.maxLat}`;
-    return `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=12&lang=en` +
-           `&bbox=${encodeURIComponent(bbox)}` +
-           `&lat=${BIAS_CENTER.lat}&lon=${BIAS_CENTER.lng}`;
-  };
+    const nominatimUrl =
+      `https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=8` +
+      `&countrycodes=ca&viewbox=${viewbox}&q=${encodeURIComponent(q)}`;
 
-  const makeNominatimUrl = (q)=> {
-    const box = hasMontreal
-      ? `${MTL.minLon},${MTL.maxLat},${MTL.maxLon},${MTL.minLat}`   // left,top,right,bottom
-      : `${CORRIDOR.minLon},${CORRIDOR.maxLat},${CORRIDOR.maxLon},${CORRIDOR.minLat}`;
-    // bounded=1 keeps results within the viewbox; countrycodes=ca keeps Canada only.
-    return `https://nominatim.openstreetmap.org/search?` +
-           `q=${encodeURIComponent(q)}` +
-           `&format=jsonv2&addressdetails=1&namedetails=1&limit=12` +
-           `&accept-language=en&countrycodes=ca&viewbox=${encodeURIComponent(box)}&bounded=1`;
-  };
+    const formatNominatim = (r)=>{
+      const a = r.address || {};
+      const lat = r.lat ? Number(r.lat) : null;
+      const lng = r.lon ? Number(r.lon) : null;
 
-  const haversineKm = (aLat, aLng, bLat, bLng) => {
-    const R = 6371;
-    const toRad = (x)=> (x * Math.PI / 180);
-    const dLat = toRad(bLat - aLat);
-    const dLng = toRad(bLng - aLng);
-    const s1 = Math.sin(dLat/2), s2 = Math.sin(dLng/2);
-    const aa = s1*s1 + Math.cos(toRad(aLat))*Math.cos(toRad(bLat))*s2*s2;
-    return 2 * R * Math.asin(Math.min(1, Math.sqrt(aa)));
-  };
+      const line1 = r.name || r.display_name?.split(",")[0] || "Address";
+      const city = a.city || a.town || a.village || a.municipality || "";
+      const region = a.state || a.province || "";
+      const postcode = a.postcode || "";
+      const country = a.country || "Canada";
 
-  const safeFetchJson = async (url, headers={})=>{
-    try{
-      const res = await fetch(url, { headers: { "Accept":"application/json", ...headers } });
-      if (!res.ok) return null;
-      return await res.json();
-    }catch(e){
-      return null;
-    }
-  };
+      const sub = [city, region, postcode, country].filter(Boolean).join(", ") || (r.display_name || "Select this address");
+      const value = r.display_name || [line1, city, region, postcode, country].filter(Boolean).join(", ");
 
-  const parsePhoton = (dat)=>{
-    if (!dat || !dat.features) return [];
-    return dat.features.map(f=>{
-      const props = f.properties || {};
-      const coords = (f.geometry && f.geometry.coordinates) ? f.geometry.coordinates : [null, null];
-      const lon = Number(coords[0]);
-      const lat = Number(coords[1]);
-      const label =
-        props.name ||
-        props.label ||
-        [props.housenumber, props.street, props.city, props.state, props.country].filter(Boolean).join(" ");
-      return { label: label || raw, lat, lon, source:"photon" };
-    }).filter(x=>Number.isFinite(x.lat) && Number.isFinite(x.lon));
-  };
-
-  const parseNominatim = (dat)=>{
-    if (!Array.isArray(dat)) return [];
-    return dat.map(r=>{
-      const lat = Number(r.lat);
-      const lon = Number(r.lon);
-      const label = r.display_name || (r.namedetails && (r.namedetails.name || r.namedetails['name:en'])) || raw;
-      return { label, lat, lon, source:"nominatim" };
-    }).filter(x=>Number.isFinite(x.lat) && Number.isFinite(x.lon));
-  };
-
-  // Fetch multiple variants to improve POI matching (hotels, etc.)
-  const urls = [
-    makeNominatimUrl(q1),
-    makeNominatimUrl(q2),
-    makePhotonUrl(q1),
-    makePhotonUrl(q2),
-  ];
-
-  const results = await Promise.all(urls.map(u=>safeFetchJson(u, u.includes("nominatim") ? { "User-Agent":"MontTremblantLimoBooking/1.0" } : {})));
-
-  const combined = [
-    ...parseNominatim(results[0]),
-    ...parseNominatim(results[1]),
-    ...parsePhoton(results[2]),
-    ...parsePhoton(results[3]),
-  ];
-
-  // Deduplicate by lat/lon rounded + label
-  const seen = new Set();
-  const deduped = [];
-  for (const it of combined){
-    const key = `${it.label.toLowerCase().slice(0,80)}|${it.lat.toFixed(5)}|${it.lon.toFixed(5)}`;
-    if (seen.has(key)) continue;
-    seen.add(key);
-    deduped.push(it);
-  }
-
-  // Score: prefer nominatim (POIs), then closeness to Montréal, then Montréal bbox, then corridor.
-  const inBox = (lat, lon, box)=> lat>=box.minLat && lat<=box.maxLat && lon>=box.minLon && lon<=box.maxLon;
-
-  deduped.sort((a,b)=>{
-    const aMTL = inBox(a.lat,a.lon,MTL) ? 1 : 0;
-    const bMTL = inBox(b.lat,b.lon,MTL) ? 1 : 0;
-    if (aMTL !== bMTL) return bMTL - aMTL;
-
-    const aSrc = (a.source==="nominatim") ? 1 : 0;
-    const bSrc = (b.source==="nominatim") ? 1 : 0;
-    if (aSrc !== bSrc) return bSrc - aSrc;
-
-    const da = haversineKm(a.lat,a.lon,BIAS_CENTER.lat,BIAS_CENTER.lng);
-    const db = haversineKm(b.lat,b.lon,BIAS_CENTER.lat,BIAS_CENTER.lng);
-    return da - db;
-  });
-
-  return deduped.slice(0, 8);
-}
-
-
-function formatNominatimItem(item){
-  const lat = Number(item?.lat);
-  const lng = Number(item?.lon);
-  const addr = item?.address || {};
-  const namedetails = item?.namedetails || {};
-  const name = namedetails?.name || item?.name || "";
-
-  const city = addr.city || addr.town || addr.village || addr.hamlet || "";
-  const region = addr.state || addr.region || "";
-  const postcode = addr.postcode || "";
-  const country = addr.country || "";
-  const road = addr.road || addr.pedestrian || addr.footway || "";
-  const house = addr.house_number || "";
-
-  const line1 = name || ([house, road].filter(Boolean).join(" ") || (item?.display_name ? String(item.display_name).split(",")[0] : "Address"));
-  const sub = [city, region, postcode, country].filter(Boolean).join(", ") || "Select this place";
-  const value = item?.display_name ? String(item.display_name) : [line1, city, region, postcode, country].filter(Boolean).join(", ");
-
-  return {
-    type: "poi",
-    main: line1,
-    sub,
-    value,
-    lat: Number.isFinite(lat) ? lat : null,
-    lng: Number.isFinite(lng) ? lng : null
-  };
-}
-
-async function geocodeFirst(query){
-  const q = (query || "").trim();
-  if (!q) return null;
-
-  // One-shot geocode used on form submit if the user didn't click a suggestion.
-  // Try a local corridor first, then fall back to Canada-wide.
-  const viewbox = { left: -76.2, top: 46.9, right: -70.8, bottom: 44.8 };
-
-  const urlBounded =
-    `https://nominatim.openstreetmap.org/search?` +
-    `q=${encodeURIComponent(q)}` +
-    `&format=jsonv2&addressdetails=1&namedetails=1&limit=1` +
-    `&accept-language=en&countrycodes=ca` +
-    `&viewbox=${viewbox.left},${viewbox.top},${viewbox.right},${viewbox.bottom}&bounded=1`;
-
-  const urlCanada =
-    `https://nominatim.openstreetmap.org/search?` +
-    `q=${encodeURIComponent(q)}` +
-    `&format=jsonv2&addressdetails=1&namedetails=1&limit=1` +
-    `&accept-language=en&countrycodes=ca`;
-
-  try{
-    const fetchOne = async (url)=>{
-      const res = await fetch(url, { headers: { "Accept":"application/json" } });
-      if (!res.ok) return null;
-      const data = await res.json().catch(()=> ([]));
-      const item = Array.isArray(data) ? data[0] : null;
-      return item ? formatNominatimItem(item) : null;
+      return { type:"address", main: line1, sub, value, lat, lng };
     };
 
-    let hit = await fetchOne(urlBounded);
-    if (!hit) hit = await fetchOne(urlCanada);
-    return hit;
-  }catch(_e){
-    return null;
+    try{
+      const [nomRes, phoRes] = await Promise.allSettled([
+        fetch(nominatimUrl, { headers: { "Accept":"application/json" } }),
+        fetch(photonUrl,    { headers: { "Accept":"application/json" } })
+      ]);
+
+      let nomItems = [];
+      if (nomRes.status === "fulfilled" && nomRes.value && nomRes.value.ok){
+        const arr = await nomRes.value.json().catch(()=>[]);
+        if (Array.isArray(arr)) nomItems = arr.map(formatNominatim);
+      }
+
+      let phoItems = [];
+      if (phoRes.status === "fulfilled" && phoRes.value && phoRes.value.ok){
+        const data = await phoRes.value.json().catch(()=>({}));
+        const feats = Array.isArray(data.features) ? data.features : [];
+        phoItems = feats.map(formatPhotonFeature);
+      }
+
+      const merged = [];
+      const seen = new Set();
+      const add = (it)=>{
+        const k = (it.value || "").toLowerCase();
+        if (!k || seen.has(k)) return;
+        seen.add(k);
+        merged.push(it);
+      };
+
+      // Nominatim first (better for POIs), then Photon (good for street addresses)
+      nomItems.forEach(add);
+      phoItems.forEach(add);
+
+      // rank local/Québec higher (but keep others as fallback)
+      const score = (it)=>{
+        const t = `${it.main||""} ${it.sub||""} ${it.value||""}`.toLowerCase();
+        let s = 0;
+        if (t.includes("montreal") || t.includes("montréal")) s += 50;
+        if (t.includes("quebec") || t.includes("québec") || t.includes("qc")) s += 20;
+        if (t.includes("laval")) s += 8;
+        if (t.includes("ottawa")) s += 6;
+        if (t.includes("canada")) s += 3;
+        return -s; // sort ascending
+      };
+
+      return merged.sort((a,b)=> score(a)-score(b)).slice(0, 8);
+    }catch(_e){
+      return [];
+    }
   }
-}
-
-async function fetchRouteOSRM(pickLat, pickLng, dropLat, dropLng){
-  const lat1 = Number(pickLat), lng1 = Number(pickLng);
-  const lat2 = Number(dropLat), lng2 = Number(dropLng);
-  if (![lat1,lng1,lat2,lng2].every(Number.isFinite)) return null;
-
-  const url = `https://router.project-osrm.org/route/v1/driving/${lng1},${lat1};${lng2},${lat2}?overview=false&alternatives=false&steps=false`;
-  try{
-    const res = await fetch(url, { headers: { "Accept":"application/json" } });
-    if (!res.ok) return null;
-    const data = await res.json().catch(()=> ({}));
-    const route = Array.isArray(data?.routes) ? data.routes[0] : null;
-    if (!route) return null;
-    const seconds = Number(route.duration);
-    const distanceKm = Number(route.distance) / 1000;
-    if (!Number.isFinite(seconds) || !Number.isFinite(distanceKm)) return null;
-    return { seconds, distanceKm };
-  }catch(_e){
-    return null;
-  }
-}
-
-function roundUpTo(n, step){
-  const x = Number(n);
-  const s = Number(step);
-  if (!Number.isFinite(x) || !Number.isFinite(s) || s <= 0) return x;
-  return Math.ceil(x / s) * s;
-}
-
-function formatDuration(seconds){
-  const s = Math.max(0, Math.round(Number(seconds) || 0));
-  const h = Math.floor(s / 3600);
-  const m = Math.round((s % 3600) / 60);
-  if (h <= 0) return `${m} min`;
-  if (m <= 0) return `${h} hr`;
-  return `${h} hr ${m} min`;
-}
-
 
   function setCoords(latId, lngId, lat, lng){
     const latEl = $(latId);
@@ -1640,49 +1488,24 @@ function formatDuration(seconds){
   }
 
   function calcVehicleTotal(vehicle){
-  const h = Math.max(3, Number(state.hours || 3));
-  if (state.mode === "hourly") return vehicle.hourly * h;
-
-  // One-way live pricing:
-  // bill based on estimated drive time (rounded up to 30 minutes), minimum 3 hours.
-  const fee = state.transfer === "airport" ? 60 : 40;
-
-  if (Number.isFinite(Number(state.route_seconds))){
-    const driveHours = Number(state.route_seconds) / 3600;
-    const billable = Math.max(3, roundUpTo(driveHours, 0.5));
-    state.route_billable_hours = billable;
-    return (vehicle.hourly * billable) + fee;
+    const h = Math.max(3, Number(state.hours || 3));
+    if (state.mode === "hourly") return vehicle.hourly * h;
+    const fee = state.transfer === "airport" ? 60 : 40;
+    return (vehicle.hourly * 3) + fee;
   }
 
-  // Fallback if we can't compute a route (e.g., no coords)
-  return (vehicle.hourly * 3) + fee;
-}
-
   function buildVehiclesForTrip(){
-  const ORDER = ["escalade","suburban","denali","qx60","tesla","sprinter"];
-  const hours = Math.max(3, Number(state.hours || 3));
-
-  const routePart = (state.mode !== "hourly" && Number.isFinite(Number(state.route_seconds)))
-    ? `Drive ~${formatDuration(state.route_seconds)} • ${Math.round(Number(state.route_distance_km||0))} km`
-    : null;
-
-  const billedPart = (state.mode !== "hourly" && Number.isFinite(Number(state.route_billable_hours)))
-    ? `Billed ${Number(state.route_billable_hours).toFixed(1).replace(/\.0$/,"")} hrs`
-    : null;
-
-  const list = LOCAL_RATES.map(v=>{
-    const total = calcVehicleTotal(v);
-
-    const note = (state.mode === "hourly")
-      ? `Total ${formatMoney(total)} for ${hours} hours`
-      : ([ (state.transfer === "airport" ? "Airport transfer" : "Point-to-point"), routePart, billedPart ].filter(Boolean).join(" • ") || "Estimate");
-
-    return { ...v, total, note };
-  });
-
-  list.sort((a,b)=>ORDER.indexOf(a.id) - ORDER.indexOf(b.id));
-  return list;
-}
+    const ORDER = ["escalade","suburban","denali","qx60","tesla","sprinter"];
+    const list = LOCAL_RATES.map(v=>{
+      const total = calcVehicleTotal(v);
+      const note = state.mode === "hourly"
+        ? `Total ${formatMoney(total)} for ${Math.max(3, Number(state.hours||3))} hours`
+        : (state.transfer === "airport" ? "Airport estimate" : "Point-to-point estimate");
+      return { ...v, total, note };
+    });
+    list.sort((a,b)=>ORDER.indexOf(a.id) - ORDER.indexOf(b.id));
+    return list;
+  }
 
   let __scrollY = 0;
   function lockBodyScroll(){
@@ -2065,76 +1888,35 @@ function formatDuration(seconds){
     });
   });
 
-  $("heroSearchForm").addEventListener("submit", async (e)=>{
-  e.preventDefault();
-  clearHeroAlert();
+  $("heroSearchForm").addEventListener("submit", (e)=>{
+    e.preventDefault();
+    clearHeroAlert();
 
-  const err = validateHero();
-  if (err) return showHeroAlert(err);
+    const err = validateHero();
+    if (err) return showHeroAlert(err);
 
-  state.pickup = val("h_pickup");
-  state.dropoff = val("h_dropoff");
-  state.date = $("h_date").value;
-  state.time = val("h_time");
-  state.transfer = val("h_transfer") || "point";
-  state.hours = Math.max(3, Number(val("h_hours") || 3));
+    state.pickup = val("h_pickup");
+    state.dropoff = val("h_dropoff");
+    state.date = $("h_date").value;
+    state.time = val("h_time");
+    state.transfer = val("h_transfer") || "point";
+    state.hours = Math.max(3, Number(val("h_hours") || 3));
 
-  // capture coords (if user picked from suggestions)
-  state.pickup_lat = val("h_pickup_lat");
-  state.pickup_lng = val("h_pickup_lng");
-  state.dropoff_lat = val("h_dropoff_lat");
-  state.dropoff_lng = val("h_dropoff_lng");
+    // ✅ capture coords (if user picked from suggestions)
+    state.pickup_lat = val("h_pickup_lat");
+    state.pickup_lng = val("h_pickup_lng");
+    state.dropoff_lat = val("h_dropoff_lat");
+    state.dropoff_lng = val("h_dropoff_lng");
 
-  // reset route cache each submit
-  state.route_seconds = null;
-  state.route_distance_km = null;
-  state.route_billable_hours = null;
-
-  setHeroSearchLoading(true);
-
-  try{
-    // If user typed a place name (e.g., "Four Seasons Hotel Montreal") but didn't click a suggestion,
-    // do a one-shot geocode so we still get coordinates.
-    if (!state.pickup_lat || !state.pickup_lng){
-      const g = await geocodeFirst(state.pickup);
-      if (g?.lat && g?.lng){
-        state.pickup_lat = String(g.lat);
-        state.pickup_lng = String(g.lng);
-        setCoords("h_pickup_lat", "h_pickup_lng", g.lat, g.lng);
-      }
-    }
-
-    if (state.mode === "one_way"){
-      if (!state.dropoff_lat || !state.dropoff_lng){
-        const g = await geocodeFirst(state.dropoff);
-        if (g?.lat && g?.lng){
-          state.dropoff_lat = String(g.lat);
-          state.dropoff_lng = String(g.lng);
-          setCoords("h_dropoff_lat", "h_dropoff_lng", g.lat, g.lng);
-        }
-      }
-
-      // Live pricing needs route duration; compute it when we have both points.
-      const route = await fetchRouteOSRM(state.pickup_lat, state.pickup_lng, state.dropoff_lat, state.dropoff_lng);
-      if (route){
-        state.route_seconds = route.seconds;
-        state.route_distance_km = route.distanceKm;
-      }
-    }
+    setHeroSearchLoading(true);
 
     state.computedVehicles = buildVehiclesForTrip();
     renderTripSummary();
     renderVehiclesOverlay();
 
-    openOverlay("overlayVehicles", true);
-  }catch(ex){
-    console.error(ex);
-    showHeroAlert("Sorry — we couldn't calculate the trip right now. Please try again.");
-  }finally{
     setHeroSearchLoading(false);
-  }
-});
-
+    openOverlay("overlayVehicles", true);
+  });
 
   window.addEventListener("load", ()=>{
     if (!history.state){
