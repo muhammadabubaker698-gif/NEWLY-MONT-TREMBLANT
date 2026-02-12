@@ -1516,7 +1516,7 @@ function setupAutocomplete(inputId, listId, latId, lngId){
       timer = setTimeout(doSearch, 80);
     });
 
-    input.addEventListener("blur", ()=> setTimeout(()=> clearAutocompleteList(list), 120));
+    input.addEventListener("blur", ()=> setTimeout(()=> clearAutocompleteList(list), 60));
     input.addEventListener("focus", () => {
       // New session improves relevance and speed
       if (window.google && window.google.maps && window.google.maps.places) newSessionToken();
@@ -2164,6 +2164,8 @@ function getQcCorridorBounds(){
   if (!window.google || !google.maps || !google.maps.places) return;
 
   const { pickup: pickupInput, dropoff: dropoffInput } = findBookingInputs();
+  if (pickupInput) pickupInput.setAttribute('data-which','pickup');
+  if (dropoffInput) dropoffInput.setAttribute('data-which','dropoff');
 if (!pickupInput || !dropoffInput) return;
 
   const options = {
@@ -2287,6 +2289,23 @@ function tuneAutocomplete(ac) {
   // Leave types unrestricted so hotels/businesses + addresses both appear
 }
 // --- Google Places performance helpers ---
+// --- Perceived speed helpers (instant UI) ---
+const __lastPredictions = { pickup: [], dropoff: [] };
+function showLoading(listEl){
+  if (!listEl) return;
+  listEl.innerHTML = '<div class="autocomplete-item" style="opacity:.7">Searching…</div>';
+  listEl.style.display = "block";
+}
+function showInstantLast(which, listEl, inputEl){
+  const preds = __lastPredictions[which] || [];
+  if (preds.length) {
+    // Render immediately while new request is in flight
+    if (typeof renderSuggestions === "function") renderSuggestions(preds, listEl, inputEl);
+    else if (typeof renderGoogleSuggestions === "function") renderGoogleSuggestions(preds, listEl, inputEl);
+  } else {
+    showLoading(listEl);
+  }
+}
 const __placesCache = new Map(); // key -> {ts, preds}
 const __CACHE_TTL_MS = 30_000;
 
