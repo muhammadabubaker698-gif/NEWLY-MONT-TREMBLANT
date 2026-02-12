@@ -2021,6 +2021,8 @@ function ensureMap(){
     fullscreenControl: false,
   });
   return gMap;
+  const ld=document.getElementById('gmap-loading'); if(ld) ld.style.display='none';
+  return gMap;
 }
 
 function setMarker(kind, lat, lng, title){
@@ -2119,72 +2121,39 @@ tuneAutocomplete(dropoffAC);
   });
 
   googlePlacesEnabled = true;
-  clearMapStatus();
 
   // Make sure the map initializes even before selecting
   ensureMap();
 }
 
 function loadGoogleMapsScript(){
-  if (!GOOGLE_PLACES_API_KEY || GOOGLE_PLACES_API_KEY.includes("PASTE_")) return;
+  if (!GOOGLE_PLACES_API_KEY || GOOGLE_PLACES_API_KEY.includes("PASTE_")) {
+    const el = document.getElementById('gmap-loading');
+    if (el) el.textContent = 'Google API key not set — using basic address search.';
+    return;
+  }
 
   const existing = document.querySelector('script[data-google-maps="1"]');
   if (existing) return;
 
-  window.__initGoogleMapsPlaces = () => { clearMapStatus(); wireAutocomplete(); };
-
   const s = document.createElement("script");
   s.dataset.googleMaps = "1";
-  s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_PLACES_API_KEY)}&libraries=places&v=weekly&loading=async&callback=__initGoogleMapsPlaces`;
+  s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_PLACES_API_KEY)}&libraries=places&v=weekly&loading=async`;
   s.async = true;
   s.defer = true;
-s.onerror = () => {
+  s.onload = wireAutocomplete;
+  s.onerror = () => {
     console.warn("Google Maps script failed to load. Check API key restrictions / billing / enabled APIs.");
+    const el = document.getElementById('gmap-loading');
+    if (el) el.textContent = 'Map failed to load (check API key / billing).';
   };
   document.head.appendChild(s);
-}
-}
-
-function showMapStatus(message, isError=false){
-  const el = document.getElementById("gmap");
-  if (!el) return;
-  el.style.position = "relative";
-  let badge = document.getElementById("gmap-status");
-  if (!badge){
-    badge = document.createElement("div");
-    badge.id = "gmap-status";
-    badge.style.position = "absolute";
-    badge.style.left = "10px";
-    badge.style.top = "10px";
-    badge.style.padding = "8px 10px";
-    badge.style.borderRadius = "10px";
-    badge.style.fontSize = "12px";
-    badge.style.zIndex = "5";
-    badge.style.maxWidth = "90%";
-    badge.style.boxShadow = "0 6px 20px rgba(0,0,0,.08)";
-    el.appendChild(badge);
-  }
-  badge.textContent = message;
-  badge.style.background = isError ? "rgba(255,235,235,.95)" : "rgba(255,255,255,.92)";
-  badge.style.color = isError ? "#b42318" : "#111827";
-  badge.style.border = isError ? "1px solid rgba(244,63,94,.25)" : "1px solid rgba(17,24,39,.12)";
-}
-
-function clearMapStatus(){
-  const badge = document.getElementById("gmap-status");
-  if (badge) badge.remove();
 }
 
 // Load after DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
-  showMapStatus("Loading map…");
+  ensureMap();         // show the empty map area (placeholder background if Google not loaded)
   loadGoogleMapsScript();
-  // If it still isn’t loaded after 8s, show a helpful message.
-  setTimeout(() => {
-    if (!(window.google && window.google.maps)) {
-      showMapStatus("Map is taking too long to load. Please check API key + referrer restrictions + billing, and open browser console for the exact error.", true);
-    }
-  }, 8000);
 });
 </script>
 
@@ -2197,6 +2166,7 @@ function tuneAutocomplete(ac) {
   // Ask only for what we need (reduces payload and speeds response)
   if (ac.setFields) ac.setFields(["place_id", "formatted_address", "geometry", "name"]);
   // Prefer establishments (hotels/businesses) + addresses
+  // Leave types unrestricted so hotels/businesses + addresses both appear
 }
 </script>
 </body>
