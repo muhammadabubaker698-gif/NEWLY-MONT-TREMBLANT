@@ -2182,5 +2182,43 @@ function tuneAutocomplete(ac) {
   // Leave types unrestricted so hotels/businesses + addresses both appear
 }
 </script>
+<script>
+(function(){
+  const startedAt = Date.now();
+  const TIMEOUT_MS = 9000;
+
+  function setMsg(msg){
+    const el = document.getElementById("gmap-loading");
+    if (el) el.textContent = msg;
+  }
+
+  // After timeout, if google maps isn't ready, show actionable message.
+  setTimeout(() => {
+    const ready = !!(window.google && window.google.maps);
+    if (!ready) {
+      setMsg("Map not loading. Open browser Console (Inspect → Console) to see the exact Google Maps error.");
+      console.warn("Google Maps not ready after timeout.",
+        {
+          hasGoogle: !!window.google,
+          hasMaps: !!(window.google && window.google.maps),
+          url: location.href,
+          referrer: document.referrer
+        }
+      );
+    }
+  }, TIMEOUT_MS);
+
+  // Expose quick diagnostics helper
+  window.__mapsDiag = function(){
+    return {
+      hasGoogle: !!window.google,
+      hasMaps: !!(window.google && window.google.maps),
+      hasPlaces: !!(window.google && window.google.maps && window.google.maps.places),
+      userAgent: navigator.userAgent,
+      url: location.href
+    };
+  };
+})();
+</script>
 </body>
 </html>
