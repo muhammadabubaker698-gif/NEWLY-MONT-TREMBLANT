@@ -1969,5 +1969,22 @@ s0.parentNode.insertBefore(s1,s0);
 </script>
 <!--End of Tawk.to Script-->
 
+
+<!-- Google Places API Integration -->
+<script>
+const GOOGLE_PLACES_API_KEY = "PASTE_YOUR_REAL_API_KEY_HERE";
+
+function loadGooglePlacesScript() {
+    if (!GOOGLE_PLACES_API_KEY) return;
+
+    const script = document.createElement("script");
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_PLACES_API_KEY}&libraries=places`;
+    script.async = true;
+    document.head.appendChild(script);
+}
+
+loadGooglePlacesScript();
+</script>
+
 </body>
 </html>
