@@ -1999,7 +1999,7 @@ s0.parentNode.insertBefore(s1,s0);
  * Paste your real key below.
  * Keep it restricted in Google Cloud Console (HTTP referrer + only Places API + Maps JavaScript API).
  */
-const GOOGLE_PLACES_API_KEY = "AIzaSyC5pxhDTNiTDjUuZq0Uro8W9iy5C_HB4rE";
+const GOOGLE_PLACES_API_KEY = "PASTE_YOUR_REAL_API_KEY_HERE";
 
 let googlePlacesEnabled = false;
 let gMap = null;
@@ -2052,6 +2052,26 @@ function setMarker(kind, lat, lng, title){
   }
 }
 
+function findBookingInputs() {
+  // Try common IDs first
+  const byId = (id) => document.getElementById(id);
+  const pickup =
+    byId("pickup") || byId("from") || byId("fromInput") || byId("pickupInput") ||
+    document.querySelector('input[placeholder*="From"]') ||
+    document.querySelector('input[aria-label*="From"]') ||
+    document.querySelector('input[name*="from" i]') ||
+    document.querySelectorAll("input[type=text]")[0];
+
+  const dropoff =
+    byId("dropoff") || byId("to") || byId("toInput") || byId("dropoffInput") ||
+    document.querySelector('input[placeholder*="To"]') ||
+    document.querySelector('input[aria-label*="To"]') ||
+    document.querySelector('input[name*="to" i]') ||
+    document.querySelectorAll("input[type=text]")[1];
+
+  return { pickup, dropoff };
+}
+
 function wireAutocomplete(){
 
 function getQcCorridorBounds(){
@@ -2065,9 +2085,8 @@ function getQcCorridorBounds(){
 
   if (!window.google || !google.maps || !google.maps.places) return;
 
-  const pickupInput  = document.getElementById("h_pickup");
-  const dropoffInput = document.getElementById("h_dropoff");
-  if (!pickupInput || !dropoffInput) return;
+  const { pickup: pickupInput, dropoff: dropoffInput } = findBookingInputs();
+if (!pickupInput || !dropoffInput) return;
 
   const options = {
     componentRestrictions: { country: "ca" },
@@ -2139,29 +2158,37 @@ tuneAutocomplete(dropoffAC);
   ensureMap();
 }
 
-function loadGoogleMapsScript(){
+function loadGoogleMapsScript() {
+  const el = document.getElementById("gmap-loading");
   if (!GOOGLE_PLACES_API_KEY || GOOGLE_PLACES_API_KEY.includes("PASTE_")) {
-    const el = document.getElementById("gmap-loading");
     if (el) el.textContent = "Google API key not set — using basic address search.";
     return;
   }
 
-  const existing = document.querySelector('script[data-google-maps="1"]');
-  if (existing) return;
+  // Avoid double-loading
+  if (window.google && window.google.maps && window.google.maps.places) {
+    wireAutocomplete();
+    return;
+  }
+  if (document.querySelector('script[data-google-maps="1"]')) return;
+
+  // Google will call this when the JS API is ready
+  window.__initGoogleMapsPlaces = () => {
+    try { wireAutocomplete(); } catch(e) { console.warn("wireAutocomplete failed", e); }
+  };
 
   const s = document.createElement("script");
   s.dataset.googleMaps = "1";
-  s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_PLACES_API_KEY)}&libraries=places&v=weekly&loading=async`;
   s.async = true;
   s.defer = true;
-  s.onload = wireAutocomplete;
+  s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_PLACES_API_KEY)}&libraries=places&v=weekly&loading=async&callback=__initGoogleMapsPlaces`;
   s.onerror = () => {
     console.warn("Google Maps script failed to load. Check API key restrictions / billing / enabled APIs.");
-    const el = document.getElementById("gmap-loading");
     if (el) el.textContent = "Map failed to load (check API key / billing / enabled APIs).";
   };
   document.head.appendChild(s);
 }
+
 
 // Load after DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
@@ -2181,44 +2208,6 @@ function tuneAutocomplete(ac) {
   // Prefer establishments (hotels/businesses) + addresses
   // Leave types unrestricted so hotels/businesses + addresses both appear
 }
-</script>
-<script>
-(function(){
-  const startedAt = Date.now();
-  const TIMEOUT_MS = 9000;
-
-  function setMsg(msg){
-    const el = document.getElementById("gmap-loading");
-    if (el) el.textContent = msg;
-  }
-
-  // After timeout, if google maps isn't ready, show actionable message.
-  setTimeout(() => {
-    const ready = !!(window.google && window.google.maps);
-    if (!ready) {
-      setMsg("Map not loading. Open browser Console (Inspect → Console) to see the exact Google Maps error.");
-      console.warn("Google Maps not ready after timeout.",
-        {
-          hasGoogle: !!window.google,
-          hasMaps: !!(window.google && window.google.maps),
-          url: location.href,
-          referrer: document.referrer
-        }
-      );
-    }
-  }, TIMEOUT_MS);
-
-  // Expose quick diagnostics helper
-  window.__mapsDiag = function(){
-    return {
-      hasGoogle: !!window.google,
-      hasMaps: !!(window.google && window.google.maps),
-      hasPlaces: !!(window.google && window.google.maps && window.google.maps.places),
-      userAgent: navigator.userAgent,
-      url: location.href
-    };
-  };
-})();
 </script>
 </body>
 </html>
