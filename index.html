@@ -2058,9 +2058,13 @@ function wireAutocomplete(){
   };
 
   const pickupAC = new google.maps.places.Autocomplete(pickupInput, options);
-  const dropoffAC = new google.maps.places.Autocomplete(dropoffInput, options);
+  
+tuneAutocomplete(pickupAC);
+const dropoffAC = new google.maps.places.Autocomplete(dropoffInput, options);
 
-  // Stop your existing (OSM/Photon) input listeners when Google is enabled
+  
+tuneAutocomplete(dropoffAC);
+// Stop your existing (OSM/Photon) input listeners when Google is enabled
   const stopOSM = (e) => { if (googlePlacesEnabled) e.stopImmediatePropagation(); };
   pickupInput.addEventListener("input", stopOSM, true);
   dropoffInput.addEventListener("input", stopOSM, true);
@@ -2138,5 +2142,17 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+<script>
+// --- Autocomplete tuning (faster + more accurate) ---
+function tuneAutocomplete(ac) {
+  if (!ac) return;
+  // Restrict results to Canada (remove if you want worldwide)
+  ac.setComponentRestrictions({ country: "ca" });
+  // Ask only for what we need (reduces payload and speeds response)
+  if (ac.setFields) ac.setFields(["place_id", "formatted_address", "geometry", "name"]);
+  // Prefer establishments (hotels/businesses) + addresses
+  ac.setTypes(["geocode"]);
+}
+</script>
 </body>
 </html>
