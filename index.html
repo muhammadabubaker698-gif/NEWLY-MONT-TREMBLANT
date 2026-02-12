@@ -775,6 +775,9 @@
 /* Google Places dropdown */
 .pac-container{z-index:999999 !important;}
 </style>
+
+<link rel="preconnect" href="https://maps.googleapis.com">
+<link rel="preconnect" href="https://maps.gstatic.com" crossorigin>
 </head>
 
 <body>
@@ -1514,7 +1517,9 @@ function setupAutocomplete(inputId, listId, latId, lngId){
     });
 
     input.addEventListener("blur", ()=> setTimeout(()=> clearAutocompleteList(list), 120));
-    input.addEventListener("focus", ()=>{
+    input.addEventListener("focus", () => {
+      // New session improves relevance and speed
+      if (window.google && window.google.maps && window.google.maps.places) newSessionToken();
       
       if (window.googlePlacesEnabled) { clearAutocompleteList(list); return; }
 if (input.value.trim().length >= 2) doSearch();
@@ -2281,6 +2286,38 @@ function tuneAutocomplete(ac) {
   // Prefer establishments (hotels/businesses) + addresses
   // Leave types unrestricted so hotels/businesses + addresses both appear
 }
+// --- Google Places performance helpers ---
+const __placesCache = new Map(); // key -> {ts, preds}
+const __CACHE_TTL_MS = 30_000;
+
+function cacheGet(key){
+  const v = __placesCache.get(key);
+  if (!v) return null;
+  if (Date.now() - v.ts > __CACHE_TTL_MS) { __placesCache.delete(key); return null; }
+  return v.preds;
+}
+function cacheSet(key, preds){
+  __placesCache.set(key, { ts: Date.now(), preds });
+  // keep cache small
+  if (__placesCache.size > 50) {
+    const firstKey = __placesCache.keys().next().value;
+    __placesCache.delete(firstKey);
+  }
+}
+
+let __sessionToken = null;
+function newSessionToken(){
+  try { __sessionToken = new google.maps.places.AutocompleteSessionToken(); } catch(e) { __sessionToken = null; }
+  return __sessionToken;
+}
+
+function getQcCorridorBounds(){
+  // Bias toward Montreal <-> Mont-Tremblant corridor
+  const sw = new google.maps.LatLng(45.2, -74.2);
+  const ne = new google.maps.LatLng(46.6, -72.6);
+  return new google.maps.LatLngBounds(sw, ne);
+}
+
 </script>
 </body>
 </html>
