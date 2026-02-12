@@ -1398,7 +1398,9 @@
     };
 
     const doSearch = async ()=>{
-      const q = input.value.trim();
+      
+      if (window.googlePlacesEnabled) { clearAutocompleteList(list); return; }
+const q = input.value.trim();
       if (q.length < 2){
         clearAutocompleteList(list);
         return;
@@ -1428,16 +1430,20 @@
     };
 
     input.addEventListener("input", ()=>{
-      // if user edits manually after choosing a suggestion, clear coordinates
+      
+      if (window.googlePlacesEnabled) { clearAutocompleteList(list); return; }
+// if user edits manually after choosing a suggestion, clear coordinates
       clearCoords(latId, lngId);
 
       if (timer) clearTimeout(timer);
-      timer = setTimeout(doSearch, 120);
+      timer = setTimeout(doSearch, 80);
     });
 
     input.addEventListener("blur", ()=> setTimeout(()=> clearAutocompleteList(list), 120));
     input.addEventListener("focus", ()=>{
-      if (input.value.trim().length >= 2) doSearch();
+      
+      if (window.googlePlacesEnabled) { clearAutocompleteList(list); return; }
+if (input.value.trim().length >= 2) doSearch();
     });
 
     // close list on Esc
@@ -2126,8 +2132,9 @@ function loadGoogleMapsScript(){
 
   const s = document.createElement("script");
   s.dataset.googleMaps = "1";
-  s.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_PLACES_API_KEY}&libraries=places`;
+  s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_PLACES_API_KEY)}&libraries=places&v=weekly&loading=async`;
   s.async = true;
+  s.defer = true;
   s.onload = wireAutocomplete;
   s.onerror = () => {
     console.warn("Google Maps script failed to load. Check API key restrictions / billing / enabled APIs.");
