@@ -909,7 +909,7 @@
           </div>
 
           
-          <div id="gmap" class="gmap" aria-label="Map preview"></div>
+          <div id="gmap" class="gmap" aria-label="Map preview"><div id="gmap-loading" style="display:flex;align-items:center;justify-content:center;height:100%;font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Arial;color:#6b7280;">Loading map…</div></div>
 
 <div class="note">Professional chauffeur • clean premium vehicles.</div>
 
@@ -2053,6 +2053,16 @@ function setMarker(kind, lat, lng, title){
 }
 
 function wireAutocomplete(){
+
+function getQcCorridorBounds(){
+  // Rough bounds covering Montreal <-> Mont-Tremblant <-> Ottawa corridor
+  // SW (lat,lng): 45.2, -74.2  |  NE (lat,lng): 46.6, -72.6
+  const sw = new google.maps.LatLng(45.2, -74.2);
+  const ne = new google.maps.LatLng(46.6, -72.6);
+  return new google.maps.LatLngBounds(sw, ne);
+}
+
+
   if (!window.google || !google.maps || !google.maps.places) return;
 
   const pickupInput  = document.getElementById("h_pickup");
@@ -2122,14 +2132,17 @@ tuneAutocomplete(dropoffAC);
 
   googlePlacesEnabled = true;
 
-  // Make sure the map initializes even before selecting
+  
+  // Initialize map immediately (prevents blank map area)
+  try { ensureMap(); } catch(e) {}
+// Make sure the map initializes even before selecting
   ensureMap();
 }
 
 function loadGoogleMapsScript(){
   if (!GOOGLE_PLACES_API_KEY || GOOGLE_PLACES_API_KEY.includes("PASTE_")) {
-    const el = document.getElementById('gmap-loading');
-    if (el) el.textContent = 'Google API key not set — using basic address search.';
+    const el = document.getElementById("gmap-loading");
+    if (el) el.textContent = "Google API key not set — using basic address search.";
     return;
   }
 
@@ -2144,8 +2157,8 @@ function loadGoogleMapsScript(){
   s.onload = wireAutocomplete;
   s.onerror = () => {
     console.warn("Google Maps script failed to load. Check API key restrictions / billing / enabled APIs.");
-    const el = document.getElementById('gmap-loading');
-    if (el) el.textContent = 'Map failed to load (check API key / billing).';
+    const el = document.getElementById("gmap-loading");
+    if (el) el.textContent = "Map failed to load (check API key / billing / enabled APIs).";
   };
   document.head.appendChild(s);
 }
