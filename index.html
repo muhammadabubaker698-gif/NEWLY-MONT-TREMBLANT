@@ -757,6 +757,20 @@
     .pill{ display:inline-flex; }
     .header-actions .btn{ display:none; }
   }
+
+/* Google map preview */
+.gmap{
+  width:100%;
+  height:220px;
+  border-radius:16px;
+  overflow:hidden;
+  background:#eef2f7;
+  margin:12px 0 10px;
+}
+@media (max-width: 520px){
+  .gmap{ height:200px; }
+}
+
 </style>
 </head>
 
@@ -894,7 +908,10 @@
             </select>
           </div>
 
-          <div class="note">Professional chauffeur • clean premium vehicles.</div>
+          
+          <div id="gmap" class="gmap" aria-label="Map preview"></div>
+
+<div class="note">Professional chauffeur • clean premium vehicles.</div>
 
           <button id="heroSearchBtn" class="search-btn" type="submit">Search</button>
           <div id="heroAlert" class="alert bad"></div>
@@ -1970,20 +1987,155 @@ s0.parentNode.insertBefore(s1,s0);
 <!--End of Tawk.to Script-->
 
 
-<!-- Google Places API Integration -->
+<!-- Google Places + Map (optional) -->
 <script>
+/**
+ * Paste your real key below.
+ * Keep it restricted in Google Cloud Console (HTTP referrer + only Places API + Maps JavaScript API).
+ */
 const GOOGLE_PLACES_API_KEY = "AIzaSyC5pxhDTNiTDjUuZq0Uro8W9iy5C_HB4rE";
 
-function loadGooglePlacesScript() {
-    if (!GOOGLE_PLACES_API_KEY) return;
+let googlePlacesEnabled = false;
+let gMap = null;
+let pickupMarker = null;
+let dropoffMarker = null;
 
-    const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_PLACES_API_KEY}&libraries=places`;
-    script.async = true;
-    document.head.appendChild(script);
+function ensureMap(){
+  if (!window.google || !google.maps) return null;
+  const el = document.getElementById("gmap");
+  if (!el) return null;
+  if (gMap) return gMap;
+
+  // Default center near Montreal
+  gMap = new google.maps.Map(el, {
+    center: { lat: 45.5019, lng: -73.5674 },
+    zoom: 10,
+    mapTypeControl: false,
+    streetViewControl: false,
+    fullscreenControl: false,
+  });
+  return gMap;
 }
 
-loadGooglePlacesScript();
+function setMarker(kind, lat, lng, title){
+  const map = ensureMap();
+  if (!map) return;
+
+  const pos = { lat, lng };
+  map.panTo(pos);
+
+  const markerOptions = { position: pos, map, title: title || "" };
+  if (kind === "pickup"){
+    if (pickupMarker) pickupMarker.setMap(null);
+    pickupMarker = new google.maps.Marker(markerOptions);
+  } else {
+    if (dropoffMarker) dropoffMarker.setMap(null);
+    dropoffMarker = new google.maps.Marker(markerOptions);
+  }
+
+  // If both are set, fit bounds
+  if (pickupMarker && dropoffMarker){
+    const bounds = new google.maps.LatLngBounds();
+    bounds.extend(pickupMarker.getPosition());
+    bounds.extend(dropoffMarker.getPosition());
+    map.fitBounds(bounds, 60);
+  } else {
+    map.setZoom(13);
+  }
+}
+
+function wireAutocomplete(){
+  if (!window.google || !google.maps || !google.maps.places) return;
+
+  const pickupInput  = document.getElementById("h_pickup");
+  const dropoffInput = document.getElementById("h_dropoff");
+  if (!pickupInput || !dropoffInput) return;
+
+  const options = {
+    componentRestrictions: { country: "ca" },
+    // You can tighten this more later if you want (Quebec only) using bounds + strictBounds.
+    fields: ["name", "formatted_address", "geometry"]
+  };
+
+  const pickupAC = new google.maps.places.Autocomplete(pickupInput, options);
+  const dropoffAC = new google.maps.places.Autocomplete(dropoffInput, options);
+
+  // Stop your existing (OSM/Photon) input listeners when Google is enabled
+  const stopOSM = (e) => { if (googlePlacesEnabled) e.stopImmediatePropagation(); };
+  pickupInput.addEventListener("input", stopOSM, true);
+  dropoffInput.addEventListener("input", stopOSM, true);
+
+  pickupAC.addListener("place_changed", () => {
+    const p = pickupAC.getPlace();
+    if (!p || !p.geometry) return;
+
+    const lat = p.geometry.location.lat();
+    const lng = p.geometry.location.lng();
+
+    const display = p.name ? (p.formatted_address ? `${p.name}, ${p.formatted_address}` : p.name) : (p.formatted_address || "");
+    if (display) pickupInput.value = display;
+
+    const hLat = document.getElementById("h_pickup_lat");
+    const hLng = document.getElementById("h_pickup_lng");
+    if (hLat) hLat.value = lat;
+    if (hLng) hLng.value = lng;
+
+    // Clear your custom list if present
+    const list = document.getElementById("h_pickup_list");
+    if (list) list.innerHTML = "";
+
+    setMarker("pickup", lat, lng, display);
+  });
+
+  dropoffAC.addListener("place_changed", () => {
+    const p = dropoffAC.getPlace();
+    if (!p || !p.geometry) return;
+
+    const lat = p.geometry.location.lat();
+    const lng = p.geometry.location.lng();
+
+    const display = p.name ? (p.formatted_address ? `${p.name}, ${p.formatted_address}` : p.name) : (p.formatted_address || "");
+    if (display) dropoffInput.value = display;
+
+    const hLat = document.getElementById("h_dropoff_lat");
+    const hLng = document.getElementById("h_dropoff_lng");
+    if (hLat) hLat.value = lat;
+    if (hLng) hLng.value = lng;
+
+    const list = document.getElementById("h_dropoff_list");
+    if (list) list.innerHTML = "";
+
+    setMarker("dropoff", lat, lng, display);
+  });
+
+  googlePlacesEnabled = true;
+
+  // Make sure the map initializes even before selecting
+  ensureMap();
+}
+
+function loadGoogleMapsScript(){
+  if (!GOOGLE_PLACES_API_KEY || GOOGLE_PLACES_API_KEY.includes("PASTE_")) return;
+
+  const existing = document.querySelector('script[data-google-maps="1"]');
+  if (existing) return;
+
+  const s = document.createElement("script");
+  s.dataset.googleMaps = "1";
+  s.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_PLACES_API_KEY}&libraries=places`;
+  s.async = true;
+  s.onload = wireAutocomplete;
+  s.onerror = () => {
+    console.warn("Google Maps script failed to load. Check API key restrictions / billing / enabled APIs.");
+  };
+  document.head.appendChild(s);
+}
+
+// Load after DOM is ready
+document.addEventListener("DOMContentLoaded", () => {
+  ensureMap();         // show the empty map area (placeholder background if Google not loaded)
+  loadGoogleMapsScript();
+});
 </script>
 
 </body>
