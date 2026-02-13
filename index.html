@@ -224,7 +224,7 @@
     background: #fff;
     box-shadow: 0 28px 70px rgba(0,0,0,.24);
     border: 1px solid rgba(11,18,32,.10);
-    overflow:hidden;
+    overflow: visible;
   }
   .tabs{
     display:flex;
@@ -308,7 +308,7 @@
     top: calc(100% - 8px);
     left:0;
     right:0;
-    z-index:30;
+    z-index: 99999;
     background:#fff;
     border:1px solid rgba(11,18,32,.12);
     border-radius: 12px;
@@ -1470,7 +1470,7 @@ function setupAutocomplete(inputId, listId, latId, lngId){
 
     const doSearch = async ()=>{
       const q = input.value.trim();
-      if (q.length < 2){
+      if (q.length < 3){
         clearAutocompleteList(list);
         return;
       }
@@ -1507,22 +1507,18 @@ function setupAutocomplete(inputId, listId, latId, lngId){
     };
 
     input.addEventListener("input", ()=>{
-      
-      if (window.googlePlacesEnabled) { clearAutocompleteList(list); return; }
-// if user edits manually after choosing a suggestion, clear coordinates
+      // if user edits manually after choosing a suggestion, clear coordinates
       clearCoords(latId, lngId);
 
       if (timer) clearTimeout(timer);
-      timer = setTimeout(doSearch, 80);
+      timer = setTimeout(doSearch, 300);
     });
 
     input.addEventListener("blur", ()=> setTimeout(()=> clearAutocompleteList(list), 60));
     input.addEventListener("focus", () => {
       // New session improves relevance and speed
       if (window.google && window.google.maps && window.google.maps.places) newSessionToken();
-      
-      if (window.googlePlacesEnabled) { clearAutocompleteList(list); return; }
-if (input.value.trim().length >= 2) doSearch();
+      if (input.value.trim().length >= 2) doSearch();
     });
 
     // close list on Esc
@@ -2078,7 +2074,7 @@ s0.parentNode.insertBefore(s1,s0);
  * Paste your real key below.
  * Keep it restricted in Google Cloud Console (HTTP referrer + only Places API + Maps JavaScript API).
  */
-const GOOGLE_MAPS_BROWSER_KEY = "AIzaSyB1v_rHuYsxchwEIrY6a4_v3PU3XH5zrp8"; // Paste your browser-restricted key here
+const GOOGLE_MAPS_BROWSER_KEY = "AIzaSyC5pxhDTNiTDjUuZq0Uro8W9iy5C_HB4rE"; // Browser-restricted key (Maps JavaScript API only)
 
 let googlePlacesEnabled = false;
 let gMap = null;
@@ -2230,8 +2226,12 @@ tuneAutocomplete(dropoffAC);
   });
 
   googlePlacesEnabled = true;
-  // Initialize map immediately
+
+  
+  // Initialize map immediately (prevents blank map area)
   try { ensureMap(); } catch(e) {}
+// Make sure the map initializes even before selecting
+  ensureMap();
 }
 
 function loadGoogleMapsScript() {
@@ -2250,19 +2250,14 @@ function loadGoogleMapsScript() {
 
   // Google will call this when the JS API is ready
   window.__initGoogleMapsPlaces = () => {
-    try {
-      ensureMap();
-      wireAutocomplete();
-    } catch(e) {
-      console.warn("Google Maps init failed", e);
-    }
+    try { wireAutocomplete(); } catch(e) { console.warn("wireAutocomplete failed", e); }
   };
 
   const s = document.createElement("script");
   s.dataset.googleMaps = "1";
   s.async = true;
   s.defer = true;
-  s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_MAPS_BROWSER_KEY)}&v=weekly&libraries=places&callback=__initGoogleMapsPlaces`;
+  s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_MAPS_BROWSER_KEY)}&v=weekly&loading=async&callback=__initGoogleMapsPlaces`;
   s.onerror = () => {
     console.warn("Google Maps script failed to load. Check API key restrictions / billing / enabled APIs.");
     if (el) el.textContent = "Map failed to load (check API key / billing / enabled APIs).";
