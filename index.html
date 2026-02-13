@@ -2074,9 +2074,9 @@ s0.parentNode.insertBefore(s1,s0);
  * Paste your real key below.
  * Keep it restricted in Google Cloud Console (HTTP referrer + only Places API + Maps JavaScript API).
  */
-const GOOGLE_MAPS_BROWSER_KEY = "AIzaSyC5pxhDTNiTDjUuZq0Uro8W9iy5C_HB4rE"; // Browser-restricted key (Maps JavaScript API only)
+const GOOGLE_MAPS_BROWSER_KEY = "AIzaSyB1v_rHuYsxchwEIrY6a4_v3PU3XH5zrp8"; // Browser-restricted key (Maps JavaScript API + Places + Directions)
 
-let googlePlacesEnabled = false;
+window.googlePlacesEnabled = false;
 let gMap = null;
 let pickupMarker = null;
 let dropoffMarker = null;
@@ -2178,7 +2178,7 @@ const dropoffAC = new google.maps.places.Autocomplete(dropoffInput, options);
   
 tuneAutocomplete(dropoffAC);
 // Stop your existing (OSM/Photon) input listeners when Google is enabled
-  const stopOSM = (e) => { if (googlePlacesEnabled) e.stopImmediatePropagation(); };
+  const stopOSM = (e) => { if (window.googlePlacesEnabled) e.stopImmediatePropagation(); };
   pickupInput.addEventListener("input", stopOSM, true);
   dropoffInput.addEventListener("input", stopOSM, true);
 
@@ -2225,7 +2225,7 @@ tuneAutocomplete(dropoffAC);
     setMarker("dropoff", lat, lng, display);
   });
 
-  googlePlacesEnabled = true;
+  window.googlePlacesEnabled = true;
 
   
   // Initialize map immediately (prevents blank map area)
