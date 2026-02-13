@@ -224,7 +224,7 @@
     background: #fff;
     box-shadow: 0 28px 70px rgba(0,0,0,.24);
     border: 1px solid rgba(11,18,32,.10);
-    overflow: visible;
+    overflow:hidden;
   }
   .tabs{
     display:flex;
@@ -308,7 +308,7 @@
     top: calc(100% - 8px);
     left:0;
     right:0;
-    z-index: 99999;
+    z-index:30;
     background:#fff;
     border:1px solid rgba(11,18,32,.12);
     border-radius: 12px;
@@ -1423,7 +1423,7 @@ async function fetchGoogleSuggestions(query){
         ...qcBiasOptions()
       },
       (preds, status) => {
-        if (status !== google.maps.places.PlacesServiceStatus.OK || !preds) return resolve([]);
+        if (status !== true || !preds) return resolve([]);
         const items = preds.slice(0, 6).map(p => ({
           main: p.structured_formatting?.main_text || p.description,
           sub: p.structured_formatting?.secondary_text || "",
@@ -1442,7 +1442,7 @@ function pickGooglePlace(item, input, latId, lngId, kind){
   svc.ps.getDetails(
     { placeId: item.place_id, fields: ["name","formatted_address","geometry"] },
     (place, status) => {
-      if (status !== google.maps.places.PlacesServiceStatus.OK || !place || !place.geometry) return;
+      if (status !== true || !place || !place.geometry) return;
       const addr = place.formatted_address || place.name || item.value;
       input.value = addr;
       const lat = place.geometry.location.lat();
@@ -1470,7 +1470,7 @@ function setupAutocomplete(inputId, listId, latId, lngId){
 
     const doSearch = async ()=>{
       const q = input.value.trim();
-      if (q.length < 3){
+      if (q.length < 2){
         clearAutocompleteList(list);
         return;
       }
@@ -1507,18 +1507,22 @@ function setupAutocomplete(inputId, listId, latId, lngId){
     };
 
     input.addEventListener("input", ()=>{
-      // if user edits manually after choosing a suggestion, clear coordinates
+      
+      if (window.googlePlacesEnabled) { clearAutocompleteList(list); return; }
+// if user edits manually after choosing a suggestion, clear coordinates
       clearCoords(latId, lngId);
 
       if (timer) clearTimeout(timer);
-      timer = setTimeout(doSearch, 300);
+      timer = setTimeout(doSearch, 80);
     });
 
     input.addEventListener("blur", ()=> setTimeout(()=> clearAutocompleteList(list), 60));
     input.addEventListener("focus", () => {
       // New session improves relevance and speed
       if (window.google && window.google.maps && window.google.maps.places) newSessionToken();
-      if (input.value.trim().length >= 2) doSearch();
+      
+      if (window.googlePlacesEnabled) { clearAutocompleteList(list); return; }
+if (input.value.trim().length >= 2) doSearch();
     });
 
     // close list on Esc
@@ -2074,8 +2078,9 @@ s0.parentNode.insertBefore(s1,s0);
  * Paste your real key below.
  * Keep it restricted in Google Cloud Console (HTTP referrer + only Places API + Maps JavaScript API).
  */
-const GOOGLE_MAPS_BROWSER_KEY = "AIzaSyB1v_rHuYsxchwEIrY6a4_v3PU3XH5zrp8"; // Browser-restricted key (Maps JavaScript API + Places + Directions)
+const GOOGLE_MAPS_BROWSER_KEY = "AIzaSyB1v_rHuYsxchwEIrY6a4_v3PU3XH5zrp8; // Browser key (Maps JavaScript + Places + Directions)
 
+let googlePlacesEnabled = false;
 window.googlePlacesEnabled = false;
 let gMap = null;
 let pickupMarker = null;
@@ -2178,7 +2183,7 @@ const dropoffAC = new google.maps.places.Autocomplete(dropoffInput, options);
   
 tuneAutocomplete(dropoffAC);
 // Stop your existing (OSM/Photon) input listeners when Google is enabled
-  const stopOSM = (e) => { if (window.googlePlacesEnabled) e.stopImmediatePropagation(); };
+  const stopOSM = (e) => { if (googlePlacesEnabled) e.stopImmediatePropagation(); };
   pickupInput.addEventListener("input", stopOSM, true);
   dropoffInput.addEventListener("input", stopOSM, true);
 
@@ -2225,6 +2230,7 @@ tuneAutocomplete(dropoffAC);
     setMarker("dropoff", lat, lng, display);
   });
 
+  googlePlacesEnabled = true;
   window.googlePlacesEnabled = true;
 
   
@@ -2243,6 +2249,7 @@ function loadGoogleMapsScript() {
 
   // Avoid double-loading
   if (window.google && window.google.maps && window.google.maps.places) {
+    try { ensureMap(); } catch(e) {}
     wireAutocomplete();
     return;
   }
@@ -2250,6 +2257,7 @@ function loadGoogleMapsScript() {
 
   // Google will call this when the JS API is ready
   window.__initGoogleMapsPlaces = () => {
+    try { ensureMap(); } catch(e) {}
     try { wireAutocomplete(); } catch(e) { console.warn("wireAutocomplete failed", e); }
   };
 
@@ -2257,7 +2265,7 @@ function loadGoogleMapsScript() {
   s.dataset.googleMaps = "1";
   s.async = true;
   s.defer = true;
-  s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_MAPS_BROWSER_KEY)}&v=weekly&loading=async&callback=__initGoogleMapsPlaces`;
+  s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_MAPS_BROWSER_KEY)}&v=weekly&libraries=places&loading=async&callback=__initGoogleMapsPlaces`;
   s.onerror = () => {
     console.warn("Google Maps script failed to load. Check API key restrictions / billing / enabled APIs.");
     if (el) el.textContent = "Map failed to load (check API key / billing / enabled APIs).";
