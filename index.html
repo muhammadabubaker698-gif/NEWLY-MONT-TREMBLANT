@@ -2134,7 +2134,6 @@ function findBookingInputs() {
   // Try common IDs first
   const byId = (id) => document.getElementById(id);
   const pickup =
-    byId("h_pickup") ||
     byId("pickup") || byId("from") || byId("fromInput") || byId("pickupInput") ||
     document.querySelector('input[placeholder*="From"]') ||
     document.querySelector('input[aria-label*="From"]') ||
@@ -2142,7 +2141,6 @@ function findBookingInputs() {
     document.querySelectorAll("input[type=text]")[0];
 
   const dropoff =
-    byId("h_dropoff") ||
     byId("dropoff") || byId("to") || byId("toInput") || byId("dropoffInput") ||
     document.querySelector('input[placeholder*="To"]') ||
     document.querySelector('input[aria-label*="To"]') ||
@@ -2153,8 +2151,6 @@ function findBookingInputs() {
 }
 
 function wireAutocomplete(){
-  // Prevent double-wiring
-  if (window.__placesWired) return;
 
 function getQcCorridorBounds(){
   // Rough bounds covering Montreal <-> Mont-Tremblant <-> Ottawa corridor
@@ -2185,10 +2181,6 @@ const dropoffAC = new google.maps.places.Autocomplete(dropoffInput, options);
 
   
 tuneAutocomplete(dropoffAC);
-// Stop your existing (OSM/Photon) input listeners when Google is enabled
-  const stopOSM = (e) => { if (window.googlePlacesEnabled) e.stopImmediatePropagation(); };
-  pickupInput.addEventListener("input", stopOSM, true);
-  dropoffInput.addEventListener("input", stopOSM, true);
 
   pickupAC.addListener("place_changed", () => {
     const p = pickupAC.getPlace();
@@ -2255,167 +2247,88 @@ tuneAutocomplete(dropoffAC);
   } catch(e) {}
 
   window.googlePlacesEnabled = true;
-  window.__placesWired = true;
-// Initialize map immediately (prevents blank map area)
+
+  
+  // Initialize map immediately (prevents blank map area)
   try { ensureMap(); } catch(e) {}
 // Make sure the map initializes even before selecting
   ensureMap();
 }
 
-function restoreInputs() {
+function loadGoogleMapsScript() {
+  const el = document.getElementById("gmap-loading");
+  if (!GOOGLE_MAPS_BROWSER_KEY || GOOGLE_MAPS_BROWSER_KEY.includes("PASTE_")) {
+    if (el) el.textContent = "Google Maps browser key not set — using basic address search.";
+    return;
+  }
+
+
+  // Disable inputs until Places is ready (prevents "type then click again" issue)
   try {
     const { pickup: _p, dropoff: _d } = findBookingInputs();
     [_p, _d].forEach((el) => {
       if (!el) return;
-      el.disabled = false;
-      if (el.dataset.prevPlaceholder !== undefined) {
-        el.setAttribute("placeholder", el.dataset.prevPlaceholder || "");
-      } else {
-        const ph = el.getAttribute("placeholder") || "";
-        if (ph.toLowerCase().includes("loading google suggestions")) {
-          // fallback: restore to a sensible default
-          el.setAttribute("placeholder", el.id === "h_dropoff" ? "To" : "From");
-        }
-      }
-      delete el.dataset.placesPending;
-      delete el.dataset.prevPlaceholder;
+      el.dataset.placesPending = "1";
+      el.dataset.prevPlaceholder = el.getAttribute("placeholder") || "";
+      el.setAttribute("placeholder", "Loading Google suggestions...");
+      el.disabled = true;
     });
-  } catch (e) {}
-}
+  } catch(e) {}
 
-function loadGoogleMapsScript() {
-  const el = document.getElementById("gmap-loading");
-
-  // If key is missing, don't block the UI
-  if (!GOOGLE_MAPS_BROWSER_KEY || GOOGLE_MAPS_BROWSER_KEY.includes("PASTE_")) {
-    if (el) el.textContent = "Google Maps browser key not set — using basic address search.";
-    restoreInputs();
-    return;
-  }
-
-  // If google + places already available, init immediately
+  // Avoid double-loading
   if (window.google && window.google.maps && window.google.maps.places) {
-    try {
-      ensureMap();
-      wireAutocomplete();
-    } catch (e) {
-      console.warn("Google already loaded but init failed", e);
-    } finally {
-      restoreInputs();
-    }
+    wireAutocomplete();
     return;
   }
+  if (document.querySelector('script[data-google-maps="1"]')) return;
 
-  // If script tag already exists, don't add another — but DO start a watchdog
-  const existing = document.querySelector('script[data-google-maps="1"]');
-  if (existing) {
-    startPlacesWatchdog();
-    return;
-  }
-
-  // Disable inputs until Places is ready
-  try {
-    const { pickup: _p, dropoff: _d } = findBookingInputs();
-    [_p, _d].forEach((inp) => {
-      if (!inp) return;
-      inp.dataset.placesPending = "1";
-      // Only store the placeholder once (avoid overwriting it with the loading text)
-      if (inp.dataset.prevPlaceholder === undefined) {
-        inp.dataset.prevPlaceholder = inp.getAttribute("placeholder") || "";
-      }
-      inp.setAttribute("placeholder", "Loading Google suggestions...");
-      inp.disabled = true;
-    });
-  } catch (e) {}
-
-  // Google will call this when ready (but we'll also backstop with onload)
+  // Google will call this when the JS API is ready
   window.__initGoogleMapsPlaces = () => {
+    try { wireAutocomplete(); } catch(e) { console.warn("wireAutocomplete failed", e); }
+
+    // Re-enable inputs and trigger suggestions if user already typed
     try {
-      ensureMap();
-      wireAutocomplete();
-    } catch (e) {
-      console.warn("Google init failed", e);
-    } finally {
-      restoreInputs();
-    }
+      const { pickup: _p, dropoff: _d } = findBookingInputs();
+      [_p, _d].forEach((el) => {
+        if (!el) return;
+        el.disabled = false;
+        if (el.dataset.prevPlaceholder) el.setAttribute("placeholder", el.dataset.prevPlaceholder);
+        delete el.dataset.placesPending;
+
+        // If user typed before Places was ready, nudge Google Autocomplete to show suggestions
+        if (el.value && el.value.trim().length >= 3) {
+          const evInput = new Event("input", { bubbles: true });
+          const evKeyUp = new KeyboardEvent("keyup", { bubbles: true });
+          el.dispatchEvent(evInput);
+          el.dispatchEvent(evKeyUp);
+        }
+      });
+    } catch(e) {}
   };
 
   const s = document.createElement("script");
   s.dataset.googleMaps = "1";
   s.async = true;
   s.defer = true;
-  s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(
-    GOOGLE_MAPS_BROWSER_KEY
-  )}&v=weekly&libraries=places&callback=__initGoogleMapsPlaces`;
-
-  // BACKSTOP: if callback doesn't fire, onload will
-  s.onload = () => {
-    try {
-      if (window.google && window.google.maps) {
-        // Create map even if Places is missing
-        try { ensureMap(); } catch(e) {}
-
-        if (window.google.maps.places) {
-          // If callback didn’t run for any reason, run it now
-          if (typeof window.__initGoogleMapsPlaces === "function") {
-            window.__initGoogleMapsPlaces();
-          }
-        } else {
-          console.warn("Maps loaded but Places is missing. Enable Places API or check key restrictions.");
-          if (el) el.textContent = "Places not available (enable Places API / check key restrictions).";
-          restoreInputs();
-        }
-      } else {
-        restoreInputs();
-      }
-    } catch (e) {
-      console.warn("onload init failed", e);
-      restoreInputs();
-    }
-  };
-
+  s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_MAPS_BROWSER_KEY)}&v=weekly&libraries=places&loading=async&callback=__initGoogleMapsPlaces`;
   s.onerror = () => {
     console.warn("Google Maps script failed to load. Check API key restrictions / billing / enabled APIs.");
     if (el) el.textContent = "Map failed to load (check API key / billing / enabled APIs).";
-    restoreInputs();
   };
-
   document.head.appendChild(s);
-
-  // WATCHDOG: never allow “Loading Google suggestions…” to stay forever
-  startPlacesWatchdog();
-
-  function startPlacesWatchdog() {
-    window.__placesWatchdogStarted = window.__placesWatchdogStarted || false;
-    if (window.__placesWatchdogStarted) return;
-    window.__placesWatchdogStarted = true;
-
-    setTimeout(() => {
-      const { pickup: _p, dropoff: _d } = findBookingInputs();
-      const pending =
-        (_p && _p.dataset && _p.dataset.placesPending) ||
-        (_d && _d.dataset && _d.dataset.placesPending);
-
-      if (!pending) return;
-
-      // If Places exists, force init; otherwise fall back (unlock inputs)
-      if (window.google && window.google.maps && window.google.maps.places) {
-        try {
-          if (typeof window.__initGoogleMapsPlaces === "function") window.__initGoogleMapsPlaces();
-        } catch (e) {
-          restoreInputs();
-        }
-      } else {
-        if (el) el.textContent = "Google Places not available — using basic address search.";
-        restoreInputs();
-      }
-    }, 6000);
-  }
 }
 
 
 // Load after DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
+  // Disable inputs briefly until Google Places wiring is ready.
+  // This prevents the "type, no suggestions, click again" behavior when users type before Places finishes loading.
+  try {
+    const { pickup, dropoff } = findBookingInputs();
+    if (pickup) pickup.disabled = true;
+    if (dropoff) dropoff.disabled = true;
+  } catch(e) {}
+
   ensureMap();         // show the empty map area (placeholder background if Google not loaded)
   loadGoogleMapsScript();
 });
