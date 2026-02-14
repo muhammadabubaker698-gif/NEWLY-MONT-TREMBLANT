@@ -2151,6 +2151,9 @@ function findBookingInputs() {
 }
 
 function wireAutocomplete(){
+  // Prevent double-wiring
+  if (window.__placesWired) return;
+
 
 function getQcCorridorBounds(){
   // Rough bounds covering Montreal <-> Mont-Tremblant <-> Ottawa corridor
@@ -2247,6 +2250,7 @@ tuneAutocomplete(dropoffAC);
   } catch(e) {}
 
   window.googlePlacesEnabled = true;
+  window.__placesWired = true;
 
   
   // Initialize map immediately (prevents blank map area)
@@ -2257,53 +2261,56 @@ tuneAutocomplete(dropoffAC);
 
 function loadGoogleMapsScript() {
   const el = document.getElementById("gmap-loading");
+
+  // If key is missing, don't block the UI
   if (!GOOGLE_MAPS_BROWSER_KEY || GOOGLE_MAPS_BROWSER_KEY.includes("PASTE_")) {
     if (el) el.textContent = "Google Maps browser key not set — using basic address search.";
+    restoreInputs();
     return;
   }
 
+  // If google + places already available, init immediately
+  if (window.google && window.google.maps && window.google.maps.places) {
+    try {
+      ensureMap();
+      wireAutocomplete();
+    } catch (e) {
+      console.warn("Google already loaded but init failed", e);
+    } finally {
+      restoreInputs();
+    }
+    return;
+  }
 
-  // Disable inputs until Places is ready (prevents "type then click again" issue)
+  // If script tag already exists, don't add another — but DO start a watchdog
+  const existing = document.querySelector('script[data-google-maps="1"]');
+  if (existing) {
+    startPlacesWatchdog();
+    return;
+  }
+
+  // Disable inputs until Places is ready
   try {
     const { pickup: _p, dropoff: _d } = findBookingInputs();
-    [_p, _d].forEach((el) => {
-      if (!el) return;
-      el.dataset.placesPending = "1";
-      el.dataset.prevPlaceholder = el.getAttribute("placeholder") || "";
-      el.setAttribute("placeholder", "Loading Google suggestions...");
-      el.disabled = true;
+    [_p, _d].forEach((inp) => {
+      if (!inp) return;
+      inp.dataset.placesPending = "1";
+      inp.dataset.prevPlaceholder = inp.getAttribute("placeholder") || "";
+      inp.setAttribute("placeholder", "Loading Google suggestions...");
+      inp.disabled = true;
     });
-  } catch(e) {}
-
-  // Avoid double-loading
-  if (window.google && window.google.maps && window.google.maps.places) {
-    wireAutocomplete();
-    return;
-  }
-  if (document.querySelector('script[data-google-maps="1"]')) return;
+  } catch (e) {}
 
   // Google will call this when the JS API is ready
   window.__initGoogleMapsPlaces = () => {
-    try { wireAutocomplete(); } catch(e) { console.warn("wireAutocomplete failed", e); }
-
-    // Re-enable inputs and trigger suggestions if user already typed
     try {
-      const { pickup: _p, dropoff: _d } = findBookingInputs();
-      [_p, _d].forEach((el) => {
-        if (!el) return;
-        el.disabled = false;
-        if (el.dataset.prevPlaceholder) el.setAttribute("placeholder", el.dataset.prevPlaceholder);
-        delete el.dataset.placesPending;
-
-        // If user typed before Places was ready, nudge Google Autocomplete to show suggestions
-        if (el.value && el.value.trim().length >= 3) {
-          const evInput = new Event("input", { bubbles: true });
-          const evKeyUp = new KeyboardEvent("keyup", { bubbles: true });
-          el.dispatchEvent(evInput);
-          el.dispatchEvent(evKeyUp);
-        }
-      });
-    } catch(e) {}
+      ensureMap();                 // create the map now that google exists
+      wireAutocomplete();
+    } catch (e) {
+      console.warn("Google init failed", e);
+    } finally {
+      restoreInputs();             // always unlock
+    }
   };
 
   const s = document.createElement("script");
@@ -2311,13 +2318,62 @@ function loadGoogleMapsScript() {
   s.async = true;
   s.defer = true;
   s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_MAPS_BROWSER_KEY)}&v=weekly&libraries=places&loading=async&callback=__initGoogleMapsPlaces`;
-  s.onerror = () => {
-    console.warn("Google Maps script failed to load. Check API key restrictions / billing / enabled APIs.");
-    if (el) el.textContent = "Map failed to load (check API key / billing / enabled APIs).";
-  };
-  document.head.appendChild(s);
-}
 
+  // BACKSTOP: Safari sometimes doesn't fire callback reliably — onload will
+  s.onload = () => {
+    try {
+      // If callback didn't run, this will initialize map + autocomplete
+      if (window.google && window.google.maps) {
+        if (typeof window.__initGoogleMapsPlaces === "function") {
+          window.__initGoogleMapsPlaces();
+        } else {
+          // At least render map
+          ensureMap();
+        }
+      }
+    } catch (e) {
+      console.warn("Google onload init failed", e);
+      restoreInputs();
+    }
+  };
+
+  s.onerror = () => {
+    console.warn("Google Maps failed to load (key/billing/referrer/APIs). Falling back.");
+    if (el) el.textContent = "Map failed to load — using basic address search.";
+    restoreInputs();               // IMPORTANT: unlock on failure
+  };
+
+  document.head.appendChild(s);
+
+  // WATCHDOG: never allow “Loading Google suggestions…” to stay forever
+  startPlacesWatchdog();
+
+  function startPlacesWatchdog() {
+    window.__placesWatchdogStarted = window.__placesWatchdogStarted || false;
+    if (window.__placesWatchdogStarted) return;
+    window.__placesWatchdogStarted = true;
+
+    setTimeout(() => {
+      const { pickup: _p, dropoff: _d } = findBookingInputs();
+      const pending =
+        (_p && _p.dataset && _p.dataset.placesPending) ||
+        (_d && _d.dataset && _d.dataset.placesPending);
+
+      if (!pending) return;
+
+      if (window.google && window.google.maps && window.google.maps.places) {
+        try {
+          if (typeof window.__initGoogleMapsPlaces === "function") window.__initGoogleMapsPlaces();
+        } catch (e) {
+          restoreInputs();
+        }
+      } else {
+        if (el) el.textContent = "Google Places not available — using basic address search.";
+        restoreInputs();
+      }
+    }, 6000);
+  }
+}
 
 // Load after DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
