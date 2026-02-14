@@ -1469,7 +1469,7 @@ async function fetchGoogleSuggestions(query){
     svc.ac.getPlacePredictions(
       {
         input: query,
-        componentRestrictions: { country: "ca" },
+        componentRestrictions: { country: ["ca","us"] },
         locationBias: getQcCorridorBounds(),
         ...qcBiasOptions()
       },
@@ -2381,10 +2381,9 @@ function findBookingInputs() {
 
 
 function getQcCorridorBounds(){
-  // Rough bounds covering Montreal <-> Mont-Tremblant <-> Ottawa corridor
-  // SW (lat,lng): 45.2, -74.2  |  NE (lat,lng): 46.6, -72.6
-  const sw = new google.maps.LatLng(45.2, -74.2);
-  const ne = new google.maps.LatLng(46.6, -72.6);
+  // Broad bounds covering Canada + USA (bias only; not strict)
+  const sw = new google.maps.LatLng(24.396308, -168.0); // southern US, west (incl. Alaska)
+  const ne = new google.maps.LatLng(83.1139, -52.0);   // northern Canada, east
   return new google.maps.LatLngBounds(sw, ne);
 }
 
@@ -2402,7 +2401,7 @@ function wireAutocomplete(){
 if (!pickupInput || !dropoffInput) return;
 
   const options = {
-    componentRestrictions: { country: "ca" },
+    componentRestrictions: { country: ["ca","us"] },
     bounds: getQcCorridorBounds(),
     strictBounds: false,
     fields: ["name", "formatted_address", "geometry"]
@@ -2679,7 +2678,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function tuneAutocomplete(ac) {
   if (!ac) return;
   // Restrict results to Canada (remove if you want worldwide)
-  ac.setComponentRestrictions({ country: "ca" });
+  ac.setComponentRestrictions({ country: ["ca","us"] });
   // Ask only for what we need (reduces payload and speeds response)
   if (ac.setFields) ac.setFields(["place_id", "formatted_address", "geometry", "name"]);
   // Prefer establishments (hotels/businesses) + addresses
@@ -2778,9 +2777,9 @@ function newSessionToken(){
 }
 
 function getQcCorridorBounds(){
-  // Bias toward Montreal <-> Mont-Tremblant corridor
-  const sw = new google.maps.LatLng(45.2, -74.2);
-  const ne = new google.maps.LatLng(46.6, -72.6);
+  // Broad bounds covering Canada + USA (bias only; not strict)
+  const sw = new google.maps.LatLng(24.396308, -168.0); // southern US, west (incl. Alaska)
+  const ne = new google.maps.LatLng(83.1139, -52.0);   // northern Canada, east
   return new google.maps.LatLngBounds(sw, ne);
 }
 
