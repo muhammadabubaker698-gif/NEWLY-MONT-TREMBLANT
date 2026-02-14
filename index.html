@@ -1212,12 +1212,15 @@
   function formatMoney(n){
     if (!Number.isFinite(Number(n))) return "—";
     return "CA$" + Math.round(Number(n));
-  
+  }
 
   function getRouteNumbers(){
     const distanceM = Number(document.getElementById("h_distance_m")?.value || 0);
     const durationS = Number(document.getElementById("h_duration_s")?.value || 0);
-    return { distanceM: Number.isFinite(distanceM)?distanceM:0, durationS: Number.isFinite(durationS)?durationS:0 };
+    return {
+      distanceM: Number.isFinite(distanceM) ? distanceM : 0,
+      durationS: Number.isFinite(durationS) ? durationS : 0
+    };
   }
 
   function vehiclePriceEstimate(vehicleId, distanceM, durationS){
@@ -1241,7 +1244,6 @@
 
     return Math.round(Math.max(minPrice, total));
   }
-}
 
   function buildTimeOptions(stepMinutes = 5, selectId){
     const timeEl = document.getElementById(selectId);
@@ -2357,7 +2359,8 @@ function updateRouteAndEstimate(){
 
 
 function ensureMap(){
-  if (!window.google || !google.maps) return null;
+  try{
+    if (!window.google || !google.maps || typeof google.maps.Map !== "function") return null;
   const el = document.getElementById("gmap");
   if (!el) return null;
   if (gMap) return gMap;
@@ -2372,6 +2375,7 @@ function ensureMap(){
   });
   const ld=document.getElementById('gmap-loading'); if(ld) ld.style.display='none';
   return gMap;
+  }catch(e){ console.warn("ensureMap failed", e); return null; }
 }
 
 function setMarker(kind, lat, lng, title){
