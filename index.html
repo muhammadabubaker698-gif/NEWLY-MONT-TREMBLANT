@@ -774,6 +774,42 @@
 
 /* Google Places dropdown */
 .pac-container{z-index:999999 !important;}
+
+/* Route summary */
+.route-info{
+  margin-top:10px;
+  padding:10px 12px;
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:14px;
+  background: rgba(255,255,255,.88);
+  backdrop-filter: blur(6px);
+}
+.route-info .ri-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  font-size:14px;
+  line-height:1.25;
+  padding:4px 0;
+}
+.route-info .ri-row span{ color:#6b7280; }
+.route-info .ri-row strong{ font-weight:700; color:#111827; }
+.route-info .ri-badges{ display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+.route-info .ri-badge{
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:12px; font-weight:600;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid rgba(0,0,0,.08);
+  background:#fff;
+}
+
+/* Mobile keyboard UX: avoid iOS zoom + better keyboard */
+#h_pickup, #h_dropoff{
+  font-size:16px; /* prevents iOS zoom */
+}
+
 </style>
 
 <link rel="preconnect" href="https://maps.googleapis.com">
@@ -837,6 +873,13 @@
           <input type="hidden" id="h_pickup_lng" value="" />
           <input type="hidden" id="h_dropoff_lat" value="" />
           <input type="hidden" id="h_dropoff_lng" value="" />
+
+          <!-- route + pricing -->
+          <input type="hidden" id="h_distance_m" value="" />
+          <input type="hidden" id="h_duration_s" value="" />
+          <input type="hidden" id="h_price_estimate" value="" />
+          <input type="hidden" id="h_pickup_airport" value="" />
+          <input type="hidden" id="h_dropoff_airport" value="" />
 
           <div id="selectedVehicleBanner" class="selected-vehicle" style="display:none;">
             <div class="selected-vehicle-info">
@@ -916,6 +959,13 @@
 
           
           <div id="gmap" class="gmap" aria-label="Map preview"><div id="gmap-loading" style="display:flex;align-items:center;justify-content:center;height:100%;font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Arial;color:#6b7280;">Loading map…</div></div>
+
+          <div id="routeInfo" class="route-info" aria-live="polite">
+            <div class="ri-row"><span>Distance</span><strong id="riDistance">—</strong></div>
+            <div class="ri-row"><span>Estimated time</span><strong id="riDuration">—</strong></div>
+            <div class="ri-row"><span>Estimated price</span><strong id="riPrice">—</strong></div>
+            <div class="ri-badges" id="riBadges"></div>
+          </div>
 
 <div class="note">Professional chauffeur • clean premium vehicles.</div>
 
@@ -1420,6 +1470,7 @@ async function fetchGoogleSuggestions(query){
       {
         input: query,
         componentRestrictions: { country: "ca" },
+        locationBias: getQcCorridorBounds(),
         ...qcBiasOptions()
       },
       (preds, status) => {
@@ -1449,6 +1500,7 @@ function pickGooglePlace(item, input, latId, lngId, kind){
       const lng = place.geometry.location.lng();
       setCoords(latId, lngId, lat, lng);
       setMarker(kind, lat, lng, place.name || addr);
+      try { updateRouteAndEstimate(); } catch(e) {}
     }
   );
 }
@@ -1465,6 +1517,7 @@ function setupAutocomplete(inputId, listId, latId, lngId){
       input.value = item.value;
       setCoords(latId, lngId, item.lat, item.lng);
       if (window.google && google.maps) setMarker((inputId.includes('pickup')||inputId.includes('from'))?'pickup':'dropoff', item.lat, item.lng, item.value);
+      try { updateRouteAndEstimate(); } catch(e) {}
 
     };
 
@@ -2084,6 +2137,172 @@ window.googlePlacesEnabled = false;
 let gMap = null;
 let pickupMarker = null;
 let dropoffMarker = null;
+let directionsService = null;
+let directionsRenderer = null;
+
+// Known airports (add more anytime)
+const KNOWN_AIRPORTS = [
+  { code: "YUL", name: "Montréal–Trudeau International Airport", lat: 45.457714, lng: -73.749908 },
+  { code: "YOW", name: "Ottawa International Airport", lat: 45.3225, lng: -75.6692 },
+  { code: "YTZ", name: "Toronto Billy Bishop Airport", lat: 43.6275, lng: -79.3962 },
+  { code: "YYZ", name: "Toronto Pearson International Airport", lat: 43.6777, lng: -79.6248 }
+];
+
+// Pricing knobs (point-to-point estimate)
+const PRICING = {
+  base: 25,        // CAD
+  perKm: 2.40,     // CAD per km
+  perMin: 0.55,    // CAD per minute
+  minFare: 95,     // minimum booking estimate
+  airportSurcharge: 15
+};
+
+function haversineKm(lat1, lon1, lat2, lon2){
+  const R = 6371;
+  const toRad = (d)=> d * Math.PI / 180;
+  const dLat = toRad(lat2-lat1);
+  const dLon = toRad(lon2-lon1);
+  const a =
+    Math.sin(dLat/2)**2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon/2)**2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+function detectAirport(lat, lng){
+  let best = null;
+  let bestKm = Infinity;
+  for (const a of KNOWN_AIRPORTS){
+    const km = haversineKm(lat, lng, a.lat, a.lng);
+    if (km < bestKm){
+      bestKm = km;
+      best = a;
+    }
+  }
+  // within ~2.5km counts as airport pickup/dropoff
+  if (best && bestKm <= 2.5) return best;
+  return null;
+}
+
+function fmtDistance(m){
+  if (!Number.isFinite(m)) return "—";
+  const km = m/1000;
+  return km >= 10 ? `${km.toFixed(0)} km` : `${km.toFixed(1)} km`;
+}
+function fmtDuration(s){
+  if (!Number.isFinite(s)) return "—";
+  const min = Math.round(s/60);
+  const h = Math.floor(min/60);
+  const m = min%60;
+  if (h <= 0) return `${m} min`;
+  return `${h}h ${m}m`;
+}
+function roundTo(x, step){
+  return Math.round(x/step)*step;
+}
+function computePrice(distanceM, durationS, pickupAirport, dropoffAirport){
+  const km = (distanceM||0)/1000;
+  const min = (durationS||0)/60;
+  let price = PRICING.base + km*PRICING.perKm + min*PRICING.perMin;
+  if (pickupAirport || dropoffAirport) price += PRICING.airportSurcharge;
+  price = Math.max(price, PRICING.minFare);
+  price = roundTo(price, 5); // round to nearest $5 like many limo services
+  return price;
+}
+
+function setRouteUI({distanceM=null, durationS=null, price=null, badges=[]}={}){
+  const dEl = document.getElementById("riDistance");
+  const tEl = document.getElementById("riDuration");
+  const pEl = document.getElementById("riPrice");
+  const bEl = document.getElementById("riBadges");
+  if (dEl) dEl.textContent = (distanceM==null? "—" : fmtDistance(distanceM));
+  if (tEl) tEl.textContent = (durationS==null? "—" : fmtDuration(durationS));
+  if (pEl) pEl.textContent = (price==null? "—" : `$${Number(price).toFixed(0)} CAD`);
+  if (bEl){
+    bEl.innerHTML = "";
+    (badges||[]).forEach((txt)=>{
+      const chip = document.createElement("div");
+      chip.className = "ri-badge";
+      chip.textContent = txt;
+      bEl.appendChild(chip);
+    });
+  }
+}
+
+function ensureDirections(){
+  const map = ensureMap();
+  if (!map || !window.google || !google.maps) return null;
+  if (!directionsService) directionsService = new google.maps.DirectionsService();
+  if (!directionsRenderer){
+    directionsRenderer = new google.maps.DirectionsRenderer({
+      map,
+      suppressMarkers: true,
+      preserveViewport: true
+    });
+  } else {
+    directionsRenderer.setMap(map);
+  }
+  return { directionsService, directionsRenderer };
+}
+
+function getLatLngFromHidden(prefix){
+  const lat = Number((document.getElementById(`h_${prefix}_lat`)||{}).value);
+  const lng = Number((document.getElementById(`h_${prefix}_lng`)||{}).value);
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+  return { lat, lng };
+}
+
+function updateRouteAndEstimate(){
+  const p = getLatLngFromHidden("pickup");
+  const d = getLatLngFromHidden("dropoff");
+  if (!p || !d){
+    // Clear route UI when incomplete
+    setRouteUI({distanceM:null, durationS:null, price:null, badges:[]});
+    const dr = document.getElementById("h_distance_m"); if (dr) dr.value = "";
+    const du = document.getElementById("h_duration_s"); if (du) du.value = "";
+    const pe = document.getElementById("h_price_estimate"); if (pe) pe.value = "";
+    return;
+  }
+
+  // Airport detection
+  const pA = detectAirport(p.lat, p.lng);
+  const dA = detectAirport(d.lat, d.lng);
+  const badges = [];
+  if (pA) badges.push(`Pickup: ${pA.code}`);
+  if (dA) badges.push(`Dropoff: ${dA.code}`);
+  const hPA = document.getElementById("h_pickup_airport"); if (hPA) hPA.value = pA ? pA.code : "";
+  const hDA = document.getElementById("h_dropoff_airport"); if (hDA) hDA.value = dA ? dA.code : "";
+
+  const ds = ensureDirections();
+  if (!ds) return;
+
+  ds.directionsService.route(
+    {
+      origin: p,
+      destination: d,
+      travelMode: google.maps.TravelMode.DRIVING
+    },
+    (result, status) => {
+      if (status !== "OK" || !result || !result.routes || !result.routes[0] || !result.routes[0].legs || !result.routes[0].legs[0]){
+        console.warn("Directions failed:", status);
+        setRouteUI({distanceM:null, durationS:null, price:null, badges});
+        return;
+      }
+      ds.directionsRenderer.setDirections(result);
+
+      const leg = result.routes[0].legs[0];
+      const distanceM = leg.distance ? leg.distance.value : null;
+      const durationS = leg.duration ? leg.duration.value : null;
+
+      const price = computePrice(distanceM||0, durationS||0, !!pA, !!dA);
+      setRouteUI({distanceM, durationS, price, badges});
+
+      const dr = document.getElementById("h_distance_m"); if (dr) dr.value = String(distanceM ?? "");
+      const du = document.getElementById("h_duration_s"); if (du) du.value = String(durationS ?? "");
+      const pe = document.getElementById("h_price_estimate"); if (pe) pe.value = String(price ?? "");
+    }
+  );
+}
+
 
 function ensureMap(){
   if (!window.google || !google.maps) return null;
@@ -2128,6 +2347,9 @@ function setMarker(kind, lat, lng, title){
   } else {
     map.setZoom(13);
   }
+
+  // Update route estimate if both endpoints exist
+  try { updateRouteAndEstimate(); } catch(e) {}
 }
 
 function findBookingInputs() {
@@ -2157,10 +2379,6 @@ function findBookingInputs() {
 }
 
 
-function wireAutocomplete(){
-  // Prevent double-wiring
-  if (window.__placesWired) return;
-
 
 function getQcCorridorBounds(){
   // Rough bounds covering Montreal <-> Mont-Tremblant <-> Ottawa corridor
@@ -2169,6 +2387,11 @@ function getQcCorridorBounds(){
   const ne = new google.maps.LatLng(46.6, -72.6);
   return new google.maps.LatLngBounds(sw, ne);
 }
+
+function wireAutocomplete(){
+  // Prevent double-wiring
+  if (window.__placesWired) return;
+
 
 
   if (!window.google || !google.maps || !google.maps.places) return;
@@ -2180,7 +2403,8 @@ if (!pickupInput || !dropoffInput) return;
 
   const options = {
     componentRestrictions: { country: "ca" },
-    // You can tighten this more later if you want (Quebec only) using bounds + strictBounds.
+    bounds: getQcCorridorBounds(),
+    strictBounds: false,
     fields: ["name", "formatted_address", "geometry"]
   };
 
@@ -2212,6 +2436,7 @@ tuneAutocomplete(dropoffAC);
     if (list) list.innerHTML = "";
 
     setMarker("pickup", lat, lng, display);
+    try { updateRouteAndEstimate(); } catch(e) {}
   });
 
   dropoffAC.addListener("place_changed", () => {
@@ -2233,6 +2458,7 @@ tuneAutocomplete(dropoffAC);
     if (list) list.innerHTML = "";
 
     setMarker("dropoff", lat, lng, display);
+    try { updateRouteAndEstimate(); } catch(e) {}
   });
   // Re-enable inputs now that Google Places is ready.
   try {
@@ -2425,6 +2651,23 @@ document.addEventListener("DOMContentLoaded", () => {
     if (pickup) pickup.disabled = true;
     if (dropoff) dropoff.disabled = true;
   } catch(e) {}
+
+  // Mobile keyboard UX
+  try {
+    const { pickup, dropoff } = findBookingInputs();
+    [pickup, dropoff].forEach((el)=>{
+      if (!el) return;
+      el.setAttribute("inputmode","search");
+      el.setAttribute("enterkeyhint","next");
+      el.setAttribute("autocapitalize","none");
+      el.setAttribute("autocomplete","off");
+      el.setAttribute("autocorrect","off");
+      el.setAttribute("spellcheck","false");
+    });
+  } catch(e) {}
+
+  // Initial UI state
+  try { setRouteUI({distanceM:null, durationS:null, price:null, badges:[]}); } catch(e) {}
 
   ensureMap();         // show the empty map area (placeholder background if Google not loaded)
   loadGoogleMapsScript();
