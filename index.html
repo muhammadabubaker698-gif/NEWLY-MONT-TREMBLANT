@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Mont Tremblant Limo Services | Luxury Chauffeur</title>
-<meta name="description" content="Luxury chauffeur service in Mont-Tremblant. Escalade, Suburban, Denali, QX60, Tesla & Sprinter. Minimum 3 hours. Call or WhatsApp +1 (514) 293-3170." />
+<meta name="description" content="Luxury chauffeur service in Mont-Tremblant. Escalade, Suburban, Denali, QX60, Tesla & Sprinter. Minimum 1 hour for hourly bookings. Vehicle minimum fares apply. Call or WhatsApp +1 (514) 293-3170." />
 <link rel="canonical" href="https://monttremblantlimoservices.com/" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,7 +18,7 @@
   "name":"Mont Tremblant Limo Services",
   "url":"https://monttremblantlimoservices.com/",
   "telephone":"+1-514-293-3170",
-  "description":"Luxury chauffeur service in Mont-Tremblant. Premium vehicles for airport transfers, hourly bookings, ski trips, corporate travel, and special events. Minimum 3 hours.",
+  "description":"Luxury chauffeur service in Mont-Tremblant. Premium vehicles for airport transfers, hourly bookings, ski trips, corporate travel, and special events. Minimum 1 hour for hourly bookings. Vehicle minimum fares apply.",
   "areaServed":[
     {"@type":"City","name":"Mont-Tremblant"},
     {"@type":"City","name":"Montréal"},
@@ -231,6 +231,8 @@
     background: #fff;
     border-bottom: 1px solid rgba(11,18,32,.08);
   }
+  .tabhint{margin-top:10px; font-size:13px; color: rgba(11,18,32,.72); line-height:1.35;}
+  .tabhint b{color: rgba(11,18,32,.92);} 
   .tab{
     flex:1;
     padding: 14px 14px;
@@ -856,8 +858,9 @@
     <aside id="booking" class="booking-card" aria-label="Search booking">
       <div class="tabs">
         <button id="tabOneWay" class="tab active" type="button" aria-selected="true">One way</button>
-        <button id="tabHourly" class="tab" type="button" aria-selected="false">By the hour</button>
+        <button id="tabHourly" class="tab" type="button" aria-selected="false">By the hour (min 1h)</button>
       </div>
+      <div class="tabhint">Need a chauffeur for events, shopping or a night out? Choose <b>By the hour</b> (minimum 1 hour).</div>
 
       <div class="book-body">
         <div class="stepbar" aria-hidden="true">
@@ -949,11 +952,18 @@
               <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z" stroke="currentColor" stroke-width="2"/>
             </svg>
             <select id="h_hours">
+              <option value="1">1 hour</option>
+              <option value="2">2 hours</option>
               <option value="3">3 hours</option>
               <option value="4">4 hours</option>
               <option value="5">5 hours</option>
               <option value="6">6 hours</option>
+              <option value="7">7 hours</option>
               <option value="8">8 hours</option>
+              <option value="9">9 hours</option>
+              <option value="10">10 hours</option>
+              <option value="11">11 hours</option>
+              <option value="12">12 hours</option>
             </select>
           </div>
 
@@ -1060,7 +1070,7 @@
 <main class="container">
   <section id="fleet" class="section">
     <h2>Our Fleet</h2>
-    <p class="subtitle">Premium vehicles for Mont-Tremblant travel. <b>Minimum 3 hours</b> applies to all vehicles.</p>
+    <p class="subtitle">Premium vehicles for Mont-Tremblant travel. <b>Minimum 1 hour (hourly)</b> applies to all vehicles.</p>
 
     <div class="grid3">
       <div class="card">
@@ -1083,7 +1093,7 @@
         <div class="card-body">
           <h3>2025 Chevrolet Suburban</h3>
           <div class="meta">Spacious • luggage friendly • long rides</div>
-          <div class="price">$120 / hour</div>
+          <div class="price">$100 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions actions-reserve">
             <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="suburban" data-mode="one_way">Reserve Point A to Point B</a>
@@ -1098,7 +1108,7 @@
         <div class="card-body">
           <h3>2026 GMC Yukon Denali</h3>
           <div class="meta">Premium comfort • smooth ride • executive travel</div>
-          <div class="price">$120 / hour</div>
+          <div class="price">$100 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions actions-reserve">
             <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="denali" data-mode="one_way">Reserve Point A to Point B</a>
@@ -1113,7 +1123,7 @@
         <div class="card-body">
           <h3>2024 Infiniti QX60</h3>
           <div class="meta">Comfort + value • airport transfers • city rides</div>
-          <div class="price">$99 / hour</div>
+          <div class="price">$75 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions actions-reserve">
             <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="qx60" data-mode="one_way">Reserve Point A to Point B</a>
@@ -1143,7 +1153,7 @@
         <div class="card-body">
           <h3>Mercedes Sprinter (Group Van)</h3>
           <div class="meta">Groups • events • ski luggage</div>
-          <div class="price">$250 / hour</div>
+          <div class="price">$299 / hour</div>
           <div class="min">3-hour minimum</div>
           <div class="actions actions-reserve">
             <a class="btn btn-primary reserve-btn" href="#booking" data-vehicle="sprinter" data-mode="one_way">Reserve Point A to Point B</a>
@@ -1168,13 +1178,16 @@
   const BUSINESS_WA = "15142933170";
 
   const LOCAL_RATES = [
-    { id:"escalade", name:"2026 Cadillac Escalade ESV", hourly:150, meta:"Ultra-luxury • VIP airport transfers • ski trips", img:"escalade.jpg" },
-    { id:"suburban", name:"2025 Chevrolet Suburban", hourly:120, meta:"Spacious • luggage friendly • long rides", img:"suburban.jpg" },
-    { id:"denali", name:"2026 GMC Yukon Denali", hourly:120, meta:"Premium comfort • smooth ride • executive travel", img:"denali.jpg" },
-    { id:"qx60", name:"2024 Infiniti QX60", hourly:99, meta:"Comfort + value • airport transfers • city rides", img:"qx60.jpg" },
-    { id:"tesla", name:"2023 Tesla Model Y", hourly:75, meta:"Quiet • modern • eco-friendly", img:"tesla.jpg" },
-    { id:"sprinter", name:"Mercedes Sprinter (Group Van)", hourly:250, meta:"Groups • events • ski luggage", img:"sprinter.jpg" }
+    { id:"escalade", name:"2026 Cadillac Escalade ESV", hourly:150, perKm:0.50, minPrice:150, meta:"Ultra-luxury • VIP airport transfers • ski trips", img:"escalade.jpg" },
+    { id:"suburban", name:"2025 Chevrolet Suburban", hourly:100, perKm:0.50, minPrice:120, meta:"Spacious • luggage friendly • long rides", img:"suburban.jpg" },
+    { id:"denali", name:"2026 GMC Yukon Denali", hourly:100, perKm:0.50, minPrice:120, meta:"Premium comfort • smooth ride • executive travel", img:"denali.jpg" },
+    { id:"qx60", name:"2024 Infiniti QX60", hourly:75, perKm:0.50, minPrice:99, meta:"Comfort + value • airport transfers • city rides", img:"qx60.jpg" },
+    { id:"tesla", name:"2023 Tesla Model Y", hourly:75, perKm:0.25, minPrice:75, meta:"Quiet • modern • eco-friendly", img:"tesla.jpg" },
+    { id:"sprinter", name:"Mercedes Sprinter (Group Van)", hourly:299, perKm:0.00, minPrice:299, meta:"Groups • events • ski luggage", img:"sprinter.jpg" }
   ];
+
+  // expose for map pricing script
+  window.LOCAL_RATES = LOCAL_RATES;
 
   const state = {
     mode: "one_way",
@@ -1199,7 +1212,36 @@
   function formatMoney(n){
     if (!Number.isFinite(Number(n))) return "—";
     return "CA$" + Math.round(Number(n));
+  
+
+  function getRouteNumbers(){
+    const distanceM = Number(document.getElementById("h_distance_m")?.value || 0);
+    const durationS = Number(document.getElementById("h_duration_s")?.value || 0);
+    return { distanceM: Number.isFinite(distanceM)?distanceM:0, durationS: Number.isFinite(durationS)?durationS:0 };
   }
+
+  function vehiclePriceEstimate(vehicleId, distanceM, durationS){
+    const v = LOCAL_RATES.find(x=>x.id===vehicleId);
+    if (!v) return 0;
+
+    const minPrice = Number(v.minPrice || 0);
+
+    // Hourly mode: bill selected hours (min 1 hour)
+    if (state.mode === "hourly"){
+      const h = Math.max(1, Number(state.hours || 1));
+      return Math.round(Math.max(minPrice, v.hourly * h));
+    }
+
+    // Point-to-point / airport: travel time + per-km, then apply vehicle minimum price
+    const km = (distanceM || 0) / 1000;
+    const travelHours = (durationS || 0) / 3600;
+
+    const perKm = Number(v.perKm || 0);
+    const total = (travelHours * v.hourly) + (km * perKm);
+
+    return Math.round(Math.max(minPrice, total));
+  }
+}
 
   function buildTimeOptions(stepMinutes = 5, selectId){
     const timeEl = document.getElementById(selectId);
@@ -1643,10 +1685,8 @@ if (input.value.trim().length >= 2) doSearch();
   }
 
   function calcVehicleTotal(vehicle){
-    const h = Math.max(3, Number(state.hours || 3));
-    if (state.mode === "hourly") return vehicle.hourly * h;
-    const fee = state.transfer === "airport" ? 60 : 40;
-    return (vehicle.hourly * 3) + fee;
+    const { distanceM, durationS } = getRouteNumbers();
+    return vehiclePriceEstimate(vehicle.id, distanceM, durationS);
   }
 
   function buildVehiclesForTrip(){
@@ -1654,7 +1694,7 @@ if (input.value.trim().length >= 2) doSearch();
     const list = LOCAL_RATES.map(v=>{
       const total = calcVehicleTotal(v);
       const note = state.mode === "hourly"
-        ? `Total ${formatMoney(total)} for ${Math.max(3, Number(state.hours||3))} hours`
+        ? `Total ${formatMoney(total)} for ${Math.max(3, Number(state.hours||1))} hours`
         : (state.transfer === "airport" ? "Airport estimate" : "Point-to-point estimate");
       return { ...v, total, note };
     });
@@ -1841,7 +1881,7 @@ if (input.value.trim().length >= 2) doSearch();
     state.selectedVehicleId = null;
     $("btnVehicleContinue").disabled = true;
 
-    const hours = Math.max(3, Number(state.hours || 3));
+    const hours = Math.max(3, Number(state.hours || 1));
     let preferredRow = null;
 
     state.computedVehicles.forEach(v=>{
@@ -1913,7 +1953,7 @@ if (input.value.trim().length >= 2) doSearch();
     $("checkoutTotal").textContent = chosen ? formatMoney(chosen.total) : "—";
     $("checkoutSub").textContent = chosen
       ? (state.mode === "hourly"
-          ? `Total ${formatMoney(chosen.total)} for ${Math.max(3, Number(state.hours||3))} hours`
+          ? `Total ${formatMoney(chosen.total)} for ${Math.max(3, Number(state.hours||1))} hours`
           : chosen.note)
       : "";
 
@@ -1947,7 +1987,7 @@ if (input.value.trim().length >= 2) doSearch();
     const triptype = (state.mode === "hourly") ? "Hourly" : (state.transfer === "airport" ? "Airport transfer" : "Point-to-point");
 
     const estimateText = (state.mode === "hourly")
-      ? `Total ${formatMoney(chosen.total)} for ${Math.max(3, Number(state.hours||3))} hours`
+      ? `Total ${formatMoney(chosen.total)} for ${Math.max(3, Number(state.hours||1))} hours`
       : `${formatMoney(chosen.total)} (${chosen.note})`;
 
     const payload = {
@@ -1991,11 +2031,11 @@ if (input.value.trim().length >= 2) doSearch();
       triptype: (state.mode === "hourly") ? "hourly" : (state.transfer === "airport" ? "airport" : "point"),
       vehicle: chosen.name,
       vehicle_id: chosen.id,
-      hours: String(Math.max(3, Number(state.hours||3))),
+      hours: String(Math.max(3, Number(state.hours||1))),
       roundtrip: "no",
       notes: val("c_notes"),
       estimate_text: (state.mode === "hourly")
-        ? `Total ${formatMoney(chosen.total)} for ${Math.max(3, Number(state.hours||3))} hours`
+        ? `Total ${formatMoney(chosen.total)} for ${Math.max(3, Number(state.hours||1))} hours`
         : `${formatMoney(chosen.total)} (${chosen.note})`,
       estimate_total_cad: chosen.total,
       pay_option: "full",
@@ -2097,11 +2137,13 @@ if (input.value.trim().length >= 2) doSearch();
     if (preferredVehicle){
       setHeroMode(preferredMode || "one_way");
       setPreferredVehicle(preferredVehicle);
+      window.__estimateVehicleId = preferredVehicle;
       document.getElementById("booking")?.scrollIntoView({ behavior: "smooth", block: "start" });
       setTimeout(()=> $("h_pickup")?.focus(), 300);
     }else{
       setHeroMode("one_way");
       setPreferredVehicle(null);
+      window.__estimateVehicleId = "escalade";
     }
     document.getElementById("year").textContent = yyyy;
 
@@ -2200,13 +2242,21 @@ function roundTo(x, step){
   return Math.round(x/step)*step;
 }
 function computePrice(distanceM, durationS, pickupAirport, dropoffAirport){
+  // Use the same vehicle formulas used in Step 2, defaulting to Escalade.
+  const vehicleId = (window.__estimateVehicleId || "escalade");
   const km = (distanceM||0)/1000;
-  const min = (durationS||0)/60;
-  let price = PRICING.base + km*PRICING.perKm + min*PRICING.perMin;
-  if (pickupAirport || dropoffAirport) price += PRICING.airportSurcharge;
-  price = Math.max(price, PRICING.minFare);
-  price = roundTo(price, 5); // round to nearest $5 like many limo services
-  return price;
+  const travelHours = (durationS||0)/3600;
+  const billableHours = Math.max(3, travelHours);
+
+  // Pull rates from LOCAL_RATES if available
+  const v = (window.LOCAL_RATES || (typeof LOCAL_RATES !== "undefined" ? LOCAL_RATES : [])).find(x=>x.id===vehicleId)
+         || { hourly:150, perKm:0.50 };
+
+  const perKm = Number(v.perKm || 0);
+  const hourly = Number(v.hourly || 0);
+
+  const total = (billableHours * hourly) + (km * perKm);
+  return Math.round(total);
 }
 
 function setRouteUI({distanceM=null, durationS=null, price=null, badges=[]}={}){
