@@ -1881,7 +1881,7 @@ if (input.value.trim().length >= 2) doSearch();
     state.selectedVehicleId = null;
     $("btnVehicleContinue").disabled = true;
 
-    const hours = Math.max(3, Number(state.hours || 1));
+    const hours = Math.max(1, Number(state.hours || 1));
     let preferredRow = null;
 
     state.computedVehicles.forEach(v=>{
@@ -2090,6 +2090,7 @@ if (input.value.trim().length >= 2) doSearch();
     const err = validateHero();
     if (err) return showHeroAlert(err);
 
+    // Collect latest inputs
     state.pickup = val("h_pickup");
     state.dropoff = val("h_dropoff");
     state.date = $("h_date").value;
@@ -2097,7 +2098,7 @@ if (input.value.trim().length >= 2) doSearch();
     state.transfer = val("h_transfer") || "point";
     state.hours = Math.max(1, Number(val("h_hours") || 1));
 
-    // ✅ capture coords (if user picked from suggestions)
+    // capture coords (if user picked from suggestions)
     state.pickup_lat = val("h_pickup_lat");
     state.pickup_lng = val("h_pickup_lng");
     state.dropoff_lat = val("h_dropoff_lat");
@@ -2105,12 +2106,17 @@ if (input.value.trim().length >= 2) doSearch();
 
     setHeroSearchLoading(true);
 
-    state.computedVehicles = buildVehiclesForTrip();
-    renderTripSummary();
-    renderVehiclesOverlay();
-
-    setHeroSearchLoading(false);
-    openOverlay("overlayVehicles", true);
+    try {
+      state.computedVehicles = buildVehiclesForTrip();
+      renderTripSummary();
+      renderVehiclesOverlay();
+      openOverlay("overlayVehicles", true);
+    } catch (ex) {
+      console.error("Choose vehicle failed:", ex);
+      showHeroAlert("Something went wrong while loading vehicles. Please refresh and try again.");
+    } finally {
+      setHeroSearchLoading(false);
+    }
   });
 
   window.addEventListener("load", ()=>{
