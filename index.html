@@ -2131,24 +2131,31 @@ function setMarker(kind, lat, lng, title){
 }
 
 function findBookingInputs() {
-  // Try common IDs first
+  // Prefer the hero booking inputs used on this page
   const byId = (id) => document.getElementById(id);
+
   const pickup =
+    byId("h_pickup") ||
     byId("pickup") || byId("from") || byId("fromInput") || byId("pickupInput") ||
-    document.querySelector('input[placeholder*="From"]') ||
-    document.querySelector('input[aria-label*="From"]') ||
+    document.querySelector('input[placeholder*="Pick up" i]') ||
+    document.querySelector('input[placeholder*="Pickup" i]') ||
+    document.querySelector('input[placeholder*="From" i]') ||
+    document.querySelector('input[aria-label*="From" i]') ||
     document.querySelector('input[name*="from" i]') ||
     document.querySelectorAll("input[type=text]")[0];
 
   const dropoff =
+    byId("h_dropoff") ||
     byId("dropoff") || byId("to") || byId("toInput") || byId("dropoffInput") ||
-    document.querySelector('input[placeholder*="To"]') ||
-    document.querySelector('input[aria-label*="To"]') ||
+    document.querySelector('input[placeholder*="Drop" i]') ||
+    document.querySelector('input[placeholder*="To" i]') ||
+    document.querySelector('input[aria-label*="To" i]') ||
     document.querySelector('input[name*="to" i]') ||
     document.querySelectorAll("input[type=text]")[1];
 
   return { pickup, dropoff };
 }
+
 
 function wireAutocomplete(){
   // Prevent double-wiring
@@ -2232,6 +2239,19 @@ tuneAutocomplete(dropoffAC);
     pickupInput.disabled = false;
     dropoffInput.disabled = false;
 
+    // Restore placeholders if we temporarily changed them during script load.
+    [pickupInput, dropoffInput].forEach((el) => {
+      if (!el) return;
+      if (el.dataset && el.dataset.prevPlaceholder !== undefined) {
+        el.setAttribute("placeholder", el.dataset.prevPlaceholder || "");
+        delete el.dataset.prevPlaceholder;
+      } else if ((el.getAttribute("placeholder") || "").includes("Loading Google suggestions")) {
+        el.setAttribute("placeholder", "");
+      }
+      if (el.dataset) delete el.dataset.placesPending;
+    });
+
+
     // If the user typed before Places finished loading, nudging focus will cause suggestions to appear immediately.
     const nudge = (el) => {
       if (!el) return;
@@ -2258,6 +2278,27 @@ tuneAutocomplete(dropoffAC);
 // Make sure the map initializes even before selecting
   ensureMap();
 }
+
+
+function restoreInputs() {
+  try {
+    const { pickup: _p, dropoff: _d } = findBookingInputs();
+    [_p, _d].forEach((el) => {
+      if (!el) return;
+      el.disabled = false;
+      // restore placeholder if we temporarily changed it
+      if (el.dataset && el.dataset.prevPlaceholder !== undefined) {
+        el.setAttribute("placeholder", el.dataset.prevPlaceholder || "");
+        delete el.dataset.prevPlaceholder;
+      } else if ((el.getAttribute("placeholder") || "").includes("Loading Google suggestions")) {
+        // safety fallback
+        el.setAttribute("placeholder", "");
+      }
+      if (el.dataset) delete el.dataset.placesPending;
+    });
+  } catch (e) {}
+}
+
 
 function loadGoogleMapsScript() {
   const el = document.getElementById("gmap-loading");
