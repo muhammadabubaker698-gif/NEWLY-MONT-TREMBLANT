@@ -2259,55 +2259,67 @@ tuneAutocomplete(dropoffAC);
   ensureMap();
 }
 
-function loadGoogleMapsScript() {
-  const el = document.getElementById("gmap-loading");
-  if (!GOOGLE_MAPS_BROWSER_KEY || GOOGLE_MAPS_BROWSER_KEY.includes("PASTE_")) {
-    if (el) el.textContent = "Google Maps browser key not set — using basic address search.";
-    return;
-  }
-
-
-  // Disable inputs until Places is ready (prevents "type then click again" issue)
+function restoreInputs() {
   try {
     const { pickup: _p, dropoff: _d } = findBookingInputs();
     [_p, _d].forEach((el) => {
       if (!el) return;
-      el.dataset.placesPending = "1";
-      el.dataset.prevPlaceholder = el.getAttribute("placeholder") || "";
-      el.setAttribute("placeholder", "Loading Google suggestions...");
-      el.disabled = true;
+      el.disabled = false;
+      if (el.dataset.prevPlaceholder !== undefined) {
+        el.setAttribute("placeholder", el.dataset.prevPlaceholder || "");
+      }
+      delete el.dataset.placesPending;
+      delete el.dataset.prevPlaceholder;
     });
-  } catch(e) {}
+  } catch (e) {}
+}
+
+function loadGoogleMapsScript() {
+  const el = document.getElementById("gmap-loading");
+
+  // If key is missing, don't block the UI
+  if (!GOOGLE_MAPS_BROWSER_KEY || GOOGLE_MAPS_BROWSER_KEY.includes("PASTE_")) {
+    if (el) el.textContent = "Google Maps browser key not set — using basic address search.";
+    restoreInputs();
+    return;
+  }
 
   // Avoid double-loading
   if (window.google && window.google.maps && window.google.maps.places) {
-    wireAutocomplete();
+    try {
+      ensureMap();          // make sure map is created if Google is already available
+      wireAutocomplete();
+    } catch (e) {
+      console.warn("Google already loaded but init failed", e);
+    } finally {
+      restoreInputs();
+    }
     return;
   }
   if (document.querySelector('script[data-google-maps="1"]')) return;
 
+  // Disable inputs until Places is ready
+  try {
+    const { pickup: _p, dropoff: _d } = findBookingInputs();
+    [_p, _d].forEach((inp) => {
+      if (!inp) return;
+      inp.dataset.placesPending = "1";
+      inp.dataset.prevPlaceholder = inp.getAttribute("placeholder") || "";
+      inp.setAttribute("placeholder", "Loading Google suggestions...");
+      inp.disabled = true;
+    });
+  } catch (e) {}
+
   // Google will call this when the JS API is ready
   window.__initGoogleMapsPlaces = () => {
-    try { wireAutocomplete(); } catch(e) { console.warn("wireAutocomplete failed", e); }
-
-    // Re-enable inputs and trigger suggestions if user already typed
     try {
-      const { pickup: _p, dropoff: _d } = findBookingInputs();
-      [_p, _d].forEach((el) => {
-        if (!el) return;
-        el.disabled = false;
-        if (el.dataset.prevPlaceholder) el.setAttribute("placeholder", el.dataset.prevPlaceholder);
-        delete el.dataset.placesPending;
-
-        // If user typed before Places was ready, nudge Google Autocomplete to show suggestions
-        if (el.value && el.value.trim().length >= 3) {
-          const evInput = new Event("input", { bubbles: true });
-          const evKeyUp = new KeyboardEvent("keyup", { bubbles: true });
-          el.dispatchEvent(evInput);
-          el.dispatchEvent(evKeyUp);
-        }
-      });
-    } catch(e) {}
+      ensureMap();          // ✅ create the map now that google exists
+      wireAutocomplete();
+    } catch (e) {
+      console.warn("Google init failed", e);
+    } finally {
+      restoreInputs();      // ✅ always unlock
+    }
   };
 
   const s = document.createElement("script");
@@ -2318,6 +2330,7 @@ function loadGoogleMapsScript() {
   s.onerror = () => {
     console.warn("Google Maps script failed to load. Check API key restrictions / billing / enabled APIs.");
     if (el) el.textContent = "Map failed to load (check API key / billing / enabled APIs).";
+    restoreInputs();        // ✅ IMPORTANT: unlock on failure
   };
   document.head.appendChild(s);
 }
@@ -2325,14 +2338,6 @@ function loadGoogleMapsScript() {
 
 // Load after DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
-  // Disable inputs briefly until Google Places wiring is ready.
-  // This prevents the "type, no suggestions, click again" behavior when users type before Places finishes loading.
-  try {
-    const { pickup, dropoff } = findBookingInputs();
-    if (pickup) pickup.disabled = true;
-    if (dropoff) dropoff.disabled = true;
-  } catch(e) {}
-
   ensureMap();         // show the empty map area (placeholder background if Google not loaded)
   loadGoogleMapsScript();
 });
