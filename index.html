@@ -2134,6 +2134,7 @@ function findBookingInputs() {
   // Try common IDs first
   const byId = (id) => document.getElementById(id);
   const pickup =
+    byId("h_pickup") ||
     byId("pickup") || byId("from") || byId("fromInput") || byId("pickupInput") ||
     document.querySelector('input[placeholder*="From"]') ||
     document.querySelector('input[aria-label*="From"]') ||
@@ -2141,6 +2142,7 @@ function findBookingInputs() {
     document.querySelectorAll("input[type=text]")[0];
 
   const dropoff =
+    byId("h_dropoff") ||
     byId("dropoff") || byId("to") || byId("toInput") || byId("dropoffInput") ||
     document.querySelector('input[placeholder*="To"]') ||
     document.querySelector('input[aria-label*="To"]') ||
@@ -2268,6 +2270,12 @@ function restoreInputs() {
       el.disabled = false;
       if (el.dataset.prevPlaceholder !== undefined) {
         el.setAttribute("placeholder", el.dataset.prevPlaceholder || "");
+      } else {
+        const ph = el.getAttribute("placeholder") || "";
+        if (ph.toLowerCase().includes("loading google suggestions")) {
+          // fallback: restore to a sensible default
+          el.setAttribute("placeholder", el.id === "h_dropoff" ? "To" : "From");
+        }
       }
       delete el.dataset.placesPending;
       delete el.dataset.prevPlaceholder;
