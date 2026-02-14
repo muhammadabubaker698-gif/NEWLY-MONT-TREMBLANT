@@ -2262,7 +2262,7 @@ function setRouteUI({distanceM=null, durationS=null, price=null, badges=[]}={}){
   const bEl = document.getElementById("riBadges");
   if (dEl) dEl.textContent = (distanceM==null? "—" : fmtDistance(distanceM));
   if (tEl) tEl.textContent = (durationS==null? "—" : fmtDuration(durationS));
-  if (if (pEl) pEl.textContent = (price==null? "—" : `CA$${Number(price).toFixed(0)}`);
+  if (pEl) pEl.textContent = (price==null? "—" : `CA$${Number(price).toFixed(0)}`);
   if (bEl){
     bEl.innerHTML = "";
     (badges||[]).forEach((txt)=>{
