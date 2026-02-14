@@ -973,13 +973,13 @@
           <div id="routeInfo" class="route-info" aria-live="polite">
             <div class="ri-row"><span>Distance</span><strong id="riDistance">—</strong></div>
             <div class="ri-row"><span>Estimated time</span><strong id="riDuration">—</strong></div>
-            <div class="ri-row"><span>Estimated price</span><strong id="riPrice">—</strong></div>
+            <div class="ri-row"><span>Starts from</span><strong id="riPrice">—</strong></div>
             <div class="ri-badges" id="riBadges"></div>
           </div>
 
 <div class="note">Professional chauffeur • clean premium vehicles.</div>
 
-          <button id="heroSearchBtn" class="search-btn" type="submit">Search</button>
+          <button id="heroSearchBtn" class="search-btn" type="submit">Choose vehicle</button>
           <div id="heroAlert" class="alert bad"></div>
         </form>
       </div>
@@ -1196,7 +1196,7 @@
     date: "",
     time: "",
     transfer: "point",
-    hours: 3,
+    hours: 1,
     preferredVehicleId: null,
     selectedVehicleId: null,
     computedVehicles: [],
@@ -1694,7 +1694,7 @@ if (input.value.trim().length >= 2) doSearch();
     const list = LOCAL_RATES.map(v=>{
       const total = calcVehicleTotal(v);
       const note = state.mode === "hourly"
-        ? `Total ${formatMoney(total)} for ${Math.max(3, Number(state.hours||1))} hours`
+        ? `Total ${formatMoney(total)} for ${Math.max(1, Number(state.hours||1))} hours`
         : (state.transfer === "airport" ? "Airport estimate" : "Point-to-point estimate");
       return { ...v, total, note };
     });
@@ -2063,7 +2063,7 @@ if (input.value.trim().length >= 2) doSearch();
   function setHeroSearchLoading(isLoading){
     const btn = $("heroSearchBtn");
     btn.disabled = isLoading;
-    btn.textContent = isLoading ? "Searching…" : "Search";
+    btn.textContent = isLoading ? "Loading…" : "Choose vehicle";
   }
 
   $("tabOneWay").addEventListener("click", ()=> setHeroMode("one_way"));
@@ -2095,7 +2095,7 @@ if (input.value.trim().length >= 2) doSearch();
     state.date = $("h_date").value;
     state.time = val("h_time");
     state.transfer = val("h_transfer") || "point";
-    state.hours = Math.max(3, Number(val("h_hours") || 3));
+    state.hours = Math.max(1, Number(val("h_hours") || 1));
 
     // ✅ capture coords (if user picked from suggestions)
     state.pickup_lat = val("h_pickup_lat");
@@ -2242,21 +2242,17 @@ function roundTo(x, step){
   return Math.round(x/step)*step;
 }
 function computePrice(distanceM, durationS, pickupAirport, dropoffAirport){
-  // Use the same vehicle formulas used in Step 2, defaulting to Escalade.
-  const vehicleId = (window.__estimateVehicleId || "escalade");
+  // Step 1 should show "Starts from" using Tesla pricing (as requested)
+  try{
+    const vId = "tesla";
+    if (typeof vehiclePriceEstimate === "function") {
+      return vehiclePriceEstimate(vId, distanceM||0, durationS||0);
+    }
+  }catch(e){}
+  // Fallback (shouldn't happen)
   const km = (distanceM||0)/1000;
   const travelHours = (durationS||0)/3600;
-  const billableHours = Math.max(3, travelHours);
-
-  // Pull rates from LOCAL_RATES if available
-  const v = (window.LOCAL_RATES || (typeof LOCAL_RATES !== "undefined" ? LOCAL_RATES : [])).find(x=>x.id===vehicleId)
-         || { hourly:150, perKm:0.50 };
-
-  const perKm = Number(v.perKm || 0);
-  const hourly = Number(v.hourly || 0);
-
-  const total = (billableHours * hourly) + (km * perKm);
-  return Math.round(total);
+  return Math.round((travelHours*75) + (km*0.25));
 }
 
 function setRouteUI({distanceM=null, durationS=null, price=null, badges=[]}={}){
@@ -2266,7 +2262,7 @@ function setRouteUI({distanceM=null, durationS=null, price=null, badges=[]}={}){
   const bEl = document.getElementById("riBadges");
   if (dEl) dEl.textContent = (distanceM==null? "—" : fmtDistance(distanceM));
   if (tEl) tEl.textContent = (durationS==null? "—" : fmtDuration(durationS));
-  if (pEl) pEl.textContent = (price==null? "—" : `$${Number(price).toFixed(0)} CAD`);
+  if (if (pEl) pEl.textContent = (price==null? "—" : `CA$${Number(price).toFixed(0)}`);
   if (bEl){
     bEl.innerHTML = "";
     (badges||[]).forEach((txt)=>{
