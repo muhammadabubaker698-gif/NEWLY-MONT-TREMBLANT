@@ -1,97 +1,82 @@
-const Stripe = require("stripe");
-
-function toCents(cad) {
-  const n = Number(cad);
-  if (!Number.isFinite(n) || n < 1) return null;
-  if (n > 20000) return null; // safety cap
-  return Math.round(n * 100);
-}
-
+// /api/create-checkout-session.js
 module.exports = async (req, res) => {
+  // Basic CORS (optional but helps)
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") return res.status(200).end();
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+
   try {
-    // Optional: basic CORS (safe to keep)
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
+    if (!STRIPE_SECRET_KEY) {
+      return res.status(500).json({ error: "Missing env var: STRIPE_SECRET_KEY" });
+    }
 
-    if (req.method === "OPTIONS") return res.status(200).end();
+    // If Vercel didn’t parse JSON for some reason, this guards it
+    const body = typeof req.body === "string" ? JSON.parse(req.body) : (req.body || {});
 
-    if (!process.env.STRIPE_SECRET_KEY) {
+    // Expecting cents from your frontend (e.g. 7500 for $75.00)
+    const amount = Number(body.amount || body.amount_cents || 0);
+    if (!Number.isFinite(amount) || amount <= 0) {
+      return res.status(400).json({ error: "Invalid amount (must be cents > 0)" });
+    }
+
+    const currency = (body.currency || "cad").toLowerCase();
+
+    // Your domain (use your production domain)
+    const baseUrl =
+      process.env.BASE_URL ||
+      "https://www.monttremblantlimoservices.com";
+
+    const successUrl = `${baseUrl}/?payment=success&session_id={CHECKOUT_SESSION_ID}`;
+    const cancelUrl = `${baseUrl}/?payment=cancel`;
+
+    // Stripe expects application/x-www-form-urlencoded
+    const params = new URLSearchParams();
+
+    params.append("mode", "payment");
+    params.append("success_url", successUrl);
+    params.append("cancel_url", cancelUrl);
+
+    // Card payments
+    params.append("payment_method_types[]", "card");
+
+    // Line item using price_data (no Stripe Product setup needed)
+    params.append("line_items[0][quantity]", "1");
+    params.append("line_items[0][price_data][currency]", currency);
+    params.append("line_items[0][price_data][unit_amount]", String(Math.round(amount)));
+    params.append("line_items[0][price_data][product_data][name]", body.title || "Mont Tremblant Limo Booking");
+
+    // Optional: metadata (shows in Stripe dashboard)
+    if (body.bookingId) params.append("metadata[bookingId]", String(body.bookingId));
+    if (body.email) params.append("customer_email", String(body.email));
+
+    const stripeResp = await fetch("https://api.stripe.com/v1/checkout/sessions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${STRIPE_SECRET_KEY}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: params.toString(),
+    });
+
+    const data = await stripeResp.json();
+
+    if (!stripeResp.ok) {
       return res.status(500).json({
-        error: "STRIPE_SECRET_KEY is not set in Vercel Environment Variables."
+        error: "Stripe error",
+        details: data,
       });
     }
 
-    if (req.method !== "POST") {
-      return res.status(405).json({ error: "Method not allowed. Use POST." });
-    }
-
-    // IMPORTANT: handle body being a string on some deployments
-    let b = req.body || {};
-    if (typeof b === "string") {
-      try {
-        b = JSON.parse(b);
-      } catch (e) {
-        return res.status(400).json({ error: "Invalid JSON body." });
-      }
-    }
-
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
-    if (!b.name || !b.date || !b.time || !b.pickup || !b.dropoff || !b.vehicle) {
-      return res.status(400).json({ error: "Missing required booking fields." });
-    }
-
-    const amount = toCents(b.pay_now_cad);
-    if (!amount) return res.status(400).json({ error: "Invalid payment amount." });
-
-    const DOMAIN =
-      process.env.PUBLIC_DOMAIN || "https://www.monttremblantlimoservices.com";
-
-    const description =
-      `Trip: ${b.triptype}\n` +
-      `Vehicle: ${b.vehicle}\n` +
-      `Date/Time: ${b.date} ${b.time}\n` +
-      `Pickup: ${b.pickup}\n` +
-      `Dropoff: ${b.dropoff}\n` +
-      `Estimate: ${b.estimate_text}\n` +
-      (b.notes ? `Notes: ${b.notes}` : "");
-
-    const session = await stripe.checkout.sessions.create({
-      mode: "payment",
-      line_items: [
-        {
-          price_data: {
-            currency: "cad",
-            product_data: {
-              name: "Mont Tremblant Limo Reservation (Full Payment)",
-              description: description.slice(0, 4000)
-            },
-            unit_amount: amount
-          },
-          quantity: 1
-        }
-      ],
-      metadata: {
-        name: b.name,
-        phone: b.phone || "",
-        date: b.date,
-        time: b.time,
-        pickup: b.pickup,
-        dropoff: b.dropoff,
-        triptype: b.triptype || "",
-        vehicle: b.vehicle || "",
-        hours: b.hours || "",
-        roundtrip: b.roundtrip || "",
-        estimate_total_cad: String(b.estimate_total_cad ?? "")
-      },
-      success_url: `${DOMAIN}/?payment=success`,
-      cancel_url: `${DOMAIN}/?payment=cancel`
-    });
-
-    return res.status(200).json({ url: session.url });
+    // Stripe returns a hosted URL for Checkout
+    return res.status(200).json({ id: data.id, url: data.url });
   } catch (err) {
-    console.error("Function error:", err);
-    return res.status(500).json({ error: err.message || "Server error" });
+    return res.status(500).json({
+      error: "Server error creating Stripe checkout session",
+      details: err?.message || String(err),
+    });
   }
 };
