@@ -1,23 +1,19 @@
-# Mont Tremblant Limo — Static site + Vercel Serverless APIs
+# Mont Tremblant Limo (Vercel)
+
+This repo is a **static single-page site** (`/index.html`) with Vercel Serverless Functions under `/api` and an admin page at `/admin`.
+
+## Important: Images
+Your HTML references images like `escalaide.jpg`, `suburban.jpg`, etc.
+
+✅ Put all `.jpg` image files **in the repository root** (same folder as `index.html`).
+
+Example files expected at the root:
+- Tremblant.jpg
+- scenic1.jpg scenic2.jpg scenic3.jpg scenic4.jpg
+- escalade.jpg denali.jpg suburban.jpg qx60.jpg tesla.jpg sprinter.jpg
 
 ## Deploy
-1. Push this folder to GitHub.
-2. Import project into Vercel.
-3. Set env vars in Vercel:
-   - SUPABASE_URL
-   - SUPABASE_ANON_KEY
-   - SUPABASE_SERVICE_ROLE_KEY   (server only)
-   - RESEND_API_KEY
-   - ADMIN_NOTIFY_EMAIL
-   - ADMIN_PASSWORD
-   - SITE_URL
+Import the repo in Vercel and Deploy.
 
-## Endpoints
-- POST /api/bookings        create booking, save to Supabase, email customer + admin
-- POST /api/admin/login     sets admin cookie
-- GET  /api/admin/logout    clears admin cookie
-- GET  /api/admin/bookings  list bookings (admin cookie required)
-- PATCH /api/admin/bookings update status/driver/notes/price_final (admin cookie required)
-
-## Admin
-Open /admin/ and log in with ADMIN_PASSWORD.
+## Environment variables
+Set the env vars in Vercel Project → Settings → Environment Variables, then redeploy.
