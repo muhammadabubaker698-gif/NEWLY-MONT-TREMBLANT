@@ -1037,13 +1037,22 @@
       <div class="summary-pill" id="checkoutSummary"></div>
 
       <div class="flow-h1">Your details</div>
-      <div class="flow-sub">Enter your name and phone, then pay securely via Stripe.</div>
+      <div class="flow-sub">Enter your details. We will email you a “request received” confirmation, then you can pay securely via Stripe.</div>
 
       <label for="c_name">Name</label>
       <input id="c_name" placeholder="Your name" />
 
       <label for="c_phone">Phone</label>
       <input id="c_phone" placeholder="+1 ..." />
+
+      <label for="c_email">Email</label>
+      <input id="c_email" placeholder="you@example.com" />
+
+      <label for="c_passengers">Passengers (optional)</label>
+      <input id="c_passengers" type="number" min="1" max="50" placeholder="e.g., 2" inputmode="numeric" />
+
+      <label for="c_luggage">Luggage (optional)</label>
+      <input id="c_luggage" type="number" min="0" max="50" placeholder="e.g., 2" inputmode="numeric" />
 
       <label for="c_notes">Notes (optional)</label>
       <textarea id="c_notes" placeholder="Passengers, luggage, flight #, stops…"></textarea>
@@ -1209,9 +1218,11 @@
   function $(id){ return document.getElementById(id); }
   function val(id){ return ($(id)?.value || "").trim(); }
 
-  function formatMoney(n){
+  function formatMoney(n, currency){
     if (!Number.isFinite(Number(n))) return "—";
-    return "CA$" + Math.round(Number(n));
+    const cur = (currency || "CAD").toUpperCase();
+    const prefix = (cur === "USD") ? "US$" : "CA$";
+    return prefix + Math.round(Number(n));
   }
 
   function getRouteNumbers(){
@@ -2007,6 +2018,12 @@ if (input.value.trim().length >= 2) doSearch();
     window.open("https://wa.me/" + BUSINESS_WA + "?text=" + buildWhatsAppMessage(payload), "_blank", "noreferrer");
   }
 
+    function getTripCurrency(){
+    const pc = (val("h_pickup_country") || "").toUpperCase();
+    const dc = (val("h_dropoff_country") || "").toUpperCase();
+    return (pc === "US" || dc === "US") ? "USD" : "CAD";
+  }
+
   async function startStripeCheckoutFromOverlay(){
     const statusEl = $("checkoutStatus");
     statusEl.textContent = "";
@@ -2023,9 +2040,56 @@ if (input.value.trim().length >= 2) doSearch();
       return;
     }
 
-    const booking = {
+    const email = val("c_email");
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email || "");
+    if (!emailOk){
+      statusEl.textContent = "Please enter a valid email address.";
+      return;
+    }
+
+    const phone = val("c_phone");
+
+    // Hourly: min 1 hour
+    const hoursNum = Math.max(1, Number(state.hours || 1));
+    const currency = getTripCurrency();
+
+    // Build database booking payload (for /api/bookings)
+    const dbBooking = {
+      mode: (state.mode === "hourly") ? "hourly" : "one_way",
+      pickup_text: state.pickup || "",
+      dropoff_text: (state.mode === "hourly") ? null : (state.dropoff || ""),
+      pickup_lat: Number(val("h_pickup_lat") || 0) || null,
+      pickup_lng: Number(val("h_pickup_lng") || 0) || null,
+      dropoff_lat: Number(val("h_dropoff_lat") || 0) || null,
+      dropoff_lng: Number(val("h_dropoff_lng") || 0) || null,
+      pickup_airport: val("h_pickup_airport") || null,
+      dropoff_airport: val("h_dropoff_airport") || null,
+
+      pickup_datetime: new Date(`${state.date}T${state.time}:00`).toISOString(),
+      hours: (state.mode === "hourly") ? hoursNum : null,
+
+      distance_m: Number(val("h_distance_m") || 0) || null,
+      duration_s: Number(val("h_duration_s") || 0) || null,
+
+      currency: currency,
+      vehicle_key: chosen.id,
+      price_estimate: Number(chosen.total) || 0,
+
+      customer_name: name,
+      customer_email: email,
+      customer_phone: phone || null,
+      passengers: Number(val("c_passengers") || 0) || null,
+      luggage: Number(val("c_luggage") || 0) || null,
+      notes: val("c_notes") || null
+    };
+
+    // Build Stripe checkout payload (kept compatible with your existing endpoint)
+    const checkoutBooking = {
+      booking_id: null, // will be filled after DB insert
       name: name,
-      phone: val("c_phone"),
+      email: email,
+      phone: phone,
+      currency: currency,
       date: state.date,
       time: state.time,
       pickup: state.pickup,
@@ -2033,32 +2097,54 @@ if (input.value.trim().length >= 2) doSearch();
       triptype: (state.mode === "hourly") ? "hourly" : (state.transfer === "airport" ? "airport" : "point"),
       vehicle: chosen.name,
       vehicle_id: chosen.id,
-      hours: String(Math.max(3, Number(state.hours||1))),
+      hours: String(hoursNum),
       roundtrip: "no",
       notes: val("c_notes"),
       estimate_text: (state.mode === "hourly")
-        ? `Total ${formatMoney(chosen.total)} for ${Math.max(3, Number(state.hours||1))} hours`
-        : `${formatMoney(chosen.total)} (${chosen.note})`,
+        ? `Total ${formatMoney(chosen.total, currency)} for ${hoursNum} hour${hoursNum>1?"s":""}`
+        : `${formatMoney(chosen.total, currency)} (${chosen.note})`,
+      estimate_total: chosen.total,
       estimate_total_cad: chosen.total,
       pay_option: "full",
+      pay_now: chosen.total,
       pay_now_cad: chosen.total
     };
 
     try{
+      statusEl.textContent = "Saving your booking…";
+
+      // 1) Save booking + send emails
+      const saveRes = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type":"application/json" },
+        body: JSON.stringify(dbBooking)
+      });
+      const saveData = await saveRes.json().catch(()=> ({}));
+      if (!saveRes.ok || !saveData?.ok) throw new Error(saveData?.error || "Unable to save booking.");
+      checkoutBooking.booking_id = saveData.id;
+
+      // 2) Start Stripe checkout (if endpoint exists)
       statusEl.textContent = "Starting secure checkout…";
       const res = await fetch("/api/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type":"application/json" },
-        body: JSON.stringify(booking)
+        body: JSON.stringify(checkoutBooking)
       });
+
       const data = await res.json().catch(()=> ({}));
-      if (!res.ok) throw new Error(data?.error || "Unable to start checkout.");
+      if (!res.ok) {
+        // If Stripe endpoint isn't configured yet, show success message with booking ID
+        statusEl.textContent = `Booking saved (ID: ${checkoutBooking.booking_id}). Payment setup is pending.`;
+        alert(`Booking saved! Your booking ID is ${checkoutBooking.booking_id}. We'll contact you to confirm and take payment.`);
+        return;
+      }
       if (!data?.url) throw new Error("Missing checkout URL from server.");
       window.location.href = data.url;
+
     }catch(err){
       console.error(err);
-      statusEl.textContent = "Stripe checkout error: " + (err.message || "Unknown error");
-      alert("Stripe checkout error: " + (err.message || "Unknown error"));
+      statusEl.textContent = "Checkout error: " + (err.message || "Unknown error");
+      alert("Checkout error: " + (err.message || "Unknown error"));
     }
   }
 
