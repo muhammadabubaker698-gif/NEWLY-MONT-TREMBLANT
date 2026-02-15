@@ -9,7 +9,13 @@ function toCents(cad) {
 
 module.exports = async (req, res) => {
   try {
-    // Clear error if env var missing
+    // Optional: basic CORS (safe to keep)
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+    if (req.method === "OPTIONS") return res.status(200).end();
+
     if (!process.env.STRIPE_SECRET_KEY) {
       return res.status(500).json({
         error: "STRIPE_SECRET_KEY is not set in Vercel Environment Variables."
@@ -20,8 +26,17 @@ module.exports = async (req, res) => {
       return res.status(405).json({ error: "Method not allowed. Use POST." });
     }
 
+    // IMPORTANT: handle body being a string on some deployments
+    let b = req.body || {};
+    if (typeof b === "string") {
+      try {
+        b = JSON.parse(b);
+      } catch (e) {
+        return res.status(400).json({ error: "Invalid JSON body." });
+      }
+    }
+
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-    const b = req.body || {};
 
     if (!b.name || !b.date || !b.time || !b.pickup || !b.dropoff || !b.vehicle) {
       return res.status(400).json({ error: "Missing required booking fields." });
@@ -30,7 +45,8 @@ module.exports = async (req, res) => {
     const amount = toCents(b.pay_now_cad);
     if (!amount) return res.status(400).json({ error: "Invalid payment amount." });
 
-    const DOMAIN = process.env.PUBLIC_DOMAIN || "https://www.monttremblantlimoservices.com";
+    const DOMAIN =
+      process.env.PUBLIC_DOMAIN || "https://www.monttremblantlimoservices.com";
 
     const description =
       `Trip: ${b.triptype}\n` +
@@ -43,17 +59,19 @@ module.exports = async (req, res) => {
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
-      line_items: [{
-        price_data: {
-          currency: "cad",
-          product_data: {
-            name: "Mont Tremblant Limo Reservation (Full Payment)",
-            description: description.slice(0, 4000)
+      line_items: [
+        {
+          price_data: {
+            currency: "cad",
+            product_data: {
+              name: "Mont Tremblant Limo Reservation (Full Payment)",
+              description: description.slice(0, 4000)
+            },
+            unit_amount: amount
           },
-          unit_amount: amount
-        },
-        quantity: 1
-      }],
+          quantity: 1
+        }
+      ],
       metadata: {
         name: b.name,
         phone: b.phone || "",
