@@ -1,82 +1,80 @@
-// /api/create-checkout-session.js
-module.exports = async (req, res) => {
-  // Basic CORS (optional but helps)
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+const Stripe = require("stripe");
 
-  if (req.method === "OPTIONS") return res.status(200).end();
-  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+module.exports = async (req, res) => {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
 
   try {
-    const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
-    if (!STRIPE_SECRET_KEY) {
-      return res.status(500).json({ error: "Missing env var: STRIPE_SECRET_KEY" });
+    const secret = process.env.STRIPE_SECRET_KEY;
+    if (!secret) {
+      return res.status(500).json({ error: "Missing STRIPE_SECRET_KEY env var" });
     }
 
-    // If Vercel didn’t parse JSON for some reason, this guards it
+    const stripe = Stripe(secret);
+
+    // Vercel usually gives req.body as an object already, but sometimes it’s a string
     const body = typeof req.body === "string" ? JSON.parse(req.body) : (req.body || {});
+    const {
+      booking_id,
+      pay_now_cad,
+      currency,
+      vehicle,
+      triptype,
+      date,
+      time,
+      pickup,
+      dropoff,
+      name,
+      email
+    } = body;
 
-    // Expecting cents from your frontend (e.g. 7500 for $75.00)
-    const amount = Number(body.amount || body.amount_cents || 0);
-    if (!Number.isFinite(amount) || amount <= 0) {
-      return res.status(400).json({ error: "Invalid amount (must be cents > 0)" });
+    const amountNumber = Number(pay_now_cad);
+    if (!amountNumber || amountNumber <= 0) {
+      return res.status(400).json({ error: "Invalid pay_now_cad amount" });
     }
 
-    const currency = (body.currency || "cad").toLowerCase();
+    const unit_amount = Math.round(amountNumber * 100); // dollars -> cents
+    const curr = (currency || "CAD").toLowerCase();
 
-    // Your domain (use your production domain)
-    const baseUrl =
-      process.env.BASE_URL ||
-      "https://www.monttremblantlimoservices.com";
+    // Build return URLs safely
+    const origin = req.headers.origin || "https://www.monttremblantlimoservices.com";
+    const success_url = `${origin}/?payment=success&booking_id=${encodeURIComponent(booking_id || "")}`;
+    const cancel_url  = `${origin}/?payment=cancel&booking_id=${encodeURIComponent(booking_id || "")}`;
 
-    const successUrl = `${baseUrl}/?payment=success&session_id={CHECKOUT_SESSION_ID}`;
-    const cancelUrl = `${baseUrl}/?payment=cancel`;
+    const session = await stripe.checkout.sessions.create({
+      mode: "payment",
+      payment_method_types: ["card"],
+      customer_email: email || undefined,
 
-    // Stripe expects application/x-www-form-urlencoded
-    const params = new URLSearchParams();
+      line_items: [
+        {
+          price_data: {
+            currency: curr,
+            product_data: {
+              name: `Mont Tremblant Limo Booking`,
+              description: `${vehicle || ""} • ${triptype || ""} • ${date || ""} ${time || ""}`.trim()
+            },
+            unit_amount
+          },
+          quantity: 1
+        }
+      ],
 
-    params.append("mode", "payment");
-    params.append("success_url", successUrl);
-    params.append("cancel_url", cancelUrl);
-
-    // Card payments
-    params.append("payment_method_types[]", "card");
-
-    // Line item using price_data (no Stripe Product setup needed)
-    params.append("line_items[0][quantity]", "1");
-    params.append("line_items[0][price_data][currency]", currency);
-    params.append("line_items[0][price_data][unit_amount]", String(Math.round(amount)));
-    params.append("line_items[0][price_data][product_data][name]", body.title || "Mont Tremblant Limo Booking");
-
-    // Optional: metadata (shows in Stripe dashboard)
-    if (body.bookingId) params.append("metadata[bookingId]", String(body.bookingId));
-    if (body.email) params.append("customer_email", String(body.email));
-
-    const stripeResp = await fetch("https://api.stripe.com/v1/checkout/sessions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${STRIPE_SECRET_KEY}`,
-        "Content-Type": "application/x-www-form-urlencoded",
+      metadata: {
+        booking_id: booking_id || "",
+        name: name || "",
+        pickup: pickup || "",
+        dropoff: dropoff || ""
       },
-      body: params.toString(),
+
+      success_url,
+      cancel_url
     });
 
-    const data = await stripeResp.json();
-
-    if (!stripeResp.ok) {
-      return res.status(500).json({
-        error: "Stripe error",
-        details: data,
-      });
-    }
-
-    // Stripe returns a hosted URL for Checkout
-    return res.status(200).json({ id: data.id, url: data.url });
+    return res.status(200).json({ url: session.url });
   } catch (err) {
-    return res.status(500).json({
-      error: "Server error creating Stripe checkout session",
-      details: err?.message || String(err),
-    });
+    console.error("Stripe checkout error:", err);
+    return res.status(500).json({ error: err.message || "Server error" });
   }
 };
