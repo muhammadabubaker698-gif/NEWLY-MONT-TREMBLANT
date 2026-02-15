@@ -1,7 +1,11 @@
 {
-  "name": "monttremblant-limo",
+  "name": "monttremblant-limo-static",
   "private": true,
+  "version": "1.0.0",
+  "type": "commonjs",
   "dependencies": {
-    "stripe": "^16.0.0"
+    "@supabase/supabase-js": "^2.45.4",
+    "resend": "^3.2.0",
+    "zod": "^3.23.8"
   }
 }

@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin • Mont Tremblant Limo</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:#f6f7fb;color:#111}
+    header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:white;border-bottom:1px solid #e6e6e6;position:sticky;top:0}
+    .wrap{max-width:1200px;margin:0 auto;padding:18px}
+    .card{background:#fff;border:1px solid #eaeaea;border-radius:14px;padding:16px}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px;border-bottom:1px solid #f0f0f0;vertical-align:top}
+    th{text-align:left;font-size:12px;letter-spacing:.02em;text-transform:uppercase;color:#555}
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .pill{display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;background:#f1f5ff}
+    .controls{display:flex;gap:10px;align-items:center}
+    input,select,button,textarea{font:inherit}
+    button{cursor:pointer;border:0;border-radius:10px;padding:10px 12px;background:#111;color:#fff}
+    button.secondary{background:#eee;color:#111}
+    .muted{color:#666;font-size:13px}
+    .login{max-width:420px;margin:10vh auto}
+    .danger{color:#b00020}
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:18px}
+    .modal.open{display:flex}
+    .modal .card{max-width:640px;width:100%}
+    textarea{width:100%;min-height:90px}
+  </style>
+</head>
+<body>
+  <header>
+    <div><b>Admin</b> <span class="muted">Mont Tremblant Limo</span></div>
+    <div class="controls">
+      <select id="statusFilter">
+        <option value="">All statuses</option>
+        <option value="new">new</option>
+        <option value="confirmed">confirmed</option>
+        <option value="assigned">assigned</option>
+        <option value="completed">completed</option>
+        <option value="cancelled">cancelled</option>
+      </select>
+      <button class="secondary" id="refreshBtn">Refresh</button>
+      <a href="/api/admin/logout"><button class="secondary">Logout</button></a>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div id="login" class="card login" style="display:none">
+      <h2>Admin login</h2>
+      <p class="muted">Enter your admin password.</p>
+      <form method="post" action="/api/admin/login">
+        <input type="password" name="password" placeholder="Password" style="width:100%;padding:12px;border-radius:10px;border:1px solid #ddd" />
+        <button style="width:100%;margin-top:10px">Login</button>
+        <p id="loginErr" class="danger" style="display:none;margin-top:10px">Wrong password</p>
+      </form>
+    </div>
+
+    <div id="app" class="card" style="display:none">
+      <div class="row" style="justify-content:space-between;align-items:center">
+        <div>
+          <h2 style="margin:0">Bookings</h2>
+          <div class="muted" id="meta"></div>
+        </div>
+      </div>
+
+      <div style="overflow:auto;margin-top:10px">
+        <table>
+          <thead>
+            <tr>
+              <th>Pickup time</th>
+              <th>Status</th>
+              <th>Customer</th>
+              <th>Trip</th>
+              <th>Vehicle</th>
+              <th>Estimate</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal" class="modal">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3 style="margin:0">Booking</h3>
+        <button class="secondary" id="closeModal">Close</button>
+      </div>
+      <div id="details" class="muted" style="margin-top:10px"></div>
+      <div style="margin-top:12px">
+        <label class="muted">Status</label>
+        <select id="editStatus" style="width:100%;padding:10px;border-radius:10px;border:1px solid #ddd">
+          <option value="new">new</option>
+          <option value="confirmed">confirmed</option>
+          <option value="assigned">assigned</option>
+          <option value="completed">completed</option>
+          <option value="cancelled">cancelled</option>
+        </select>
+      </div>
+      <div style="margin-top:12px">
+        <label class="muted">Assigned driver</label>
+        <input id="editDriver" placeholder="Driver name" style="width:100%;padding:10px;border-radius:10px;border:1px solid #ddd" />
+      </div>
+      <div style="margin-top:12px">
+        <label class="muted">Final price (optional)</label>
+        <input id="editPrice" placeholder="e.g. 450" style="width:100%;padding:10px;border-radius:10px;border:1px solid #ddd" />
+      </div>
+      <div style="margin-top:12px">
+        <label class="muted">Internal notes</label>
+        <textarea id="editNotes" placeholder="Notes..."></textarea>
+      </div>
+      <button id="saveBtn" style="margin-top:12px;width:100%">Save</button>
+      <div id="saveMsg" class="muted" style="margin-top:10px"></div>
+    </div>
+  </div>
+
+<script>
+  const $ = (s) => document.querySelector(s);
+
+  const state = { bookings: [], current: null };
+
+  function escapeHtml(s){ return String(s||"").replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+  async function api(url, opts){
+    const r = await fetch(url, { credentials:"include", ...opts });
+    const j = await r.json().catch(()=> ({}));
+    if(!r.ok || j.ok === false) throw new Error(j.error || "Request failed");
+    return j;
+  }
+
+  function showLogin(err){
+    $("#login").style.display = "block";
+    $("#app").style.display = "none";
+    if(err) $("#loginErr").style.display = "block";
+  }
+
+  function showApp(){
+    $("#login").style.display = "none";
+    $("#app").style.display = "block";
+  }
+
+  function fmtMoney(b){
+    const cur = b.currency || "CAD";
+    const n = Math.round(Number(b.price_estimate||0));
+    return `${cur}$${n}`;
+  }
+
+  function rowHtml(b){
+    const trip = `
+      <div><b>P:</b> ${escapeHtml(b.pickup_text)}</div>
+      ${b.mode === "one_way" ? `<div><b>D:</b> ${escapeHtml(b.dropoff_text||"-")}</div>` : ""}
+      ${b.mode === "hourly" ? `<div><b>Hours:</b> ${escapeHtml(b.hours||"")}</div>` : ""}
+    `;
+    return `
+      <tr>
+        <td>${escapeHtml(new Date(b.pickup_datetime).toLocaleString())}</td>
+        <td><span class="pill">${escapeHtml(b.status)}</span></td>
+        <td>
+          <div><b>${escapeHtml(b.customer_name)}</b></div>
+          <div class="muted">${escapeHtml(b.customer_email)}</div>
+          <div class="muted">${escapeHtml(b.customer_phone||"")}</div>
+        </td>
+        <td style="min-width:320px">${trip}</td>
+        <td>${escapeHtml(b.vehicle_key||"")}</td>
+        <td>${escapeHtml(fmtMoney(b))}</td>
+        <td><button class="secondary" data-open="${escapeHtml(b.id)}">Open</button></td>
+      </tr>
+    `;
+  }
+
+  function render(){
+    $("#rows").innerHTML = state.bookings.map(rowHtml).join("");
+    $("#meta").textContent = `${state.bookings.length} bookings`;
+    document.querySelectorAll("[data-open]").forEach(btn=>{
+      btn.addEventListener("click", () => openModal(btn.dataset.open));
+    });
+  }
+
+  async function load(){
+    const status = $("#statusFilter").value;
+    try{
+      const q = status ? `?status=${encodeURIComponent(status)}` : "";
+      const j = await api(`/api/admin/bookings${q}`);
+      state.bookings = j.data || [];
+      showApp();
+      render();
+    }catch(e){
+      showLogin(location.search.includes("err=1"));
+    }
+  }
+
+  function openModal(id){
+    const b = state.bookings.find(x => x.id === id);
+    state.current = b;
+    $("#details").innerHTML = `
+      <div><b>ID:</b> ${escapeHtml(b.id)}</div>
+      <div><b>Mode:</b> ${escapeHtml(b.mode)}</div>
+      <div><b>Pickup:</b> ${escapeHtml(b.pickup_text)}</div>
+      ${b.mode==="one_way" ? `<div><b>Dropoff:</b> ${escapeHtml(b.dropoff_text||"-")}</div>` : ""}
+      <div><b>Pickup time:</b> ${escapeHtml(new Date(b.pickup_datetime).toLocaleString())}</div>
+      ${b.mode==="hourly" ? `<div><b>Hours:</b> ${escapeHtml(b.hours||"")}</div>` : ""}
+      <div><b>Vehicle:</b> ${escapeHtml(b.vehicle_key||"")}</div>
+      <div><b>Estimate:</b> ${escapeHtml(fmtMoney(b))}</div>
+      <div><b>Notes:</b> ${escapeHtml(b.notes||"-")}</div>
+    `;
+    $("#editStatus").value = b.status || "new";
+    $("#editDriver").value = b.assigned_driver || "";
+    $("#editNotes").value = b.internal_notes || "";
+    $("#editPrice").value = b.price_final || "";
+    $("#saveMsg").textContent = "";
+    $("#modal").classList.add("open");
+  }
+
+  $("#closeModal").addEventListener("click", ()=> $("#modal").classList.remove("open"));
+  $("#refreshBtn").addEventListener("click", load);
+  $("#statusFilter").addEventListener("change", load);
+
+  $("#saveBtn").addEventListener("click", async ()=>{
+    const b = state.current;
+    if(!b) return;
+    $("#saveBtn").disabled = true;
+    $("#saveMsg").textContent = "Saving...";
+    try{
+      const payload = {
+        id: b.id,
+        status: $("#editStatus").value,
+        assigned_driver: $("#editDriver").value,
+        internal_notes: $("#editNotes").value,
+        price_final: $("#editPrice").value ? Number($("#editPrice").value) : null,
+      };
+      const j = await api("/api/admin/bookings", {
+        method:"PATCH",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify(payload)
+      });
+      const updated = j.data;
+      const idx = state.bookings.findIndex(x => x.id === updated.id);
+      if(idx >= 0) state.bookings[idx] = updated;
+      render();
+      $("#saveMsg").textContent = "Saved ✅";
+    }catch(e){
+      $("#saveMsg").textContent = "Error: " + e.message;
+    }finally{
+      $("#saveBtn").disabled = false;
+    }
+  });
+
+  // show wrong password message
+  if (location.search.includes("err=1")) $("#loginErr").style.display="block";
+
+  load();
+</script>
+</body>
+</html>
