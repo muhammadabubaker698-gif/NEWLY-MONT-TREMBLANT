@@ -1,0 +1,50 @@
+-- 1) ensure extension for gen_random_uuid()
+create extension if not exists pgcrypto;
+
+-- 2) create table (full schema)
+create table if not exists public.bookings (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+
+  -- trip info
+  mode text not null,                       -- "one_way" | "hourly"
+  pickup_text text not null,
+  dropoff_text text,
+  pickup_lat double precision,
+  pickup_lng double precision,
+  dropoff_lat double precision,
+  dropoff_lng double precision,
+
+  -- airport codes MUST be text (YUL, etc.)
+  pickup_airport text,
+  dropoff_airport text,
+
+  pickup_datetime timestamptz not null,
+  hours integer,
+  distance_m integer,
+  duration_s integer,
+
+  currency text not null default 'CAD',
+  vehicle_key text not null,
+  price_estimate numeric not null default 0,
+
+  -- customer
+  customer_name text not null,
+  customer_email text not null,
+  customer_phone text,
+  passengers integer,
+  luggage integer,
+  notes text,
+
+  -- payment tracking
+  payment_status text not null default 'unpaid',  -- unpaid|paid|failed
+  stripe_session_id text,
+  stripe_payment_intent text
+);
+
+-- 3) if you previously created airport fields as boolean, force them back to text:
+alter table public.bookings
+  alter column pickup_airport type text using pickup_airport::text;
+
+alter table public.bookings
+  alter column dropoff_airport type text using dropoff_airport::text;
