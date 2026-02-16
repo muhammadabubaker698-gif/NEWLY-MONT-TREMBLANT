@@ -1,58 +1,56 @@
+// /api/create-checkout-session.js
 const Stripe = require("stripe");
-const { createClient } = require("@supabase/supabase-js");
-
-function getEnv(name) {
-  const v = process.env[name];
-  if (!v) throw new Error(`Missing env var: ${name}`);
-  return v;
-}
 
 module.exports = async (req, res) => {
-  try {
-    const stripe = new Stripe(getEnv("STRIPE_SECRET_KEY"), { apiVersion: "2024-06-20" });
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
-    // IMPORTANT: Vercel gives raw body as a stream, we must read it as Buffer
-    const buf = await new Promise((resolve, reject) => {
-      const chunks = [];
-      req.on("data", (c) => chunks.push(Buffer.from(c)));
-      req.on("end", () => resolve(Buffer.concat(chunks)));
-      req.on("error", reject);
+  try {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+    const body = typeof req.body === "string" ? JSON.parse(req.body) : (req.body || {});
+
+    // Your index.html sends: booking_id, price_estimate, currency
+    const bookingId =
+      body.booking_id ||
+      body.bookingId ||
+      body.id ||
+      body.client_reference_id;
+
+    const amount =
+      body.price_estimate ??
+      body.amount ??
+      body.total ??
+      body.estimated_total;
+
+    const currency = (body.currency || "CAD").toLowerCase();
+
+    if (!bookingId) return res.status(400).json({ error: "Missing booking_id" });
+    if (!amount || Number(amount) <= 0) return res.status(400).json({ error: "Invalid price_estimate" });
+
+    const siteUrl = process.env.SITE_URL || "https://monttremblantlimoservices.com";
+
+    const session = await stripe.checkout.sessions.create({
+      mode: "payment",
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price_data: {
+            currency,
+            product_data: { name: `Mont Tremblant Limo Booking (${bookingId})` },
+            unit_amount: Math.round(Number(amount) * 100),
+          },
+          quantity: 1,
+        },
+      ],
+      client_reference_id: bookingId,
+      metadata: { booking_id: bookingId },
+      success_url: `${siteUrl}/?paid=1&bookingId=${encodeURIComponent(bookingId)}`,
+      cancel_url: `${siteUrl}/?canceled=1&bookingId=${encodeURIComponent(bookingId)}`,
     });
 
-    const sig = req.headers["stripe-signature"];
-    if (!sig) return res.status(400).send("Missing stripe-signature");
-
-    const event = stripe.webhooks.constructEvent(
-      buf,
-      sig,
-      getEnv("STRIPE_WEBHOOK_SECRET")
-    );
-
-    if (event.type === "checkout.session.completed") {
-      const session = event.data.object;
-
-      const bookingId =
-        session.metadata?.booking_id || session.client_reference_id;
-
-      if (bookingId) {
-        const supabase = createClient(
-          getEnv("SUPABASE_URL"),
-          getEnv("SUPABASE_SERVICE_ROLE_KEY")
-        );
-
-        await supabase
-          .from("bookings")
-          .update({
-            payment_status: "paid",
-            stripe_session_id: session.id,
-            stripe_payment_intent: session.payment_intent || null,
-          })
-          .eq("id", bookingId);
-      }
-    }
-
-    res.json({ received: true });
-  } catch (err) {
-    res.status(400).send(`Webhook Error: ${err.message}`);
+    return res.status(200).json({ url: session.url, id: session.id });
+  } catch (e) {
+    console.error("create-checkout-session error:", e);
+    return res.status(500).json({ error: e.message || "Internal error" });
   }
 };
