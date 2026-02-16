@@ -1,56 +1,55 @@
-// /api/create-checkout-session.js
+// /api/stripe-webhook.js
 const Stripe = require("stripe");
+const { createClient } = require("@supabase/supabase-js");
 
 module.exports = async (req, res) => {
-  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+  if (req.method !== "POST") return res.status(405).send("Method Not Allowed");
+
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+  const sig = req.headers["stripe-signature"];
+  let event;
 
   try {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+    // IMPORTANT: Vercel needs raw body for Stripe signature. If this fails, see note below.
+    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+  } catch (err) {
+    console.error("Webhook signature verify failed:", err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
 
-    const body = typeof req.body === "string" ? JSON.parse(req.body) : (req.body || {});
+  try {
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object;
 
-    // Your index.html sends: booking_id, price_estimate, currency
-    const bookingId =
-      body.booking_id ||
-      body.bookingId ||
-      body.id ||
-      body.client_reference_id;
+      const bookingId = session.metadata?.booking_id || session.client_reference_id;
+      const paymentStatus = session.payment_status; // "paid"
+      const amountTotal = (session.amount_total ?? 0) / 100;
+      const currency = session.currency?.toUpperCase();
 
-    const amount =
-      body.price_estimate ??
-      body.amount ??
-      body.total ??
-      body.estimated_total;
+      if (bookingId) {
+        const supabase = createClient(
+          process.env.SUPABASE_URL,
+          process.env.SUPABASE_SERVICE_ROLE_KEY
+        );
 
-    const currency = (body.currency || "CAD").toLowerCase();
+        // Update booking row
+        const { error } = await supabase
+          .from("bookings")
+          .update({
+            payment_status: paymentStatus,
+            estimated_total: amountTotal, // optional
+            currency: currency,           // optional
+          })
+          .eq("id", bookingId);
 
-    if (!bookingId) return res.status(400).json({ error: "Missing booking_id" });
-    if (!amount || Number(amount) <= 0) return res.status(400).json({ error: "Invalid price_estimate" });
+        if (error) console.error("Supabase update error:", error);
+      }
+    }
 
-    const siteUrl = process.env.SITE_URL || "https://monttremblantlimoservices.com";
-
-    const session = await stripe.checkout.sessions.create({
-      mode: "payment",
-      payment_method_types: ["card"],
-      line_items: [
-        {
-          price_data: {
-            currency,
-            product_data: { name: `Mont Tremblant Limo Booking (${bookingId})` },
-            unit_amount: Math.round(Number(amount) * 100),
-          },
-          quantity: 1,
-        },
-      ],
-      client_reference_id: bookingId,
-      metadata: { booking_id: bookingId },
-      success_url: `${siteUrl}/?paid=1&bookingId=${encodeURIComponent(bookingId)}`,
-      cancel_url: `${siteUrl}/?canceled=1&bookingId=${encodeURIComponent(bookingId)}`,
-    });
-
-    return res.status(200).json({ url: session.url, id: session.id });
+    return res.status(200).json({ received: true });
   } catch (e) {
-    console.error("create-checkout-session error:", e);
-    return res.status(500).json({ error: e.message || "Internal error" });
+    console.error("Webhook handler error:", e);
+    return res.status(500).send("Webhook handler failed");
   }
 };
