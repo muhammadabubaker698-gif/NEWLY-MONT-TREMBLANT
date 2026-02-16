@@ -1,142 +1,141 @@
-const { createClient } = require("@supabase/supabase-js");
+// /api/bookings.js
 const { Resend } = require("resend");
-const { z } = require("zod");
-
-const BookingSchema = z.object({
-  mode: z.enum(["one_way", "hourly"]),
-  pickup_text: z.string().min(3),
-  dropoff_text: z.string().optional().nullable(),
-  pickup_lat: z.number().optional().nullable(),
-  pickup_lng: z.number().optional().nullable(),
-  dropoff_lat: z.number().optional().nullable(),
-  dropoff_lng: z.number().optional().nullable(),
-  pickup_airport: z.string().optional().nullable(),
-  dropoff_airport: z.string().optional().nullable(),
-  pickup_datetime: z.string().min(5), // ISO
-  hours: z.number().int().min(1).max(24).optional().nullable(),
-  distance_m: z.number().int().optional().nullable(),
-  duration_s: z.number().int().optional().nullable(),
-  currency: z.enum(["CAD","USD"]).default("CAD"),
-  vehicle_key: z.string().min(2),
-  price_estimate: z.number().min(0),
-  customer_name: z.string().min(2),
-  customer_email: z.string().email(),
-  customer_phone: z.string().optional().nullable(),
-  passengers: z.number().int().min(1).max(50).optional().nullable(),
-  luggage: z.number().int().min(0).max(50).optional().nullable(),
-  notes: z.string().optional().nullable(),
-});
-
-function money(n, currency="CAD") {
-  const rounded = Math.round(Number(n) || 0);
-  return `${currency}$${rounded}`;
-}
-
-function safe(s){ return String(s ?? "").replace(/[<>]/g,""); }
-
-function customerEmailHtml(b, id) {
-  return `
-    <div style="font-family:Arial,sans-serif;line-height:1.5">
-      <h2>Booking received ✅</h2>
-      <p>Hi ${safe(b.customer_name)},</p>
-      <p>We received your request. We’ll confirm shortly.</p>
-      <hr/>
-      <p><b>Pickup:</b> ${safe(b.pickup_text)}</p>
-      ${b.mode === "one_way" ? `<p><b>Dropoff:</b> ${safe(b.dropoff_text || "-")}</p>` : ""}
-      <p><b>Date/Time:</b> ${new Date(b.pickup_datetime).toLocaleString()}</p>
-      ${b.mode === "hourly" ? `<p><b>Hours:</b> ${b.hours}</p>` : ""}
-      <p><b>Vehicle:</b> ${safe(b.vehicle_key)}</p>
-      <p><b>Estimated price:</b> ${money(b.price_estimate, b.currency)}</p>
-      <p><b>Booking ID:</b> ${id}</p>
-      <hr/>
-      <p>If you need changes, reply to this email or WhatsApp us.</p>
-    </div>`;
-}
-
-function adminEmailHtml(b, id) {
-  return `
-    <div style="font-family:Arial,sans-serif;line-height:1.5">
-      <h2>New booking 🔔</h2>
-      <p><b>ID:</b> ${id}</p>
-      <p><b>Mode:</b> ${safe(b.mode)}</p>
-      <p><b>Pickup:</b> ${safe(b.pickup_text)}</p>
-      ${b.mode === "one_way" ? `<p><b>Dropoff:</b> ${safe(b.dropoff_text || "-")}</p>` : ""}
-      <p><b>Date/Time:</b> ${new Date(b.pickup_datetime).toLocaleString()}</p>
-      ${b.mode === "hourly" ? `<p><b>Hours:</b> ${b.hours}</p>` : ""}
-      <p><b>Vehicle:</b> ${safe(b.vehicle_key)}</p>
-      <p><b>Estimate:</b> ${money(b.price_estimate, b.currency)}</p>
-      <hr/>
-      <p><b>Name:</b> ${safe(b.customer_name)}</p>
-      <p><b>Email:</b> ${safe(b.customer_email)}</p>
-      <p><b>Phone:</b> ${safe(b.customer_phone || "-")}</p>
-      <p><b>Notes:</b> ${safe(b.notes || "-")}</p>
-    </div>`;
-}
-
-function getEnv(name){
-  const v = process.env[name];
-  if(!v) throw new Error(`Missing env var: ${name}`);
-  return v;
-}
+const { createClient } = require("@supabase/supabase-js");
 
 module.exports = async (req, res) => {
-  if (req.method !== "POST") {
-    res.statusCode = 405;
-    return res.end("Method Not Allowed");
-  }
+  // CORS (optional but helpful)
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  if (req.method === "OPTIONS") return res.status(200).end();
+
+  if (req.method !== "POST") return res.status(405).json({ ok: false, error: "Method not allowed" });
 
   try {
-    const supabase = createClient(
-      getEnv("SUPABASE_URL"),
-      getEnv("SUPABASE_SERVICE_ROLE_KEY")
-    );
-    const resend = new Resend(getEnv("RESEND_API_KEY"));
+    const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
 
-    const body = await new Promise((resolve, reject) => {
-      let data = "";
-      req.on("data", chunk => data += chunk);
-      req.on("end", () => {
-        try { resolve(JSON.parse(data || "{}")); } catch (e) { reject(e); }
-      });
-    });
+    // ✅ ENV
+    const SUPABASE_URL = process.env.SUPABASE_URL;
+    const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
-    const b = BookingSchema.parse(body);
+    // ✅ IMPORTANT: correct admin email env (your screenshot had typo)
+    const ADMIN_NOTIFY_EMAIL =
+      process.env.ADMIN_NOTIFY_EMAIL ||
+      process.env.ADMIN_NOTIFY_EMAI || // fallback in case old typo exists
+      "groupedelson@gmail.com";
 
-    const { data: inserted, error } = await supabase
+    // ✅ Use a verified sender (fallback to Resend onboarding sender)
+    const RESEND_FROM = process.env.RESEND_FROM || "onboarding@resend.dev";
+    const FROM = `Mont Tremblant Limo <${RESEND_FROM}>`;
+
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+      throw new Error("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
+    }
+    if (!RESEND_API_KEY) {
+      throw new Error("Missing RESEND_API_KEY");
+    }
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    const resend = new Resend(RESEND_API_KEY);
+
+    // ---- Basic fields coming from your index.html ----
+    const booking = {
+      customer_name: body.customer_name || body.name || "",
+      customer_email: body.customer_email || body.email || "",
+      customer_phone: body.customer_phone || body.phone || "",
+      passengers: body.passengers ?? null,
+      luggage: body.luggage ?? null,
+      notes: body.notes || "",
+      mode: body.mode || "point_to_point",
+
+      pickup_text: body.pickup_text || body.pickup || "",
+      dropoff_text: body.dropoff_text || body.dropoff || "",
+      pickup_datetime: body.pickup_datetime || body.pickup_date || null,
+
+      hours: body.hours ?? null,
+      duration_s: body.duration_s ?? null,
+      distance_m: body.distance_m ?? null,
+
+      price_estimate: body.price_estimate ?? body.estimated_total ?? null,
+      currency: body.currency || "CAD",
+
+      vehicle_key: body.vehicle_key || null,
+
+      // airport flags/coords if present
+      pickup_airport: body.pickup_airport ?? false,
+      dropoff_airport: body.dropoff_airport ?? false,
+      pickup_lat: body.pickup_lat ?? null,
+      pickup_lng: body.pickup_lng ?? null,
+      dropoff_lat: body.dropoff_lat ?? null,
+      dropoff_lng: body.dropoff_lng ?? null,
+
+      // payment tracking
+      payment_status: "unpaid",
+    };
+
+    // ✅ Insert into Supabase
+    const { data, error } = await supabase
       .from("bookings")
-      .insert([b])
+      .insert(booking)
       .select("id")
       .single();
 
-    if (error) throw error;
-
-    const bookingId = inserted.id;
-
-    // emails (best-effort)
-    const from = "Mont Tremblant Limo <bookings@monttremblantlimoservices.com>";
-
-    await resend.emails.send({
-      from,
-      to: b.customer_email,
-      subject: "We received your booking request",
-      html: customerEmailHtml(b, bookingId),
-    });
-
-    const adminTo = process.env.ADMIN_NOTIFY_EMAIL;
-    if (adminTo) {
-      await resend.emails.send({
-        from,
-        to: adminTo,
-        subject: `New booking: ${bookingId}`,
-        html: adminEmailHtml(b, bookingId),
-      });
+    if (error) {
+      console.error("Supabase insert error:", error);
+      throw new Error(error.message || "Supabase insert failed");
     }
 
-    res.setHeader("Content-Type", "application/json");
-    res.end(JSON.stringify({ ok: true, id: bookingId }));
+    const bookingId = data.id;
+    console.log("Booking inserted:", bookingId);
+
+    // ✅ Email content
+    const subject = `New Booking Request (${bookingId})`;
+    const html = `
+      <h2>New Booking Request</h2>
+      <p><b>Booking ID:</b> ${bookingId}</p>
+      <p><b>Name:</b> ${booking.customer_name}</p>
+      <p><b>Email:</b> ${booking.customer_email}</p>
+      <p><b>Phone:</b> ${booking.customer_phone}</p>
+      <p><b>Pickup:</b> ${booking.pickup_text}</p>
+      <p><b>Dropoff:</b> ${booking.dropoff_text}</p>
+      <p><b>Pickup Date/Time:</b> ${booking.pickup_datetime || ""}</p>
+      <p><b>Passengers:</b> ${booking.passengers ?? ""}</p>
+      <p><b>Luggage:</b> ${booking.luggage ?? ""}</p>
+      <p><b>Notes:</b> ${booking.notes || ""}</p>
+      <p><b>Estimate:</b> ${booking.price_estimate ?? ""} ${booking.currency}</p>
+      <hr/>
+      <p>Mode: ${booking.mode}</p>
+    `;
+
+    // ✅ Send admin email
+    const adminSend = await resend.emails.send({
+      from: FROM,
+      to: ADMIN_NOTIFY_EMAIL,
+      subject,
+      html,
+    });
+    console.log("Admin email result:", adminSend?.data?.id || adminSend);
+
+    // ✅ Send customer confirmation (optional)
+    if (booking.customer_email) {
+      const custSend = await resend.emails.send({
+        from: FROM,
+        to: booking.customer_email,
+        subject: "We received your booking request",
+        html: `
+          <p>Hi ${booking.customer_name || "there"},</p>
+          <p>We received your request. Your booking ID is <b>${bookingId}</b>.</p>
+          <p>We will contact you shortly to confirm.</p>
+          <p>— Mont Tremblant Limo</p>
+        `,
+      });
+      console.log("Customer email result:", custSend?.data?.id || custSend);
+    }
+
+    return res.status(200).json({ ok: true, id: bookingId });
   } catch (e) {
-    res.statusCode = 400;
-    res.setHeader("Content-Type", "application/json");
-    res.end(JSON.stringify({ ok: false, error: e?.message || "Unknown error" }));
+    console.error("bookings.js error:", e);
+    return res.status(400).json({ ok: false, error: e.message || "Unknown error" });
   }
 };
