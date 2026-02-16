@@ -1,120 +1,62 @@
-// api/stripe-webhook.js
 const Stripe = require("stripe");
 const { createClient } = require("@supabase/supabase-js");
-const { Resend } = require("resend");
 
-// IMPORTANT for Stripe signature verification:
-// Vercel Node functions: we must read raw body
-async function getRawBody(req) {
-  const chunks = [];
-  for await (const chunk of req) chunks.push(Buffer.from(chunk));
-  return Buffer.concat(chunks);
-}
-
-function mustEnv(name) {
+function getEnv(name) {
   const v = process.env[name];
   if (!v) throw new Error(`Missing env var: ${name}`);
   return v;
 }
 
-module.exports = async function handler(req, res) {
+module.exports = async (req, res) => {
   try {
-    if (req.method !== "POST") return res.status(405).send("Method not allowed");
+    const stripe = new Stripe(getEnv("STRIPE_SECRET_KEY"));
 
-    const stripe = new Stripe(mustEnv("STRIPE_SECRET_KEY"), { apiVersion: "2024-06-20" });
+    // Read raw body as Buffer
+    const buf = await new Promise((resolve, reject) => {
+      const chunks = [];
+      req.on("data", (c) => chunks.push(Buffer.from(c)));
+      req.on("end", () => resolve(Buffer.concat(chunks)));
+      req.on("error", reject);
+    });
 
     const sig = req.headers["stripe-signature"];
-    if (!sig) return res.status(400).send("Missing stripe-signature header");
+    if (!sig) return res.status(400).send("Missing stripe-signature");
 
-    const rawBody = await getRawBody(req);
-
-    let event;
-    try {
-      event = stripe.webhooks.constructEvent(
-        rawBody,
-        sig,
-        mustEnv("STRIPE_WEBHOOK_SECRET")
-      );
-    } catch (err) {
-      console.error("Webhook signature verification failed.", err.message);
-      return res.status(400).send(`Webhook Error: ${err.message}`);
-    }
-
-    const supabase = createClient(
-      mustEnv("SUPABASE_URL"),
-      mustEnv("SUPABASE_SERVICE_ROLE_KEY"),
-      { auth: { persistSession: false } }
+    const event = stripe.webhooks.constructEvent(
+      buf,
+      sig,
+      getEnv("STRIPE_WEBHOOK_SECRET")
     );
 
-    const resend = new Resend(mustEnv("RESEND_API_KEY"));
-    const fromEmail =
-      process.env.RESEND_FROM || "Mont Tremblant Limo <onboarding@resend.dev>";
-    const adminTo =
-      process.env.ADMIN_NOTIFY_EMAIL ||
-      process.env.ADMIN_NOTIFY_EMAI ||
-      null;
-
-    // We handle these events:
-    // - checkout.session.completed (best: has metadata + client_reference_id)
-    // - payment_intent.succeeded (fallback)
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
 
+      // Accept all variants
       const bookingId =
+        session.metadata?.booking_id ||
+        session.metadata?.bookingId ||
         session.client_reference_id ||
-        (session.metadata && session.metadata.bookingId) ||
-        (session.metadata && session.metadata.booking_id);
+        null;
 
-      if (!bookingId) {
-        console.warn("No bookingId found in session.");
-        return res.status(200).json({ received: true, note: "no bookingId" });
+      if (bookingId) {
+        const supabase = createClient(
+          getEnv("SUPABASE_URL"),
+          getEnv("SUPABASE_SERVICE_ROLE_KEY")
+        );
+
+        await supabase
+          .from("bookings")
+          .update({
+            payment_status: "paid",
+            stripe_session_id: session.id,
+            stripe_payment_intent: session.payment_intent || null,
+          })
+          .eq("id", bookingId);
       }
-
-      const paymentStatus = session.payment_status === "paid" ? "paid" : "unpaid";
-      const stripe_session_id = session.id;
-      const stripe_payment_intent =
-        typeof session.payment_intent === "string" ? session.payment_intent : null;
-
-      const { data: updated, error: upErr } = await supabase
-        .from("bookings")
-        .update({
-          payment_status: paymentStatus,
-          stripe_session_id,
-          stripe_payment_intent,
-        })
-        .eq("id", bookingId)
-        .select("*")
-        .single();
-
-      if (upErr) {
-        console.error("Supabase update failed:", upErr.message);
-      } else if (adminTo && paymentStatus === "paid") {
-        // Notify provider payment received
-        await resend.emails.send({
-          from: fromEmail,
-          to: adminTo,
-          subject: `Payment received ✅ (${bookingId})`,
-          html: `
-            <h2>Payment received ✅</h2>
-            <p><b>Booking ID:</b> ${bookingId}</p>
-            <p><b>Customer:</b> ${updated?.customer_name || "-"}</p>
-            <p><b>Email:</b> ${updated?.customer_email || "-"}</p>
-            <p><b>Phone:</b> ${updated?.customer_phone || "-"}</p>
-            <p><b>Amount:</b> ${updated?.price_estimate ? `${(updated.currency || "CAD").toUpperCase()}$${Number(updated.price_estimate).toFixed(0)}` : "-"}</p>
-            <p><b>Pickup:</b> ${updated?.pickup || "-"}</p>
-            <p><b>Dropoff:</b> ${updated?.dropoff || "-"}</p>
-            <p><b>Stripe session:</b> ${stripe_session_id}</p>
-          `,
-        });
-      }
-
-      return res.status(200).json({ received: true });
     }
 
-    // Not handling other event types right now
     return res.status(200).json({ received: true });
-  } catch (e) {
-    console.error("WEBHOOK ERROR:", e);
-    return res.status(500).send(e.message || "Internal Server Error");
+  } catch (err) {
+    return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 };
