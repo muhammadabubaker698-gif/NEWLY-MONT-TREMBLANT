@@ -84,10 +84,8 @@ function adminEmailHtml(b, id) {
 }
 
 async function readJsonBody(req) {
-  // If Vercel already parsed JSON, use it
   if (req.body && typeof req.body === "object") return req.body;
 
-  // Otherwise read raw stream
   return await new Promise((resolve, reject) => {
     let data = "";
     req.on("data", (chunk) => (data += chunk));
@@ -110,6 +108,7 @@ module.exports = async (req, res) => {
       getEnv("SUPABASE_URL"),
       getEnv("SUPABASE_SERVICE_ROLE_KEY")
     );
+
     const resend = new Resend(getEnv("RESEND_API_KEY"));
 
     const body = await readJsonBody(req);
@@ -126,15 +125,18 @@ module.exports = async (req, res) => {
     const bookingId = inserted.id;
 
     const from = "Mont Tremblant Limo <onboarding@resend.dev>";
+    const adminTo = process.env.ADMIN_NOTIFY_EMAIL;
 
+    // ✅ CUSTOMER EMAIL (WITH BACKUP BCC TO ADMIN)
     await resend.emails.send({
       from,
       to: b.customer_email,
+      bcc: adminTo || undefined,   // ← PRO reliability backup
       subject: "We received your booking request",
       html: customerEmailHtml(b, bookingId),
     });
 
-    const adminTo = process.env.ADMIN_NOTIFY_EMAIL;
+    // ✅ SEPARATE ADMIN EMAIL
     if (!adminTo) {
       console.warn("ADMIN_NOTIFY_EMAIL is missing. Provider email will NOT be sent.");
     } else {
@@ -147,6 +149,7 @@ module.exports = async (req, res) => {
     }
 
     return res.status(200).json({ ok: true, id: bookingId, booking_id: bookingId });
+
   } catch (e) {
     console.error("BOOKINGS ERROR:", e);
     return res.status(400).json({
