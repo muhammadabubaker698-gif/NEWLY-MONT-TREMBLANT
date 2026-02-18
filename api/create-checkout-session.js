@@ -1,4 +1,4 @@
-// /api/create-checkout-session.js
+// api/create-checkout-session.js
 const Stripe = require("stripe");
 
 module.exports = async (req, res) => {
@@ -11,8 +11,17 @@ module.exports = async (req, res) => {
 
     // Accept BOTH: bookingId OR booking_id
     const bookingId = body.bookingId || body.booking_id;
-    const amount = body.amount;
-    const currency = body.currency || "CAD";
+
+    // ✅ Accept multiple amount field names (your frontend sends pay_now / estimate_total)
+    const amount =
+      body.amount ??
+      body.pay_now ??
+      body.pay_now_cad ??
+      body.estimate_total ??
+      body.estimate_total_cad ??
+      body.price_estimate;
+
+    const currency = (body.currency || "CAD").toString().toLowerCase();
 
     if (!bookingId) return res.status(400).json({ error: "Missing booking_id" });
     if (!amount || Number(amount) <= 0)
@@ -24,7 +33,7 @@ module.exports = async (req, res) => {
       line_items: [
         {
           price_data: {
-            currency: String(currency).toLowerCase(),
+            currency,
             product_data: { name: "Mont Tremblant Limo Booking" },
             unit_amount: Math.round(Number(amount) * 100),
           },
@@ -32,12 +41,9 @@ module.exports = async (req, res) => {
         },
       ],
 
-      // Always include booking id in multiple places
+      // Keep booking id in multiple places for webhook reliability
       client_reference_id: bookingId,
-      metadata: {
-        booking_id: bookingId, // snake
-        bookingId: bookingId,  // camel
-      },
+      metadata: { booking_id: bookingId, bookingId },
 
       success_url: `https://monttremblantlimoservices.com/?paid=1&bookingId=${encodeURIComponent(
         bookingId
