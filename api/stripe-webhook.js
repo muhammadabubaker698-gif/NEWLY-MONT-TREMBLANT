@@ -1,3 +1,4 @@
+// api/stripe-webhook.js
 const Stripe = require("stripe");
 const { createClient } = require("@supabase/supabase-js");
 
@@ -8,10 +9,12 @@ function getEnv(name) {
 }
 
 module.exports = async (req, res) => {
+  if (req.method !== "POST") return res.status(405).send("Method Not Allowed");
+
   try {
     const stripe = new Stripe(getEnv("STRIPE_SECRET_KEY"));
 
-    // Read raw body as Buffer
+    // Read raw body as Buffer (required for Stripe signature verification)
     const buf = await new Promise((resolve, reject) => {
       const chunks = [];
       req.on("data", (c) => chunks.push(Buffer.from(c)));
@@ -31,7 +34,6 @@ module.exports = async (req, res) => {
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
 
-      // Accept all variants
       const bookingId =
         session.metadata?.booking_id ||
         session.metadata?.bookingId ||
