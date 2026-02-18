@@ -125,31 +125,46 @@ module.exports = async (req, res) => {
     const bookingId = inserted.id;
 
     const from = "Mont Tremblant Limo <onboarding@resend.dev>";
-    const adminTo = process.env.ADMIN_NOTIFY_EMAIL;
+    const adminTo = (process.env.ADMIN_NOTIFY_EMAIL || "").trim();
 
-    // ✅ CUSTOMER EMAIL (WITH BACKUP BCC TO ADMIN)
-    await resend.emails.send({
-      from,
-      to: b.customer_email,
-      bcc: adminTo || undefined,   // ← PRO reliability backup
-      subject: "We received your booking request",
-      html: customerEmailHtml(b, bookingId),
-    });
+    // Debug logs (check Vercel Logs -> Functions)
+    console.log("ADMIN_NOTIFY_EMAIL =", JSON.stringify(adminTo));
+    console.log("CUSTOMER EMAIL =", JSON.stringify(b.customer_email));
+    console.log("RESEND_API_KEY exists?", !!process.env.RESEND_API_KEY);
 
-    // ✅ SEPARATE ADMIN EMAIL
-    if (!adminTo) {
-      console.warn("ADMIN_NOTIFY_EMAIL is missing. Provider email will NOT be sent.");
-    } else {
-      await resend.emails.send({
+    // -------- CUSTOMER EMAIL (WITH BACKUP BCC TO ADMIN) --------
+    try {
+      const customerResp = await resend.emails.send({
         from,
-        to: adminTo,
-        subject: `New booking: ${bookingId}`,
-        html: adminEmailHtml(b, bookingId),
+        to: b.customer_email,
+        bcc: adminTo || undefined, // backup notification
+        subject: "We received your booking request",
+        html: customerEmailHtml(b, bookingId),
       });
+      console.log("RESEND CUSTOMER RESPONSE =", customerResp);
+    } catch (err) {
+      console.error("RESEND CUSTOMER ERROR =", err);
+    }
+
+    // -------- ADMIN EMAIL (SEPARATE) --------
+    try {
+      if (!adminTo) {
+        console.warn("ADMIN EMAIL SKIPPED (ADMIN_NOTIFY_EMAIL missing)");
+      } else {
+        console.log("SENDING ADMIN EMAIL TO =", JSON.stringify(adminTo));
+        const adminResp = await resend.emails.send({
+          from,
+          to: adminTo,
+          subject: `New booking: ${bookingId}`,
+          html: adminEmailHtml(b, bookingId),
+        });
+        console.log("RESEND ADMIN RESPONSE =", adminResp);
+      }
+    } catch (err) {
+      console.error("RESEND ADMIN ERROR =", err);
     }
 
     return res.status(200).json({ ok: true, id: bookingId, booking_id: bookingId });
-
   } catch (e) {
     console.error("BOOKINGS ERROR:", e);
     return res.status(400).json({
