@@ -83,6 +83,25 @@ function adminEmailHtml(b, id) {
   </div>`;
 }
 
+async function readJsonBody(req) {
+  // If Vercel already parsed JSON, use it
+  if (req.body && typeof req.body === "object") return req.body;
+
+  // Otherwise read raw stream
+  return await new Promise((resolve, reject) => {
+    let data = "";
+    req.on("data", (chunk) => (data += chunk));
+    req.on("end", () => {
+      try {
+        resolve(JSON.parse(data || "{}"));
+      } catch (e) {
+        reject(e);
+      }
+    });
+    req.on("error", reject);
+  });
+}
+
 module.exports = async (req, res) => {
   if (req.method !== "POST") return res.status(405).send("Method Not Allowed");
 
@@ -93,19 +112,7 @@ module.exports = async (req, res) => {
     );
     const resend = new Resend(getEnv("RESEND_API_KEY"));
 
-    // read raw body (works reliably on Vercel)
-    const body = await new Promise((resolve, reject) => {
-      let data = "";
-      req.on("data", (chunk) => (data += chunk));
-      req.on("end", () => {
-        try {
-          resolve(JSON.parse(data || "{}"));
-        } catch (e) {
-          reject(e);
-        }
-      });
-    });
-
+    const body = await readJsonBody(req);
     const b = BookingSchema.parse(body);
 
     const { data: inserted, error } = await supabase
@@ -118,10 +125,8 @@ module.exports = async (req, res) => {
 
     const bookingId = inserted.id;
 
-    // NOTE: keep as resend.dev until your domain sender is verified in Resend
     const from = "Mont Tremblant Limo <onboarding@resend.dev>";
 
-    // customer email
     await resend.emails.send({
       from,
       to: b.customer_email,
@@ -129,7 +134,6 @@ module.exports = async (req, res) => {
       html: customerEmailHtml(b, bookingId),
     });
 
-    // ✅ provider/admin email
     const adminTo = process.env.ADMIN_NOTIFY_EMAIL;
     if (!adminTo) {
       console.warn("ADMIN_NOTIFY_EMAIL is missing. Provider email will NOT be sent.");
@@ -142,4 +146,12 @@ module.exports = async (req, res) => {
       });
     }
 
-    return res.status(2
+    return res.status(200).json({ ok: true, id: bookingId, booking_id: bookingId });
+  } catch (e) {
+    console.error("BOOKINGS ERROR:", e);
+    return res.status(400).json({
+      ok: false,
+      error: e?.message || "Unknown error",
+    });
+  }
+};
