@@ -38,6 +38,7 @@ function money(n, currency = "CAD") {
   const rounded = Math.round(Number(n) || 0);
   return `${currency}$${rounded}`;
 }
+
 function safe(s) {
   return String(s ?? "").replace(/[<>]/g, "");
 }
@@ -124,47 +125,43 @@ module.exports = async (req, res) => {
 
     const bookingId = inserted.id;
 
-    const from = "Mont Tremblant Limo <onboarding@resend.dev>";
-    const adminTo = (process.env.ADMIN_NOTIFY_EMAIL || "").trim();
+    // ⭐ PROFESSIONAL SENDER
+    const from = "Mont Tremblant Limo <bookings@monttremblantlimoservices.com>";
 
-    // Debug logs (check Vercel Logs -> Functions)
-    console.log("ADMIN_NOTIFY_EMAIL =", JSON.stringify(adminTo));
-    console.log("CUSTOMER EMAIL =", JSON.stringify(b.customer_email));
-    console.log("RESEND_API_KEY exists?", !!process.env.RESEND_API_KEY);
+    // ⭐ REPLIES GO TO YOUR GMAIL
+    const replyTo = "muhammadabubaker698@gmail.com";
 
-    // -------- CUSTOMER EMAIL (WITH BACKUP BCC TO ADMIN) --------
-    try {
-      const customerResp = await resend.emails.send({
+    const adminTo = process.env.ADMIN_NOTIFY_EMAIL;
+
+    // =========================
+    // CUSTOMER EMAIL
+    // =========================
+    await resend.emails.send({
+      from,
+      to: b.customer_email,
+      reply_to: replyTo,
+      bcc: adminTo || undefined,
+      subject: "We received your booking request",
+      html: customerEmailHtml(b, bookingId),
+    });
+
+    // =========================
+    // ADMIN EMAIL
+    // =========================
+    if (adminTo) {
+      await resend.emails.send({
         from,
-        to: b.customer_email,
-        bcc: adminTo || undefined, // backup notification
-        subject: "We received your booking request",
-        html: customerEmailHtml(b, bookingId),
+        to: adminTo,
+        reply_to: replyTo,
+        subject: `New booking: ${bookingId}`,
+        html: adminEmailHtml(b, bookingId),
       });
-      console.log("RESEND CUSTOMER RESPONSE =", customerResp);
-    } catch (err) {
-      console.error("RESEND CUSTOMER ERROR =", err);
+    } else {
+      console.warn("ADMIN_NOTIFY_EMAIL missing");
     }
 
-    // -------- ADMIN EMAIL (SEPARATE) --------
-    try {
-      if (!adminTo) {
-        console.warn("ADMIN EMAIL SKIPPED (ADMIN_NOTIFY_EMAIL missing)");
-      } else {
-        console.log("SENDING ADMIN EMAIL TO =", JSON.stringify(adminTo));
-        const adminResp = await resend.emails.send({
-          from,
-          to: adminTo,
-          subject: `New booking: ${bookingId}`,
-          html: adminEmailHtml(b, bookingId),
-        });
-        console.log("RESEND ADMIN RESPONSE =", adminResp);
-      }
-    } catch (err) {
-      console.error("RESEND ADMIN ERROR =", err);
-    }
+    return res.status(200).json({ ok: true, id: bookingId });
 
-    return res.status(200).json({ ok: true, id: bookingId, booking_id: bookingId });
   } catch (e) {
     console.error("BOOKINGS ERROR:", e);
     return res.status(400).json({
