@@ -1,3 +1,4 @@
+// api/bookings.js
 const { createClient } = require("@supabase/supabase-js");
 const { Resend } = require("resend");
 const { z } = require("zod");
@@ -92,7 +93,7 @@ module.exports = async (req, res) => {
     );
     const resend = new Resend(getEnv("RESEND_API_KEY"));
 
-    // read raw body
+    // read raw body (works reliably on Vercel)
     const body = await new Promise((resolve, reject) => {
       let data = "";
       req.on("data", (chunk) => (data += chunk));
@@ -117,8 +118,7 @@ module.exports = async (req, res) => {
 
     const bookingId = inserted.id;
 
-    // If your Resend domain isn't verified, keep FROM as resend.dev or a verified sender.
-    // Replace this only after verifying monttremblantlimoservices.com in Resend.
+    // NOTE: keep as resend.dev until your domain sender is verified in Resend
     const from = "Mont Tremblant Limo <onboarding@resend.dev>";
 
     // customer email
@@ -129,9 +129,11 @@ module.exports = async (req, res) => {
       html: customerEmailHtml(b, bookingId),
     });
 
-    // ADMIN email (IMPORTANT)
+    // ✅ provider/admin email
     const adminTo = process.env.ADMIN_NOTIFY_EMAIL;
-    if (adminTo) {
+    if (!adminTo) {
+      console.warn("ADMIN_NOTIFY_EMAIL is missing. Provider email will NOT be sent.");
+    } else {
       await resend.emails.send({
         from,
         to: adminTo,
@@ -140,12 +142,4 @@ module.exports = async (req, res) => {
       });
     }
 
-    return res.status(200).json({
-      ok: true,
-      id: bookingId,
-      booking_id: bookingId, // <-- helps frontend
-    });
-  } catch (e) {
-    return res.status(400).json({ ok: false, error: e?.message || "Unknown error" });
-  }
-};
+    return res.status(2
