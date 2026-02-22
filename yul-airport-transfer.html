@@ -1221,6 +1221,94 @@ header{
   .float-book{ bottom: 104px; }
 }
 
+
+/* ===== Ultra Luxury v2 (Monogram + Private Aviation UI) ===== */
+
+/* Floating monogram button */
+.float-book{
+  padding: 10px 14px 10px 10px;
+}
+.float-book .mono{
+  width:34px; height:34px;
+  display:inline-grid;
+  place-items:center;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(11,18,32,.90), rgba(11,18,32,.70));
+  color: var(--goldC);
+  font-weight: 950;
+  letter-spacing: .6px;
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 14px 34px rgba(0,0,0,.18);
+}
+.float-book .label{
+  font-weight: 950;
+}
+
+/* Booking widget: private aviation feel */
+.booking-card{
+  border-radius: 22px;
+  overflow: hidden;
+}
+.booking-card .tabs{
+  display:flex;
+  gap:8px;
+  padding: 10px;
+  background: rgba(11,18,32,.03);
+  border-bottom: 1px solid rgba(11,18,32,.08);
+}
+.booking-card .tab{
+  flex:1;
+  text-align:center;
+  padding: 12px 10px;
+  border-radius: 999px;
+  font-weight: 900;
+  background: rgba(255,255,255,.65);
+  border: 1px solid rgba(11,18,32,.10);
+  box-shadow: 0 10px 20px rgba(0,0,0,.05);
+}
+.booking-card .tab.active{
+  background: linear-gradient(90deg, rgba(181,138,43,.16), rgba(242,208,122,.28));
+  border-color: rgba(181,138,43,.22);
+}
+
+/* Aviation-style progress bar */
+.booking-card .progress{
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(11,18,32,.08);
+  overflow:hidden;
+}
+.booking-card .progress > span{
+  display:block;
+  height:100%;
+  width:0%;
+  background: linear-gradient(90deg, var(--goldA), var(--goldB));
+  border-radius: 999px;
+}
+
+/* Fields */
+.booking-card .field{
+  border-radius: 14px;
+  background: rgba(255,255,255,.70);
+  border: 1px solid rgba(11,18,32,.10);
+  box-shadow: 0 10px 22px rgba(0,0,0,.05);
+}
+.booking-card input,
+.booking-card select,
+.booking-card textarea{
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+/* Summary / price panel (if present) */
+.booking-card .summary{
+  border-radius: 16px;
+  background: rgba(11,18,32,.03);
+  border: 1px solid rgba(11,18,32,.08);
+  padding: 12px;
+}
+
 </style>
 <link href="https://maps.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://maps.gstatic.com" rel="preconnect"/>
@@ -3805,9 +3893,7 @@ function getQcCorridorBounds(){
   })();
 </script>
 
-<a class="float-book" href="booking.html" data-i18n="float_book" aria-label="Book online">
-  <span style="font-size:14px;">✦</span><span>Book online</span>
-</a>
+<a class="float-book" href="booking.html" data-i18n="float_book" aria-label="Book online"><span class="mono">MT</span><span class="label" data-i18n="float_book">Book online</span></a>
 
 </body>
 </html>
