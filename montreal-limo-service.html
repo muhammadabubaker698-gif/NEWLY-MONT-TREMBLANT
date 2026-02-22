@@ -125,31 +125,31 @@
 
 <style>
     :root{
-    --bg:#070A0F;
-    --ink:#F5F6F7;
-    --muted: rgba(245,246,247,.72);
-    --line: rgba(245,246,247,.10);
-    --shadow: 0 22px 70px rgba(0,0,0,.55);
-    --shadow2: 0 14px 34px rgba(0,0,0,.40);
-    --radius: 18px;
-    --max: 1160px;
+  --bg:#f6f7f9;
+  --ink:#0b1220;
+  --muted: rgba(11,18,32,.65);
+  --line: rgba(11,18,32,.08);
+  --shadow: 0 22px 70px rgba(0,0,0,.08);
+  --shadow2: 0 14px 34px rgba(0,0,0,.06);
+  --radius: 18px;
+  --max: 1160px;
 
-    /* Luxury gold accent */
-    --gradA:#c8a24a;
-    --gradB:#f2d07a;
+  /* luxury gold accent */
+  --gradA:#c8a24a;
+  --gradB:#f2d07a;
 
-    --good:#34d399;
-    --bad:#fb7185;
+  --good:#16a34a;
+  --bad:#dc2626;
 
-    --flowbar-h: 180px;
-    --vh: 100vh;
-  }
+  --flowbar-h: 180px;
+  --vh: 100vh;
+}
 
 *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{
     font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-    background: var(--bg);
+    background:#f6f7f9;
     color: var(--ink);
     line-height: 1.6;
     font-size: 16px;
@@ -168,7 +168,7 @@
     position: sticky;
     top:0;
     z-index:50;
-    background: rgba(7,10,15,.78);
+    background:#ffffff;
     backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--line);
   }
@@ -225,7 +225,7 @@
     padding: 10px 12px;
     border-radius: 999px;
     border: 1px solid rgba(11,18,32,.12);
-    background: rgba(7,10,15,.45);
+    background:#ffffff;
     white-space:nowrap;
   }
 
@@ -238,7 +238,7 @@
     border-radius: 999px;
     font-weight: 900;
     border: 1px solid rgba(11,18,32,.14);
-    background: rgba(255,255,255,.04);
+    background:#ffffff;
     box-shadow: var(--shadow2);
     color: rgba(11,18,32,.92);
     transition: transform .15s ease, box-shadow .15s ease;
@@ -257,7 +257,7 @@
     position:relative;
     border-bottom: 1px solid var(--line);
     background:
-      linear-gradient(90deg, rgba(7,10,15,.85) 0%, rgba(7,10,15,.55) 45%, rgba(7,10,15,0) 72%),
+      linear-gradient(90deg, rgba(255,255,255,.95) 0%, rgba(255,255,255,.90) 45%, rgba(7,10,15,0) 72%),
       linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.45)),
       url("/Tremblant.jpg") center/cover no-repeat;
   }
@@ -308,14 +308,14 @@
     justify-self:end;
     width: min(430px, 100%);
     border-radius: 14px;
-    background: rgba(255,255,255,.04);
+    background:#ffffff;
     box-shadow: 0 28px 70px rgba(0,0,0,.24);
     border: 1px solid rgba(11,18,32,.10);
     overflow:hidden;
   }
   .tabs{
     display:flex;
-    background: rgba(255,255,255,.04);
+    background:#ffffff;
     border-bottom: 1px solid rgba(11,18,32,.08);
   }
   .tabhint{margin-top:10px; font-size:13px; color: rgba(11,18,32,.72); line-height:1.35;}
@@ -326,16 +326,16 @@
     font-weight: 950;
     font-size: 14px;
     color: rgba(11,18,32,.78);
-    background: rgba(255,255,255,.04);
+    background:#ffffff;
     border:none;
     cursor:pointer;
   }
   .tab.active{
-    background: rgba(255,255,255,.06);
+    background:#ffffff;
     color: rgba(11,18,32,.94);
   }
 
-  .book-body{ padding: 14px; background: rgba(255,255,255,.04); }
+  .book-body{ padding: 14px; background:#ffffff; }
 
   .stepbar{
     display:flex;
@@ -373,7 +373,7 @@
     padding: 12px 12px;
     border-radius: 10px;
     border: 1px solid rgba(11,18,32,.10);
-    background: rgba(255,255,255,.06);
+    background:#ffffff;
     margin-bottom: 10px;
     min-width: 0;
   }
@@ -398,7 +398,7 @@
     left:0;
     right:0;
     z-index:30;
-    background: rgba(255,255,255,.04);
+    background:#ffffff;
     border:1px solid rgba(11,18,32,.12);
     border-radius: 12px;
     box-shadow: 0 16px 28px rgba(0,0,0,.12);
@@ -410,7 +410,7 @@
     width:100%;
     border:none;
     border-top:1px solid rgba(11,18,32,.08);
-    background: rgba(255,255,255,.04);
+    background:#ffffff;
     text-align:left;
     padding: 10px 12px;
     font-size: 14px;
@@ -445,7 +445,7 @@
     padding: 10px 12px;
     border-radius: 12px;
     border: 1px solid rgba(11,18,32,.12);
-    background: rgba(255,255,255,.05);
+    background:#ffffff;
     font-weight: 850;
     font-size: 13px;
   }
@@ -455,7 +455,7 @@
     position: fixed;
     inset: 0;
     z-index: 99999;
-    background: rgba(7,10,15,.92);
+    background:#ffffff;
     display: none;
     overflow: hidden;
     overscroll-behavior: contain;
@@ -465,7 +465,7 @@
   .overlay-top{
     height: 76px;
     border-bottom: 1px solid rgba(11,18,32,.10);
-    background: rgba(7,10,15,.78);
+    background:#ffffff;
     backdrop-filter: blur(14px);
     display:flex;
     align-items:center;
@@ -483,7 +483,7 @@
   }
   .overlay-close{
     border: 1px solid rgba(11,18,32,.14);
-    background: rgba(255,255,255,.04);
+    background:#ffffff;
     border-radius: 12px;
     padding: 10px 12px;
     font-weight: 900;
@@ -528,7 +528,7 @@
   .summary-pill{
     border: 1px solid rgba(11,18,32,.12);
     border-radius: 16px;
-    background: rgba(255,255,255,.05);
+    background:#ffffff;
     padding: 14px 16px;
     font-weight: 800;
     color: rgba(11,18,32,.82);
@@ -558,7 +558,7 @@
     border: 1px solid rgba(11,18,32,.12);
     border-radius: 16px;
     overflow: hidden;
-    background: rgba(255,255,255,.04);
+    background:#ffffff;
   }
 
   .vrow{
@@ -632,7 +632,7 @@
     border-radius: 10px;
     border: 1px solid rgba(0,0,0,.08);
     flex: 0 0 auto;
-    background: rgba(255,255,255,.04);
+    background:#ffffff;
   }
 
   .flow-actions{
@@ -640,7 +640,7 @@
     position: sticky;
     bottom: 0;
     z-index: 5;
-    background: rgba(7,10,15,.92);
+    background:#ffffff;
     backdrop-filter: blur(8px);
     border-top: 1px solid rgba(11,18,32,.10);
     padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
@@ -681,7 +681,7 @@
     padding: 12px 12px;
     border-radius: 12px;
     border: 1px solid rgba(11,18,32,.14);
-    background: rgba(255,255,255,.06);
+    background:#ffffff;
     color: rgba(11,18,32,.92);
     outline:none;
     font-weight: 800;
@@ -693,7 +693,7 @@
     margin-top: 12px;
     border-radius: 12px;
     border: 1px solid rgba(11,18,32,.12);
-    background: rgba(255,255,255,.05);
+    background:#ffffff;
     padding: 12px;
   }
   .estimate-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
@@ -719,7 +719,7 @@
   .card{
     border-radius: var(--radius);
     border: 1px solid rgba(11,18,32,.10);
-    background: rgba(255,255,255,.04);
+    background:#ffffff;
     box-shadow: 0 14px 36px rgba(0,0,0,.08);
     overflow:hidden;
   }
@@ -747,7 +747,7 @@
     padding: 10px 12px;
     border-radius: 12px;
     border: 1px solid rgba(11,18,32,.12);
-    background: rgba(255,255,255,.05);
+    background:#ffffff;
     font-size: 13px;
     font-weight: 800;
     color: rgba(11,18,32,.8);
@@ -764,12 +764,12 @@
     object-fit: cover;
     border-radius: 8px;
     border: 1px solid rgba(11,18,32,.12);
-    background: rgba(255,255,255,.04);
+    background:#ffffff;
     flex: 0 0 auto;
   }
   .selected-vehicle button{
     border: 1px solid rgba(11,18,32,.16);
-    background: rgba(255,255,255,.04);
+    background:#ffffff;
     border-radius: 999px;
     padding: 6px 12px;
     font-weight: 800;
@@ -856,7 +856,7 @@
   height:220px;
   border-radius:16px;
   overflow:hidden;
-  background: rgba(255,255,255,.06);
+  background:#ffffff;
   margin:12px 0 10px;
 }
 @media (max-width: 520px){
@@ -894,7 +894,7 @@
   padding:6px 10px;
   border-radius:999px;
   border:1px solid rgba(0,0,0,.08);
-  background: rgba(255,255,255,.04);
+  background:#ffffff;
 }
 
 /* Mobile keyboard UX: avoid iOS zoom + better keyboard */
@@ -910,7 +910,7 @@
   padding:6px;
   border-radius:999px;
   border:1px solid rgba(11,18,32,.14);
-  background: rgba(7,10,15,.45);
+  background:#ffffff;
 }
 .lang-btn{
   border:none;
@@ -936,7 +936,7 @@
 .contact-card{
   border: 1px solid rgba(11,18,32,.10);
   border-radius: 16px;
-  background: rgba(255,255,255,.04);
+  background:#ffffff;
   box-shadow: 0 14px 36px rgba(0,0,0,.08);
   padding: 16px;
 }
@@ -1006,7 +1006,7 @@ body{ padding-bottom: 64px; }
 .route-card{
   border-radius: var(--radius);
   border: 1px solid rgba(11,18,32,.10);
-  background: rgba(255,255,255,.04);
+  background:#ffffff;
   box-shadow: 0 14px 36px rgba(0,0,0,.08);
   padding:16px;
 }
@@ -1023,7 +1023,7 @@ body{ padding-bottom: 64px; }
 .area-card{
   border-radius: var(--radius);
   border: 1px solid rgba(11,18,32,.10);
-  background: rgba(255,255,255,.04);
+  background:#ffffff;
   box-shadow: 0 14px 36px rgba(0,0,0,.08);
   padding:16px;
 }
@@ -1034,7 +1034,7 @@ body{ padding-bottom: 64px; }
 .faq-item{
   border: 1px solid rgba(11,18,32,.12);
   border-radius: 16px;
-  background: rgba(255,255,255,.04);
+  background:#ffffff;
   overflow:hidden;
 }
 .faq-item summary{
@@ -1054,9 +1054,177 @@ body{ padding-bottom: 64px; }
   .routes-grid, .areas-grid{ grid-template-columns: 1fr; }
 }
 
+
+/* ===== Ultra Luxury Upgrade ===== */
+:root{
+  --paper:#f6f7f9;
+  --card:#ffffff;
+  --glass: rgba(255,255,255,.72);
+  --glass2: rgba(255,255,255,.58);
+  --ink:#0b1220;
+  --muted: rgba(11,18,32,.62);
+  --line: rgba(11,18,32,.08);
+  --shadow: 0 26px 80px rgba(0,0,0,.10);
+  --shadow2: 0 18px 44px rgba(0,0,0,.08);
+  --radius: 18px;
+  --max: 1160px;
+
+  --goldA:#b58a2b;
+  --goldB:#f2d07a;
+  --goldC:#fff2c4;
+
+  --accent: linear-gradient(90deg, var(--goldA), var(--goldB));
+}
+
+body{
+  background:
+    radial-gradient(1200px 700px at 10% -10%, rgba(242,208,122,.35), transparent 55%),
+    radial-gradient(900px 600px at 90% 0%, rgba(181,138,43,.18), transparent 60%),
+    radial-gradient(900px 600px at 60% 115%, rgba(11,18,32,.06), transparent 55%),
+    var(--paper);
+}
+
+h1,h2,.hero-title{
+  font-family: "Playfair Display", ui-serif, Georgia, serif;
+  letter-spacing: -0.6px;
+}
+
+.brand, .btn, .badge, .tab, .links a{
+  letter-spacing: .2px;
+}
+
+header{
+  background: rgba(255,255,255,.78);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--line);
+}
+
+.logo{
+  background: linear-gradient(180deg, #0b1220, #111a2c);
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 18px 50px rgba(0,0,0,.18);
+}
+
+.hero-wrap{
+  position:relative;
+  background:
+    linear-gradient(90deg, rgba(246,247,249,.88) 0%, rgba(246,247,249,.55) 45%, rgba(246,247,249,0) 72%),
+    linear-gradient(180deg, rgba(0,0,0,.00), rgba(0,0,0,.10)),
+    url("/Tremblant.jpg") center/cover no-repeat;
+}
+.hero-wrap::after{
+  content:"";
+  position:absolute; inset:0;
+  background: radial-gradient(700px 420px at 22% 32%, rgba(242,208,122,.20), transparent 55%);
+  pointer-events:none;
+}
+.hero-inner{ position:relative; z-index:1; }
+
+.badge{
+  background: rgba(255,255,255,.72);
+  border: 1px solid rgba(11,18,32,.10);
+  box-shadow: 0 12px 24px rgba(0,0,0,.06);
+}
+
+.card{
+  background: var(--card);
+  border: 1px solid rgba(11,18,32,.08);
+  box-shadow: var(--shadow2);
+}
+
+.booking-card{
+  background: rgba(255,255,255,.82);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(11,18,32,.10);
+  box-shadow: 0 34px 90px rgba(0,0,0,.18);
+}
+
+.field, input, select, textarea{
+  background: rgba(11,18,32,.04);
+  border-color: rgba(11,18,32,.10);
+}
+
+.btn{
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.btn:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 18px 44px rgba(0,0,0,.10);
+}
+
+.btn-primary{
+  border:none;
+  color:#0b0b0b;
+  background: var(--accent);
+  box-shadow: 0 22px 56px rgba(181,138,43,.18);
+}
+.btn-primary:hover{
+  box-shadow: 0 28px 70px rgba(181,138,43,.22);
+}
+
+/* subtle shine */
+.btn-primary{
+  position:relative;
+  overflow:hidden;
+}
+.btn-primary::after{
+  content:"";
+  position:absolute;
+  top:-80%;
+  left:-40%;
+  width:60%;
+  height:240%;
+  transform: rotate(20deg);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
+  opacity:.0;
+}
+.btn-primary:hover::after{
+  animation: shine 1.15s ease;
+}
+@keyframes shine{
+  0%{ transform: translateX(-40%) rotate(20deg); opacity:0; }
+  20%{ opacity:.55; }
+  100%{ transform: translateX(220%) rotate(20deg); opacity:0; }
+}
+
+/* section reveal */
+.reveal{
+  opacity:0;
+  transform: translateY(12px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+.reveal.on{
+  opacity:1;
+  transform: translateY(0);
+}
+
+/* Floating Book button */
+.float-book{
+  position:fixed;
+  right: 16px;
+  bottom: 88px;
+  z-index: 9999;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding: 12px 14px;
+  border-radius: 999px;
+  background: var(--accent);
+  color:#0b0b0b;
+  font-weight: 950;
+  box-shadow: 0 22px 56px rgba(181,138,43,.20);
+  border: 1px solid rgba(11,18,32,.12);
+}
+.float-book:hover{ transform: translateY(-2px); }
+
+@media (max-width: 680px){
+  .float-book{ bottom: 104px; }
+}
+
 </style>
 <link href="https://maps.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://maps.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 <header>
@@ -1067,6 +1235,7 @@ body{ padding-bottom: 64px; }
 <div data-i18n="brand_name">Mont Tremblant Limo</div>
 </div>
 <div class="links">
+        <a href="booking.html" data-i18n="nav_book">Book online</a>
         
         <a href="corporate.html" data-i18n="nav_corporate">Corporate</a><a href="#fleet" data-i18n="nav_fleet">Our fleet</a>
         <a href="services.html" data-i18n="nav_services">Services</a>
@@ -1076,6 +1245,8 @@ body{ padding-bottom: 64px; }
         <a href="#contact" data-i18n="nav_contact">Contact</a>
       </div>
 <div class="header-actions">
+
+        <a class="btn btn-primary" href="booking.html" data-i18n="nav_book">Book online</a>
 <div aria-label="Language switcher" class="lang-switch">
 <button aria-pressed="true" class="lang-btn active" data-lang="en" type="button">EN</button>
 <button aria-pressed="false" class="lang-btn" data-lang="fr" type="button">FR</button>
@@ -1278,10 +1449,10 @@ body{ padding-bottom: 64px; }
 </div>
 </div>
 <main class="container">
-<section class="section" id="fleet">
+<section class="section reveal" id="fleet">
 <h2 data-i18n="fleet_title">Our Fleet</h2>
 <p class="subtitle" data-i18n-html="fleet_sub_html">Premium vehicles for Mont-Tremblant travel. <b>Minimum 1 hour (hourly)</b> applies to all vehicles.</p>
-<div class="grid3">
+<div class="grid3 reveal">
 <div class="card">
 <div class="card-media"><img alt="2026 Cadillac Escalade ESV black" src="/escalade.jpg"/></div>
 <div class="card-body">
@@ -1290,8 +1461,8 @@ body{ padding-bottom: 64px; }
 <div class="price">$150 / <span data-i18n="unit_hour">hour</span></div>
 <div class="min" data-hours="3" data-i18n-html="min_hours_html">3-hour minimum</div>
 <div class="actions actions-reserve">
-<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_point" data-mode="one_way" data-vehicle="escalade" href="#booking">Reserve Point A to Point B</a>
-<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_hourly" data-mode="hourly" data-vehicle="escalade" href="#booking">Reserve by hour</a>
+<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_point" data-mode="one_way" data-vehicle="escalade" href="booking.html">Reserve Point A to Point B</a>
+<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_hourly" data-mode="hourly" data-vehicle="escalade" href="booking.html">Reserve by hour</a>
 <a class="btn btn-whatsapp" data-i18n="btn_whatsapp" href="https://wa.me/14383203733" rel="noreferrer" target="_blank">WhatsApp</a>
 </div>
 </div>
@@ -1304,8 +1475,8 @@ body{ padding-bottom: 64px; }
 <div class="price">$100 / <span data-i18n="unit_hour">hour</span></div>
 <div class="min" data-hours="3" data-i18n-html="min_hours_html">3-hour minimum</div>
 <div class="actions actions-reserve">
-<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_point" data-mode="one_way" data-vehicle="suburban" href="#booking">Reserve Point A to Point B</a>
-<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_hourly" data-mode="hourly" data-vehicle="suburban" href="#booking">Reserve by hour</a>
+<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_point" data-mode="one_way" data-vehicle="suburban" href="booking.html">Reserve Point A to Point B</a>
+<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_hourly" data-mode="hourly" data-vehicle="suburban" href="booking.html">Reserve by hour</a>
 <a class="btn btn-whatsapp" data-i18n="btn_whatsapp" href="https://wa.me/14383203733" rel="noreferrer" target="_blank">WhatsApp</a>
 </div>
 </div>
@@ -1318,8 +1489,8 @@ body{ padding-bottom: 64px; }
 <div class="price">$100 / <span data-i18n="unit_hour">hour</span></div>
 <div class="min" data-hours="3" data-i18n-html="min_hours_html">3-hour minimum</div>
 <div class="actions actions-reserve">
-<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_point" data-mode="one_way" data-vehicle="denali" href="#booking">Reserve Point A to Point B</a>
-<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_hourly" data-mode="hourly" data-vehicle="denali" href="#booking">Reserve by hour</a>
+<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_point" data-mode="one_way" data-vehicle="denali" href="booking.html">Reserve Point A to Point B</a>
+<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_hourly" data-mode="hourly" data-vehicle="denali" href="booking.html">Reserve by hour</a>
 <a class="btn btn-whatsapp" data-i18n="btn_whatsapp" href="https://wa.me/14383203733" rel="noreferrer" target="_blank">WhatsApp</a>
 </div>
 </div>
@@ -1332,8 +1503,8 @@ body{ padding-bottom: 64px; }
 <div class="price">$75 / <span data-i18n="unit_hour">hour</span></div>
 <div class="min" data-hours="3" data-i18n-html="min_hours_html">3-hour minimum</div>
 <div class="actions actions-reserve">
-<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_point" data-mode="one_way" data-vehicle="qx60" href="#booking">Reserve Point A to Point B</a>
-<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_hourly" data-mode="hourly" data-vehicle="qx60" href="#booking">Reserve by hour</a>
+<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_point" data-mode="one_way" data-vehicle="qx60" href="booking.html">Reserve Point A to Point B</a>
+<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_hourly" data-mode="hourly" data-vehicle="qx60" href="booking.html">Reserve by hour</a>
 <a class="btn btn-whatsapp" data-i18n="btn_whatsapp" href="https://wa.me/14383203733" rel="noreferrer" target="_blank">WhatsApp</a>
 </div>
 </div>
@@ -1346,8 +1517,8 @@ body{ padding-bottom: 64px; }
 <div class="price">$75 / <span data-i18n="unit_hour">hour</span></div>
 <div class="min" data-hours="3" data-i18n-html="min_hours_html">3-hour minimum</div>
 <div class="actions actions-reserve">
-<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_point" data-mode="one_way" data-vehicle="tesla" href="#booking">Reserve Point A to Point B</a>
-<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_hourly" data-mode="hourly" data-vehicle="tesla" href="#booking">Reserve by hour</a>
+<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_point" data-mode="one_way" data-vehicle="tesla" href="booking.html">Reserve Point A to Point B</a>
+<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_hourly" data-mode="hourly" data-vehicle="tesla" href="booking.html">Reserve by hour</a>
 <a class="btn btn-whatsapp" data-i18n="btn_whatsapp" href="https://wa.me/14383203733" rel="noreferrer" target="_blank">WhatsApp</a>
 </div>
 </div>
@@ -1360,15 +1531,15 @@ body{ padding-bottom: 64px; }
 <div class="price">$299 / <span data-i18n="unit_hour">hour</span></div>
 <div class="min" data-hours="3" data-i18n-html="min_hours_html">3-hour minimum</div>
 <div class="actions actions-reserve">
-<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_point" data-mode="one_way" data-vehicle="sprinter" href="#booking">Reserve Point A to Point B</a>
-<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_hourly" data-mode="hourly" data-vehicle="sprinter" href="#booking">Reserve by hour</a>
+<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_point" data-mode="one_way" data-vehicle="sprinter" href="booking.html">Reserve Point A to Point B</a>
+<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_hourly" data-mode="hourly" data-vehicle="sprinter" href="booking.html">Reserve by hour</a>
 <a class="btn btn-whatsapp" data-i18n="btn_whatsapp" href="https://wa.me/14383203733" rel="noreferrer" target="_blank">WhatsApp</a>
 </div>
 </div>
 </div>
 </div>
 </section>
-<section id="routes" class="section">
+<section id="routes" class="section reveal">
   <h2 data-i18n="routes_title">Popular Routes</h2>
   <p class="subtitle" data-i18n="routes_sub">Door-to-door transfers across Montréal, Mont‑Tremblant, and the Laurentians. Airport pickups available.</p>
 
@@ -1393,7 +1564,7 @@ body{ padding-bottom: 64px; }
   </div>
 </section>
 
-<section id="airports" class="section">
+<section id="airports" class="section reveal">
   <h2 data-i18n="airports_title">Airport Pickup Made Easy</h2>
   <p class="subtitle" data-i18n="airports_sub">We serve Montréal–Trudeau (YUL), Mirabel (YMX), and surrounding airports on request.</p>
 
@@ -1419,7 +1590,7 @@ body{ padding-bottom: 64px; }
   </div>
 </section>
 
-<section id="service-areas" class="section">
+<section id="service-areas" class="section reveal">
   <h2 data-i18n="areas_title">Service Areas</h2>
   <p class="subtitle" data-i18n="areas_sub">We operate in Montréal and surrounding areas, plus Mont‑Tremblant and long-distance trips.</p>
 
@@ -1439,7 +1610,7 @@ body{ padding-bottom: 64px; }
   </div>
 </section>
 
-<section id="faq" class="section">
+<section id="faq" class="section reveal">
   <h2 data-i18n="faq_title">FAQ</h2>
   <div class="faq">
     <details class="faq-item">
@@ -1464,7 +1635,7 @@ body{ padding-bottom: 64px; }
   </div>
 </section>
 
-<section class="section" id="contact">
+<section class="section reveal" id="contact">
 <h2 data-i18n="contact_title">Contact Us</h2>
 <p class="subtitle" data-i18n="contact_sub">Questions, bookings, or custom trips — contact us anytime.</p>
 <div class="contact-grid">
@@ -3614,6 +3785,29 @@ function getQcCorridorBounds(){
   }
 
   initLang();
+
+  // Ultra-luxury: scroll reveal
+  (function(){
+    const els = Array.from(document.querySelectorAll('.reveal'));
+    if (!('IntersectionObserver' in window) || !els.length){
+      els.forEach(el=>el.classList.add('on'));
+      return;
+    }
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if (e.isIntersecting){
+          e.target.classList.add('on');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    els.forEach(el=>io.observe(el));
+  })();
 </script>
+
+<a class="float-book" href="booking.html" data-i18n="float_book" aria-label="Book online">
+  <span style="font-size:14px;">✦</span><span>Book online</span>
+</a>
+
 </body>
 </html>
