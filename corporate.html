@@ -1443,32 +1443,59 @@ header{
 .contact-bar a:hover{ transform: translateY(-1px); }
 
 
-/* ===== Executive header layout (desktop) ===== */
+/* ===== Header v3 (clean + mobile-first like your example) ===== */
+header{ position: sticky; top:0; z-index: 10000; }
+.nav{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.brand{ display:flex; align-items:center; gap:12px; }
+
+@media (max-width: 940px){
+  header .nav{
+    display:grid;
+    grid-template-columns: 44px 1fr auto;
+    align-items:center;
+    gap:10px;
+  }
+  header .brand{ justify-self:center; }
+  header .brand .brand-text{ text-align:left; }
+  header .menu-toggle{ justify-self:start; }
+  header .header-actions{
+    justify-self:end;
+    display:flex;
+    gap:10px;
+    align-items:center;
+  }
+  header .header-actions .pill{
+    max-width: 46vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 10px 12px;
+  }
+  header .header-actions .btn.btn-primary{ display:none; } /* hide big book button on top row on mobile */
+}
+
+/* Desktop: keep clean one-line header */
 @media (min-width: 941px){
   header .nav{
     display:grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: auto 1fr auto;
     align-items:center;
-    gap: 12px;
-  }
-  header .brand{
-    justify-self:start;
   }
   header .links{
     justify-self:center;
-    position: static !important;
     display:flex !important;
     flex-direction: row !important;
+    position: static !important;
     background: transparent !important;
-    box-shadow: none !important;
     border: none !important;
+    box-shadow: none !important;
     padding: 0 !important;
     gap: 22px !important;
   }
   header .links a{
     background: transparent !important;
     border: none !important;
-    padding: 10px 4px !important;
+    padding: 10px 2px !important;
     font-weight: 900;
     text-transform: uppercase;
     font-size: 12px;
@@ -1476,22 +1503,17 @@ header{
     color: rgba(11,18,32,.78);
   }
   header .links a:hover{ color: rgba(11,18,32,.95); }
+  header .menu-toggle{ display:none !important; }
+  header .nav-overlay{ display:none !important; }
   header .header-actions{
     justify-self:end;
     display:flex;
     gap:10px;
     align-items:center;
   }
-  header .header-actions .lang-switch{
-    order: 3;
-  }
-  header .header-actions .pill{
-    order: 1;
-  }
-  header .header-actions .btn{ order: 2; }
-  header .menu-toggle{ display:none !important; }
-  header .nav-overlay{ display:none !important; }
 }
+
+/* Mobile drawer links style kept from earlier */
 
 </style>
 <link href="https://maps.googleapis.com" rel="preconnect"/>
