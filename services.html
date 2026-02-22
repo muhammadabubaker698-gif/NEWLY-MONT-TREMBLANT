@@ -1336,62 +1336,6 @@ header{
 }
 
 
-/* ===== Mobile navigation (hamburger) ===== */
-.menu-toggle{
-  display:none;
-  width:44px; height:44px;
-  border-radius: 14px;
-  border:1px solid rgba(11,18,32,.10);
-  background: rgba(255,255,255,.82);
-  box-shadow: 0 14px 34px rgba(0,0,0,.06);
-  align-items:center;
-  justify-content:center;
-  gap:6px;
-}
-.menu-toggle i{
-  display:block;
-  width:18px; height:2px;
-  background: rgba(11,18,32,.82);
-  border-radius: 999px;
-}
-.menu-toggle i:nth-child(2){ width:14px; opacity:.85 }
-.menu-toggle i:nth-child(3){ width:18px; opacity:.75 }
-
-@media (max-width: 940px){
-  .menu-toggle{ display:inline-flex; }
-  .links{
-    position: fixed;
-    left: 12px; right: 12px;
-    top: 70px;
-    display: none;
-    flex-direction: column;
-    gap: 10px;
-    padding: 14px;
-    border-radius: 18px;
-    background: rgba(255,255,255,.94);
-    border: 1px solid rgba(11,18,32,.10);
-    box-shadow: 0 28px 70px rgba(0,0,0,.12);
-    z-index: 9999;
-  }
-  .links a{
-    padding: 12px 12px;
-    border-radius: 14px;
-    background: rgba(11,18,32,.04);
-    border: 1px solid rgba(11,18,32,.08);
-  }
-  body.nav-open .links{ display:flex; }
-  .nav-overlay{
-    display:none;
-    position: fixed;
-    inset: 0;
-    background: rgba(11,18,32,.28);
-    backdrop-filter: blur(2px);
-    z-index: 9998;
-  }
-  body.nav-open .nav-overlay{ display:block; }
-}
-
-
 /* Booking readability (mobile) */
 .tabhint{
   padding: 12px 14px;
@@ -1422,35 +1366,7 @@ header{
 .contact-bar a:hover{ transform: translateY(-1px); }
 
 
-/* ===== Header v3 (clean + mobile-first like your example) ===== */
-header{ position: sticky; top:0; z-index: 10000; }
-.nav{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
-.brand{ display:flex; align-items:center; gap:12px; }
-
-@media (max-width: 940px){
-  header .nav{
-    display:grid;
-    grid-template-columns: 44px 1fr auto;
-    align-items:center;
-    gap:10px;
-  }
-  header .brand{ justify-self:center; }
-  header .brand .brand-text{ text-align:left; }
-  header .menu-toggle{ justify-self:start; }
-  header .header-actions{
-    justify-self:end;
-    display:flex;
-    gap:10px;
-    align-items:center;
-  }
-  header .header-actions .pill{
-    max-width: 46vw;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    padding: 10px 12px;
-  }
-  header .header-actions .btn.btn-primary{ display:none; } /* hide big book button on top row on mobile */
+/* hide big book button on top row on mobile */
 }
 
 /* Desktop: keep clean one-line header */
@@ -1494,25 +1410,133 @@ header{ position: sticky; top:0; z-index: 10000; }
 
 /* Mobile drawer links style kept from earlier */
 
+
+/* ===== Header v4 (reference-style, clean desktop + proper mobile) ===== */
+header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.78); backdrop-filter: blur(18px); border-bottom: 1px solid rgba(11,18,32,.10); }
+.header-top, .header-nav{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.header-top{ padding: 10px 0; }
+.header-nav{ padding: 8px 0 12px 0; }
+
+.top-pill{
+  display:inline-flex; align-items:center; gap:8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(11,18,32,.10);
+  background: rgba(255,255,255,.90);
+  box-shadow: 0 14px 34px rgba(0,0,0,.06);
+  font-weight: 900;
+  color: rgba(11,18,32,.86);
+  text-decoration:none;
+}
+.top-pill strong{ font-weight: 950; }
+
+.brand-link{ display:flex; align-items:center; gap:12px; text-decoration:none; color: var(--ink); }
+.brand-link .logo{ width:42px; height:42px; }
+.brand-link .brand-name{ font-weight: 950; }
+
+.header-right{ display:flex; align-items:center; gap:10px; }
+
+.header-nav .links{
+  display:flex; align-items:center; justify-content:center;
+  gap: 22px;
+  flex: 1;
+}
+.header-nav .links a{
+  background: transparent;
+  border: none;
+  padding: 10px 2px;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 1.1px;
+  color: rgba(11,18,32,.78);
+  text-decoration:none;
+}
+.header-nav .links a:hover{ color: rgba(11,18,32,.95); }
+
+.header-nav .menu-toggle{ display:none; }
+
+/* Mobile: hamburger left, brand center, phone icon + language right; nav drawer opens */
+@media (max-width: 940px){
+  .header-top{ padding: 10px 0 8px 0; }
+  .header-top .top-left{ display:none; } /* hide big phone pill on mobile */
+  .brand-link .brand-name{ display:none; } /* keep logo clean like reference */
+  .header-nav{ padding: 0 0 10px 0; }
+  .header-nav{ display:none; } /* we put menu inside overlay drawer; keep single-row header like reference */
+  header .menu-toggle{ display:inline-flex; }
+  header .nav-overlay{ display:none; position: fixed; inset:0; background: rgba(11,18,32,.28); backdrop-filter: blur(2px); z-index:9998; }
+  body.nav-open header .nav-overlay{ display:block; }
+  header .drawer{
+    display:none;
+    position: fixed;
+    left: 12px; right: 12px;
+    top: 72px;
+    padding: 14px;
+    border-radius: 18px;
+    background: rgba(255,255,255,.94);
+    border: 1px solid rgba(11,18,32,.10);
+    box-shadow: 0 28px 70px rgba(0,0,0,.12);
+    z-index: 9999;
+  }
+  body.nav-open header .drawer{ display:block; }
+  header .drawer a{
+    display:block;
+    padding: 12px 12px;
+    border-radius: 14px;
+    background: rgba(11,18,32,.04);
+    border: 1px solid rgba(11,18,32,.08);
+    margin-bottom: 10px;
+  }
+  header .drawer a:last-child{ margin-bottom:0; }
+  .icon-pill{
+    width:44px; height:44px;
+    padding:0;
+    display:inline-flex; align-items:center; justify-content:center;
+    border-radius: 14px;
+  }
+}
+
+/* Desktop keep two-row header; hide hamburger/drawer */
+@media (min-width: 941px){
+  header .menu-toggle, header .drawer, header .nav-overlay{ display:none !important; }
+}
+
 </style>
 <link href="https://maps.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://maps.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body class="page-services">
+
 <header>
-<div class="container">
-<div class="nav">
-<div class="nav-overlay" aria-hidden="true"></div>
-<div class="brand">
-<div class="logo">MT</div>
-<div data-i18n="brand_name">Mont Tremblant Limo</div>
+  <div class="nav-overlay" aria-hidden="true"></div>
+  <div class="container header-top">
+    <a class="top-pill top-left" href="tel:+14383203733">📞 <strong>+1 (438) 320-3733</strong></a>
+
+    <a class="brand-link" href="index.html" aria-label="Home">
+      <div class="logo">MT</div>
+      <div class="brand-name" data-i18n="brand_name">Mont Tremblant Limo</div>
+    </a>
+
+    <div class="header-right">
+      <a class="top-pill" href="https://wa.me/14383203733" target="_blank" rel="noreferrer" data-i18n="nav_whatsapp">WhatsApp</a>
+      <div aria-label="Language switcher" class="lang-switch">
+<button aria-pressed="true" class="lang-btn active" data-lang="en" type="button">EN</button>
+<button aria-pressed="false" class="lang-btn" data-lang="fr" type="button">FR</button>
 </div>
-<button class="menu-toggle" type="button" aria-label="Menu" aria-expanded="false">
-  <i></i><i></i><i></i>
-</button>
-<div class="links">
-        <a href="booking.html" data-i18n="nav_book">Book online</a>
+      <button class="menu-toggle icon-pill" type="button" aria-label="Menu" aria-expanded="false">
+        <i></i><i></i><i></i>
+      </button>
+      <a class="top-pill icon-pill" href="tel:+14383203733" aria-label="Call">
+        📞
+      </a>
+    </div>
+  </div>
+
+  <div class="container header-nav">
+    <div style="width:42px"></div>
+    <div class="links">
+      <a href="booking.html" data-i18n="nav_book">Book online</a>
         
         <a href="corporate.html#corporate" data-i18n="nav_corporate">Corporate</a><a href="#fleet" data-i18n="nav_fleet">Our fleet</a>
         <a href="services.html" data-i18n="nav_services">Services</a>
@@ -1520,20 +1544,25 @@ header{ position: sticky; top:0; z-index: 10000; }
         <a href="#airports" data-i18n="nav_airports">Airports</a>
         <a href="#faq" data-i18n="nav_faq">FAQ</a>
         <a href="#contact" data-i18n="nav_contact">Contact</a>
-      </div>
-<div class="header-actions">
+    </div>
+    <div style="width:42px"></div>
+  </div>
 
-        <a class="btn btn-primary" href="booking.html" data-i18n="nav_book">Book online</a>
-<div aria-label="Language switcher" class="lang-switch">
-<button aria-pressed="true" class="lang-btn active" data-lang="en" type="button">EN</button>
-<button aria-pressed="false" class="lang-btn" data-lang="fr" type="button">FR</button>
-</div>
-<span class="pill">📞 <a href="tel:+14383203733">+1 (438) 320-3733</a></span>
-<a class="btn" data-i18n="nav_whatsapp" href="https://wa.me/14383203733" rel="noreferrer" target="_blank">WhatsApp</a>
-</div>
-</div>
-</div>
+  <nav class="drawer" aria-label="Mobile menu">
+    <a href="booking.html" data-i18n="nav_book">Book online</a>
+        
+        <a href="corporate.html#corporate" data-i18n="nav_corporate">Corporate</a><a href="#fleet" data-i18n="nav_fleet">Our fleet</a>
+        <a href="services.html" data-i18n="nav_services">Services</a>
+        <a href="#routes" data-i18n="nav_routes">Destinations</a>
+        <a href="#airports" data-i18n="nav_airports">Airports</a>
+        <a href="#faq" data-i18n="nav_faq">FAQ</a>
+        <a href="#contact" data-i18n="nav_contact">Contact</a>
+    <a href="tel:+14383203733">📞 +1 (438) 320-3733</a>
+    <a href="mailto:info@monttremblantlimoservices.com?subject=Booking%20Request">✉️ info@monttremblantlimoservices.com</a>
+    <a href="https://wa.me/14383203733" target="_blank" rel="noreferrer">WhatsApp</a>
+  </nav>
 </header>
+
 <div class="hero-wrap">
 <div class="hero-inner container">
 <div class="hero-left">
@@ -3985,6 +4014,29 @@ function getQcCorridorBounds(){
     document.querySelectorAll(".links a").forEach(a=>{
       a.addEventListener("click", closeNav);
     });
+  })();
+
+  // Header v4: mobile drawer
+  (function(){
+    const btn = document.querySelector("header .menu-toggle");
+    const overlay = document.querySelector("header .nav-overlay");
+    const drawer = document.querySelector("header .drawer");
+    if(!btn || !overlay || !drawer) return;
+
+    function closeNav(){
+      document.body.classList.remove("nav-open");
+      btn.setAttribute("aria-expanded","false");
+    }
+    function openNav(){
+      document.body.classList.add("nav-open");
+      btn.setAttribute("aria-expanded","true");
+    }
+
+    btn.addEventListener("click", ()=>{
+      document.body.classList.contains("nav-open") ? closeNav() : openNav();
+    });
+    overlay.addEventListener("click", closeNav);
+    drawer.querySelectorAll("a").forEach(a=>a.addEventListener("click", closeNav));
   })();
 </script>
 
