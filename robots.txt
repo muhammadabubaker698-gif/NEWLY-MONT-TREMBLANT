@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://monttremblantlimoservices.com/sitemap.xml
