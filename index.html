@@ -812,6 +812,100 @@
   font-size:16px; /* prevents iOS zoom */
 }
 
+/* Language switch */
+.lang-switch{
+  display:flex;
+  gap:6px;
+  align-items:center;
+  padding:6px;
+  border-radius:999px;
+  border:1px solid rgba(11,18,32,.14);
+  background: rgba(255,255,255,.65);
+}
+.lang-btn{
+  border:none;
+  border-radius:999px;
+  padding:8px 10px;
+  font-weight:900;
+  cursor:pointer;
+  background: transparent;
+  color: rgba(11,18,32,.80);
+}
+.lang-btn.active{
+  background: rgba(11,18,32,.10);
+  color: rgba(11,18,32,.92);
+}
+
+/* Contact section */
+.contact-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 16px;
+}
+.contact-card{
+  border: 1px solid rgba(11,18,32,.10);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 14px 36px rgba(0,0,0,.08);
+  padding: 16px;
+}
+.contact-card h3{ font-size: 17px; letter-spacing: -.1px; }
+.contact-card p{ margin-top: 10px; color: rgba(11,18,32,.74); font-weight: 750; }
+.contact-card input, .contact-card textarea{
+  margin-top: 10px;
+}
+.contact-map iframe{
+  width:100%;
+  height: 320px;
+  border: 0;
+  border-radius: 16px;
+  margin-top: 14px;
+}
+
+/* Footer columns */
+.footer-grid{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  text-align:left;
+}
+footer a:hover{ text-decoration: underline; }
+
+/* Sticky contact bar */
+.contact-bar{
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99998;
+  background: rgba(11,18,32,.94);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255,255,255,.14);
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+  display:flex;
+  gap: 10px;
+  justify-content: center;
+}
+.contact-bar a{
+  color:#fff;
+  font-weight: 900;
+  text-decoration:none;
+  border: 1px solid rgba(255,255,255,.18);
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.08);
+}
+
+/* Make room for contact bar on desktop */
+body{ padding-bottom: 64px; }
+
+@media (max-width: 700px){
+  .contact-grid{ grid-template-columns: 1fr; }
+  .footer-grid{ grid-template-columns: 1fr; text-align:center; }
+  .contact-bar{ justify-content: space-around; }
+}
+
 </style>
 
 <link rel="preconnect" href="https://maps.googleapis.com">
@@ -828,14 +922,20 @@
       </div>
 
       <div class="links">
-        <a href="#fleet">Our fleet</a>
-        <a href="#routes">Destinations</a>
-        <a href="#faq">FAQ</a>
+        <a href="#fleet" data-i18n="nav_fleet">Our fleet</a>
+        <a href="#routes" data-i18n="nav_routes">Destinations</a>
+        <a href="#faq" data-i18n="nav_faq">FAQ</a>
+        <a href="#contact" data-i18n="nav_contact">Contact</a>
       </div>
 
       <div class="header-actions">
+        <div class="lang-switch" aria-label="Language switcher">
+          <button type="button" class="lang-btn active" data-lang="en" aria-pressed="true">EN</button>
+          <button type="button" class="lang-btn" data-lang="fr" aria-pressed="false">FR</button>
+        </div>
+
         <span class="pill">📞 <a href="tel:+14383203733">+1 (438) 320-3733</a></span>
-        <a class="btn" href="https://wa.me/14383203733" target="_blank" rel="noreferrer">WhatsApp</a>
+        <a class="btn" href="https://wa.me/14383203733" target="_blank" rel="noreferrer" data-i18n="nav_whatsapp">WhatsApp</a>
       </div>
     </div>
   </div>
@@ -844,14 +944,14 @@
 <div class="hero-wrap">
   <div class="hero-inner container">
     <div class="hero-left">
-      <div class="hero-title">Luxury chauffeur service in Mont-Tremblant</div>
-      <div class="hero-sub">Airport transfers, hourly bookings, ski trips, corporate travel and special events.</div>
+      <div class="hero-title" data-i18n="hero_title">Luxury chauffeur service in Mont-Tremblant</div>
+      <div class="hero-sub" data-i18n="hero_sub">Airport transfers, hourly bookings, ski trips, corporate travel and special events.</div>
 
       <div class="hero-badges">
-        <span class="badge">24/7 booking</span>
-        <span class="badge">Professional chauffeurs</span>
-        <span class="badge">Premium vehicles</span>
-        <span class="badge">Mont-Tremblant • Montréal • Ottawa</span>
+        <span class="badge" data-i18n="badge_247">24/7 booking</span>
+        <span class="badge" data-i18n="badge_pro">Professional chauffeurs</span>
+        <span class="badge" data-i18n="badge_premium">Premium vehicles</span>
+        <span class="badge" data-i18n="badge_cities">Mont-Tremblant • Montréal • Ottawa</span>
       </div>
     </div>
 
@@ -1174,12 +1274,77 @@
     </div>
   </section>
 
+  
+  <section id="contact" class="section">
+    <h2 data-i18n="contact_title">Contact Us</h2>
+    <p class="subtitle" data-i18n="contact_sub">Questions, bookings, or custom trips — contact us anytime.</p>
+
+    <div class="contact-grid">
+      <div class="contact-card">
+        <h3 data-i18n="contact_getintouch">Get in touch</h3>
+
+        <p>
+          <svg width="18" height="18" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:6px">
+            <path d="M4 4h16v16H4z" fill="none" stroke="currentColor" stroke-width="2"/>
+            <path d="M4 6l8 7 8-7" fill="none" stroke="currentColor" stroke-width="2"/>
+          </svg>
+
+          <a href="mailto:info@monttremblantlimoservices.com?subject=Booking%20Request&body=Hello%20Mont%20Tremblant%20Limo%20Services,%0D%0A%0D%0AI%20would%20like%20to%20book%20a%20ride.%0D%0A%0D%0APickup:%0D%0ADropoff:%0D%0ADate:%0D%0ATime:%0D%0APassengers:%0D%0A%0D%0AThank%20you.">
+            info@monttremblantlimoservices.com
+          </a>
+        </p>
+
+        <p>📞 <a href="tel:+14383203733">+1 (438) 320-3733</a></p>
+
+        <p data-i18n="contact_avail">Available 24/7</p>
+      </div>
+
+      <div class="contact-card">
+        <h3 data-i18n="contact_sendmsg">Send us a message</h3>
+
+        <input id="cf_name" placeholder="Your name" data-i18n-placeholder="ph_name">
+        <input id="cf_email" placeholder="Your email" data-i18n-placeholder="ph_email">
+        <textarea id="cf_message" placeholder="Your message" data-i18n-placeholder="ph_message"></textarea>
+
+        <button class="btn btn-primary" type="button" onclick="sendContactEmail()" data-i18n="contact_sendbtn">Send Message</button>
+      </div>
+    </div>
+
+    <div class="contact-map" aria-label="Google Map preview">
+      <iframe src="https://www.google.com/maps?q=Mont%20Tremblant%20Quebec&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+  </section>
+
+
   <footer>
-    © <span id="year"></span> Mont Tremblant Limo Services • All rights reserved
+    <div class="container footer-grid">
+      <div>
+        <strong data-i18n="footer_brand">Mont Tremblant Limo Services</strong><br>
+        <span data-i18n="footer_tagline">Luxury chauffeur service in Mont-Tremblant</span>
+      </div>
+
+      <div>
+        <strong data-i18n="footer_contact">Contact</strong><br>
+        <a href="mailto:info@monttremblantlimoservices.com?subject=Booking%20Request">
+          info@monttremblantlimoservices.com
+        </a><br>
+        <a href="tel:+14383203733">+1 (438) 320-3733</a>
+      </div>
+
+      <div>
+        © <span id="year"></span> <span data-i18n="footer_rights">All rights reserved</span>
+      </div>
+    </div>
   </footer>
 </main>
 
 <a class="whatsapp-float" href="https://wa.me/14383203733" target="_blank" rel="noreferrer">WhatsApp</a>
+
+<div class="contact-bar">
+  <a href="tel:+14383203733" data-i18n="sticky_call">Call</a>
+  <a href="mailto:info@monttremblantlimoservices.com?subject=Booking%20Request" data-i18n="sticky_email">Email</a>
+  <a href="https://wa.me/14383203733" target="_blank" rel="noreferrer" data-i18n="sticky_whatsapp">WhatsApp</a>
+</div>
 
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
@@ -2926,5 +3091,146 @@ function getQcCorridorBounds(){
 }
 
 </script>
+
+<script>
+  function sendContactEmail(){
+    const name = document.getElementById("cf_name")?.value || "";
+    const email = document.getElementById("cf_email")?.value || "";
+    const message = document.getElementById("cf_message")?.value || "";
+
+    const subject = "Customer Inquiry";
+    const body =
+`Hello Mont Tremblant Limo Services,
+
+Name: ${name}
+Email: ${email}
+
+Message:
+${message}
+
+`;
+
+    const mailto =
+      "mailto:info@monttremblantlimoservices.com"
+      + "?subject=" + encodeURIComponent(subject)
+      + "&body=" + encodeURIComponent(body);
+
+    window.location.href = mailto;
+  }
+
+  const I18N = {
+    en: {
+      nav_fleet: "Our fleet",
+      nav_routes: "Destinations",
+      nav_faq: "FAQ",
+      nav_contact: "Contact",
+      nav_whatsapp: "WhatsApp",
+
+      hero_title: "Luxury chauffeur service in Mont-Tremblant",
+      hero_sub: "Airport transfers, hourly bookings, ski trips, corporate travel and special events.",
+
+      badge_247: "24/7 booking",
+      badge_pro: "Professional chauffeurs",
+      badge_premium: "Premium vehicles",
+      badge_cities: "Mont-Tremblant • Montréal • Ottawa",
+
+      contact_title: "Contact Us",
+      contact_sub: "Questions, bookings, or custom trips — contact us anytime.",
+      contact_getintouch: "Get in touch",
+      contact_sendmsg: "Send us a message",
+      contact_sendbtn: "Send Message",
+      contact_avail: "Available 24/7",
+
+      ph_name: "Your name",
+      ph_email: "Your email",
+      ph_message: "Your message",
+
+      footer_brand: "Mont Tremblant Limo Services",
+      footer_tagline: "Luxury chauffeur service in Mont-Tremblant",
+      footer_contact: "Contact",
+      footer_rights: "All rights reserved",
+
+      sticky_call: "Call",
+      sticky_email: "Email",
+      sticky_whatsapp: "WhatsApp"
+    },
+
+    fr: {
+      nav_fleet: "Notre flotte",
+      nav_routes: "Destinations",
+      nav_faq: "FAQ",
+      nav_contact: "Contact",
+      nav_whatsapp: "WhatsApp",
+
+      hero_title: "Service de chauffeur de luxe à Mont-Tremblant",
+      hero_sub: "Transferts aéroport, réservations à l’heure, sorties ski, voyages corporatifs et événements spéciaux.",
+
+      badge_247: "Réservation 24/7",
+      badge_pro: "Chauffeurs professionnels",
+      badge_premium: "Véhicules haut de gamme",
+      badge_cities: "Mont-Tremblant • Montréal • Ottawa",
+
+      contact_title: "Nous joindre",
+      contact_sub: "Questions, réservations ou trajets sur mesure — contactez-nous à tout moment.",
+      contact_getintouch: "Contact",
+      contact_sendmsg: "Envoyez-nous un message",
+      contact_sendbtn: "Envoyer",
+      contact_avail: "Disponible 24/7",
+
+      ph_name: "Votre nom",
+      ph_email: "Votre courriel",
+      ph_message: "Votre message",
+
+      footer_brand: "Mont Tremblant Limo Services",
+      footer_tagline: "Service de chauffeur de luxe à Mont-Tremblant",
+      footer_contact: "Contact",
+      footer_rights: "Tous droits réservés",
+
+      sticky_call: "Appeler",
+      sticky_email: "Courriel",
+      sticky_whatsapp: "WhatsApp"
+    }
+  };
+
+  function applyLang(lang){
+    const dict = I18N[lang] || I18N.en;
+
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+      const key = el.getAttribute("data-i18n");
+      if (dict[key]) el.textContent = dict[key];
+    });
+
+    document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+      const key = el.getAttribute("data-i18n-placeholder");
+      if (dict[key]) el.setAttribute("placeholder", dict[key]);
+    });
+
+    document.querySelectorAll(".lang-btn").forEach(btn=>{
+      const isOn = btn.dataset.lang === lang;
+      btn.classList.toggle("active", isOn);
+      btn.setAttribute("aria-pressed", isOn ? "true" : "false");
+    });
+
+    try { localStorage.setItem("mtls_lang", lang); } catch(e) {}
+    document.documentElement.setAttribute("lang", lang);
+  }
+
+  function initLang(){
+    let saved = null;
+    try { saved = localStorage.getItem("mtls_lang"); } catch(e) {}
+
+    const browser = (navigator.language || "en").toLowerCase();
+    const guess = browser.startsWith("fr") ? "fr" : "en";
+
+    applyLang(saved || guess);
+
+    document.querySelectorAll(".lang-btn").forEach(btn=>{
+      btn.addEventListener("click", ()=> applyLang(btn.dataset.lang));
+    });
+  }
+
+  initLang();
+</script>
+
 </body>
 </html>
