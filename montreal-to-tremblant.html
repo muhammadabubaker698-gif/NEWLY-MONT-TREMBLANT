@@ -1309,6 +1309,92 @@ header{
   padding: 12px;
 }
 
+
+/* ===== Mobile navigation (hamburger) ===== */
+.menu-toggle{
+  display:none;
+  width:44px; height:44px;
+  border-radius: 14px;
+  border:1px solid rgba(11,18,32,.10);
+  background: rgba(255,255,255,.82);
+  box-shadow: 0 14px 34px rgba(0,0,0,.06);
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+}
+.menu-toggle i{
+  display:block;
+  width:18px; height:2px;
+  background: rgba(11,18,32,.82);
+  border-radius: 999px;
+}
+.menu-toggle i:nth-child(2){ width:14px; opacity:.85 }
+.menu-toggle i:nth-child(3){ width:18px; opacity:.75 }
+
+@media (max-width: 940px){
+  .menu-toggle{ display:inline-flex; }
+  .links{
+    position: fixed;
+    left: 12px; right: 12px;
+    top: 70px;
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+    border-radius: 18px;
+    background: rgba(255,255,255,.94);
+    border: 1px solid rgba(11,18,32,.10);
+    box-shadow: 0 28px 70px rgba(0,0,0,.12);
+    z-index: 9999;
+  }
+  .links a{
+    padding: 12px 12px;
+    border-radius: 14px;
+    background: rgba(11,18,32,.04);
+    border: 1px solid rgba(11,18,32,.08);
+  }
+  body.nav-open .links{ display:flex; }
+  .nav-overlay{
+    display:none;
+    position: fixed;
+    inset: 0;
+    background: rgba(11,18,32,.28);
+    backdrop-filter: blur(2px);
+    z-index: 9998;
+  }
+  body.nav-open .nav-overlay{ display:block; }
+}
+
+
+/* Booking readability (mobile) */
+.tabhint{
+  padding: 12px 14px;
+  line-height: 1.45;
+  border-radius: 14px;
+  background: rgba(11,18,32,.03);
+  border: 1px solid rgba(11,18,32,.08);
+}
+@media (max-width: 520px){
+  .booking-card{ padding: 14px !important; }
+  .tabhint{ padding: 14px 16px; }
+}
+
+
+/* Bottom contact bar: gold buttons */
+.contact-bar{
+  background: rgba(11,18,32,.80);
+  backdrop-filter: blur(10px);
+}
+.contact-bar a{
+  background: linear-gradient(90deg, var(--goldA), var(--goldB));
+  color: #0b0b0b !important;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 999px;
+  padding: 10px 14px;
+  box-shadow: 0 16px 34px rgba(181,138,43,.20);
+}
+.contact-bar a:hover{ transform: translateY(-1px); }
+
 </style>
 <link href="https://maps.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://maps.gstatic.com" rel="preconnect"/>
@@ -1318,14 +1404,18 @@ header{
 <header>
 <div class="container">
 <div class="nav">
+<div class="nav-overlay" aria-hidden="true"></div>
 <div class="brand">
 <div class="logo">MT</div>
 <div data-i18n="brand_name">Mont Tremblant Limo</div>
 </div>
+<button class="menu-toggle" type="button" aria-label="Menu" aria-expanded="false">
+  <i></i><i></i><i></i>
+</button>
 <div class="links">
         <a href="booking.html" data-i18n="nav_book">Book online</a>
         
-        <a href="corporate.html" data-i18n="nav_corporate">Corporate</a><a href="#fleet" data-i18n="nav_fleet">Our fleet</a>
+        <a href="corporate.html#corporate" data-i18n="nav_corporate">Corporate</a><a href="#fleet" data-i18n="nav_fleet">Our fleet</a>
         <a href="services.html" data-i18n="nav_services">Services</a>
         <a href="#routes" data-i18n="nav_routes">Destinations</a>
         <a href="#airports" data-i18n="nav_airports">Airports</a>
@@ -2342,8 +2432,8 @@ if (input.value.trim().length >= 2) doSearch();
     document.documentElement.classList.remove("overlay-open");
     unlockBodyScroll();
     try{
-      if (window.Tawk_API && typeof window.Tawk_API.showWidget === "function") {
-        window.Tawk_API.showWidget();
+      if (window.__Tawk_API_DISABLED__ && typeof window.__Tawk_API_DISABLED__.showWidget === "function") {
+        window.__Tawk_API_DISABLED__.showWidget();
       }
     }catch(e){}
   }
@@ -2408,8 +2498,8 @@ if (input.value.trim().length >= 2) doSearch();
     el.setAttribute("aria-hidden","false");
 
     try{
-      if (window.Tawk_API && typeof window.Tawk_API.hideWidget === "function") {
-        window.Tawk_API.hideWidget();
+      if (window.__Tawk_API_DISABLED__ && typeof window.__Tawk_API_DISABLED__.hideWidget === "function") {
+        window.__Tawk_API_DISABLED__.hideWidget();
       }
     }catch(e){}
 
@@ -2430,8 +2520,8 @@ if (input.value.trim().length >= 2) doSearch();
       document.documentElement.classList.remove("overlay-open");
       unlockBodyScroll();
       try{
-        if (window.Tawk_API && typeof window.Tawk_API.showWidget === "function") {
-          window.Tawk_API.showWidget();
+        if (window.__Tawk_API_DISABLED__ && typeof window.__Tawk_API_DISABLED__.showWidget === "function") {
+          window.__Tawk_API_DISABLED__.showWidget();
         }
       }catch(e){}
       if (location.hash === "#overlayVehicles" || location.hash === "#overlayCheckout"){
@@ -2843,17 +2933,6 @@ if (input.value.trim().length >= 2) doSearch();
   });
 </script>
 <!--Start of Tawk.to Script-->
-<script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/6987db032260861c350b5c0a/default';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();
-</script>
 <!--End of Tawk.to Script-->
 <!-- Google Places + Map (optional) -->
 <script>
@@ -3890,6 +3969,29 @@ function getQcCorridorBounds(){
       });
     }, { threshold: 0.12 });
     els.forEach(el=>io.observe(el));
+  })();
+
+  // Mobile nav toggle
+  (function(){
+    const btn = document.querySelector(".menu-toggle");
+    const overlay = document.querySelector(".nav-overlay");
+    if(!btn || !overlay) return;
+
+    function closeNav(){
+      document.body.classList.remove("nav-open");
+      btn.setAttribute("aria-expanded","false");
+    }
+    function openNav(){
+      document.body.classList.add("nav-open");
+      btn.setAttribute("aria-expanded","true");
+    }
+    btn.addEventListener("click", ()=>{
+      document.body.classList.contains("nav-open") ? closeNav() : openNav();
+    });
+    overlay.addEventListener("click", closeNav);
+    document.querySelectorAll(".links a").forEach(a=>{
+      a.addEventListener("click", closeNav);
+    });
   })();
 </script>
 
