@@ -4,13 +4,13 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Montréal to Ottawa Limo Service | Luxury Chauffeur</title>
-<meta name="description" content="Private chauffeur and limo service from Montréal to Ottawa, ON. Escalade, Suburban, Denali, QX60, Tesla & Sprinter. Flat-rate quotes, airport connections, 24/7 booking." />
-<link rel="canonical" href="https://monttremblantlimoservices.com/montreal-to-ottawa.html" />
+<title>Corporate Chauffeur Service Montréal | Preferred Rates & Invoicing</title>
+<meta name="description" content="Corporate chauffeur service in Montréal and Mont-Tremblant. Preferred corporate rates, monthly packages, detailed invoices, and top-notch executive transportation. 24/7 support." />
+<link rel="canonical" href="https://monttremblantlimoservices.com/corporate.html" />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Montréal ⇄ Mont‑Tremblant Transfers | Private Chauffeur" />
-<meta property="og:description" content="Door-to-door private transfers between Montréal and Mont‑Tremblant. Premium SUVs and Sprinter for ski trips and events." />
-<meta property="og:url" content="https://monttremblantlimoservices.com/montreal-to-tremblant.html" />
+<meta property="og:title" content="Montréal Limo Service | Luxury Chauffeur" />
+<meta property="og:description" content="Premium chauffeur service in Montréal: airport transfers (YUL), hourly bookings, corporate travel, and events." />
+<meta property="og:url" content="https://monttremblantlimoservices.com/montreal-limo-service.html" />
 <meta property="og:image" content="https://monttremblantlimoservices.com/Tremblant.jpg" />
 <meta name="twitter:card" content="summary_large_image" />
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
@@ -21,9 +21,9 @@
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   "name": "Mont Tremblant Limo Services",
-  "url": "https://monttremblantlimoservices.com/montreal-to-tremblant.html",
+  "url": "https://monttremblantlimoservices.com/montreal-limo-service.html",
   "telephone": "+1-438-320-3733",
-  "description": "Luxury chauffeur service in Ottawa. Premium vehicles for airport transfers, hourly bookings, ski trips, corporate travel, and special events. Minimum 1 hour for hourly bookings. Vehicle minimum fares apply.",
+  "description": "Luxury chauffeur service in Mont-Tremblant. Premium vehicles for airport transfers, hourly bookings, ski trips, corporate travel, and special events. Minimum 1 hour for hourly bookings. Vehicle minimum fares apply.",
   "areaServed": [
     {
       "@type": "City",
@@ -43,7 +43,7 @@
     },
     {
       "@type": "City",
-      "name": "Ottawa"
+      "name": "Mont-Tremblant"
     },
     {
       "@type": "AdministrativeArea",
@@ -81,7 +81,54 @@
   "email": "info@monttremblantlimoservices.com",
   "priceRange": "$$$"
 }
-</script>
+
+  function setPlaceholders(lang){
+    const dict = (I18N[lang] || I18N.en);
+    document.querySelectorAll("[data-i18n-ph]").forEach(el=>{
+      const k = el.getAttribute("data-i18n-ph");
+      if (dict[k]) el.setAttribute("placeholder", dict[k]);
+    });
+  }
+
+  // extend applyLang to also set placeholders (safe if applyLang exists)
+  const __oldApplyLang = (typeof applyLang === "function") ? applyLang : null;
+  if (__oldApplyLang){
+    applyLang = function(lang){
+      __oldApplyLang(lang);
+      try{ setPlaceholders(lang); }catch(e){}
+    }
+  }
+
+  function sendCorporateEmail(){
+    const company = (document.getElementById("co_company")?.value || "").trim();
+    const contact = (document.getElementById("co_contact")?.value || "").trim();
+    const email = (document.getElementById("co_email")?.value || "").trim();
+    const phone = (document.getElementById("co_phone")?.value || "").trim();
+    const details = (document.getElementById("co_details")?.value || "").trim();
+
+    const subject = "Corporate Account Request";
+    const body =
+`Hello Mont Tremblant Limo Services,
+
+I would like to set up a corporate account.
+
+Company: ${company}
+Contact: ${contact}
+Email: ${email}
+Phone: ${phone}
+
+Requirements:
+${details}
+
+Thank you.`;
+
+    const mailto = "mailto:info@monttremblantlimoservices.com"
+      + "?subject=" + encodeURIComponent(subject)
+      + "&body=" + encodeURIComponent(body);
+
+    window.location.href = mailto;
+  }
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -1057,31 +1104,6 @@ body{ padding-bottom: 64px; }
 </style>
 <link href="https://maps.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://maps.gstatic.com" rel="preconnect"/>
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"FAQPage",
-  "mainEntity":[
-    {
-      "@type":"Question",
-      "name":"How do I book a Montréal to Ottawa ride?",
-      "acceptedAnswer":{"@type":"Answer","text":"Use the booking form, WhatsApp, or email. We confirm availability and send a secure payment link."}
-    },
-    {
-      "@type":"Question",
-      "name":"Can we stop on the way?",
-      "acceptedAnswer":{"@type":"Answer","text":"Yes. Add stops in Notes and we will confirm timing and any additional charges before payment."}
-    },
-    {
-      "@type":"Question",
-      "name":"Do you provide child seats?",
-      "acceptedAnswer":{"@type":"Answer","text":"Child seats are available on request. Tell us the child’s age/weight and we’ll arrange the right seat."}
-    }
-  ]
-}
-</script>
-
 </head>
 <body>
 <header>
@@ -1114,13 +1136,13 @@ body{ padding-bottom: 64px; }
 <div class="hero-wrap">
 <div class="hero-inner container">
 <div class="hero-left">
-<div class="hero-title" data-i18n="hero_title">Luxury chauffeur service in Ottawa</div>
+<div class="hero-title" data-i18n="hero_title">Luxury chauffeur service in Mont-Tremblant</div>
 <div class="hero-sub" data-i18n="hero_sub">Airport transfers, hourly bookings, ski trips, corporate travel and special events.</div>
 <div class="hero-badges">
 <span class="badge" data-i18n="badge_247">24/7 booking</span>
 <span class="badge" data-i18n="badge_pro">Professional chauffeurs</span>
 <span class="badge" data-i18n="badge_premium">Premium vehicles</span>
-<span class="badge" data-i18n="badge_cities">Ottawa • Montréal • Ottawa</span>
+<span class="badge" data-i18n="badge_cities">Mont-Tremblant • Montréal • Ottawa</span>
 </div>
 </div>
 <aside aria-label="Search booking" class="booking-card" id="booking">
@@ -1305,7 +1327,7 @@ body{ padding-bottom: 64px; }
 <main class="container">
 <section class="section" id="fleet">
 <h2 data-i18n="fleet_title">Our Fleet</h2>
-<p class="subtitle" data-i18n-html="fleet_sub_html">Premium vehicles for Ottawa travel. <b>Minimum 1 hour (hourly)</b> applies to all vehicles.</p>
+<p class="subtitle" data-i18n-html="fleet_sub_html">Premium vehicles for Mont-Tremblant travel. <b>Minimum 1 hour (hourly)</b> applies to all vehicles.</p>
 <div class="grid3">
 <div class="card">
 <div class="card-media"><img alt="2026 Cadillac Escalade ESV black" src="/escalade.jpg"/></div>
@@ -1392,6 +1414,48 @@ body{ padding-bottom: 64px; }
 </div>
 </div>
 </div>
+
+<div class="card" style="margin-top:14px;">
+  <div class="card-body">
+    <h3 data-i18n="corp_ind_t">Industries we serve</h3>
+    <div class="meta" data-i18n="corp_ind_b">
+      • Financial & banking institutions<br>
+      • Law firms & legal professionals<br>
+      • Corporate executives & VIP clients<br>
+      • Hotels, resorts & concierge partners<br>
+      • Event planners & conference organizers<br>
+      • Film & production crews<br>
+      • Healthcare & private clinics<br>
+      • Technology & consulting firms
+    </div>
+  </div>
+</div>
+
+<div class="card" style="margin-top:14px;">
+  <div class="card-body">
+    <h3 data-i18n="corp_onb_t">Corporate account onboarding</h3>
+    <div class="meta" data-i18n="corp_onb_b">
+      1. Contact us with your monthly transportation needs<br>
+      2. Receive a customized corporate pricing proposal<br>
+      3. Confirm billing structure and invoice preferences<br>
+      4. Assign your dedicated booking contact<br>
+      5. Start booking immediately with priority service
+    </div>
+  </div>
+</div>
+
+<div class="card" style="margin-top:14px;">
+  <div class="card-body">
+    <h3 data-i18n="corp_bro_t">Corporate brochure</h3>
+    <div class="meta" data-i18n="corp_bro_b">
+      Download our corporate transportation overview to share with your management or procurement team.
+    </div>
+    <div class="actions" style="margin-top:10px;">
+      <a class="btn btn-primary" href="corporate-brochure.pdf" download data-i18n="corp_bro_btn">Download brochure (PDF)</a>
+    </div>
+  </div>
+</div>
+
 </section>
 <section id="routes" class="section">
   <h2 data-i18n="routes_title">Popular Routes</h2>
@@ -1523,7 +1587,7 @@ body{ padding-bottom: 64px; }
 <div class="container footer-grid">
 <div>
 <strong data-i18n="footer_brand">Mont Tremblant Limo Services</strong><br/>
-<span data-i18n="footer_tagline">Luxury chauffeur service in Ottawa</span>
+<span data-i18n="footer_tagline">Luxury chauffeur service in Mont-Tremblant</span>
 </div>
 <div>
 <strong data-i18n="footer_contact">Contact</strong><br/>
@@ -1538,52 +1602,67 @@ body{ padding-bottom: 64px; }
 </div>
 </footer>
 
-<section class="section" id="route-details">
-  <h2 data-i18n="r_h2">Montréal to Ottawa Chauffeur Service</h2>
-  <p class="subtitle" data-i18n="r_sub">Door-to-door private transportation with premium SUVs and professional chauffeurs.</p>
+<section id="corporate" class="section">
+  <h2 data-i18n="corp_h2">Corporate Transportation</h2>
+  <p class="subtitle" data-i18n="corp_sub">Executive chauffeur service for companies in Montréal, surrounding areas, and Mont-Tremblant.</p>
 
-  <div class="grid3" style="margin-top:14px;">
+  <div class="grid3" style="margin-top:16px;">
     <div class="card">
       <div class="card-body">
-        <h3 data-i18n="r_card1_t">Popular use cases</h3>
-        <div class="meta" data-i18n="r_card1_b">Business travel • Family trips • Events • Hotel & resort transfers</div>
+        <h3 data-i18n="corp_card1_t">Preferred rates</h3>
+        <div class="meta" data-i18n="corp_card1_b">Corporate pricing based on volume, routes, and service level — ideal for frequent travel.</div>
       </div>
     </div>
     <div class="card">
       <div class="card-body">
-        <h3 data-i18n="r_card2_t">Vehicles</h3>
-        <div class="meta" data-i18n="r_card2_b">Escalade • Suburban • Denali • QX60 • Tesla • Sprinter</div>
+        <h3 data-i18n="corp_card2_t">Monthly packages</h3>
+        <div class="meta" data-i18n="corp_card2_b">Flexible monthly packages for executives, teams, and visiting clients. Priority booking included.</div>
       </div>
     </div>
     <div class="card">
       <div class="card-body">
-        <h3 data-i18n="r_card3_t">Airports</h3>
-        <div class="meta" data-i18n="r_card3_b">YOW connections available on request</div>
+        <h3 data-i18n="corp_card3_t">Detailed invoicing</h3>
+        <div class="meta" data-i18n="corp_card3_b">Itemized invoices with trip details, receipts, and PO references — easy for accounting.</div>
       </div>
     </div>
   </div>
-</section>
 
-<section class="section" id="route-faq">
-  <h2 data-i18n="faq_h2">FAQ</h2>
-  <div class="vlist" style="margin-top:12px;">
-    <div class="vrow" style="cursor:default">
-      <div class="vleft">
-        <b data-i18n="faq_q1">How do I book a Montréal to Ottawa ride?</b>
-        <small data-i18n="faq_a1">Use the booking form, WhatsApp, or email. We confirm availability and send a secure payment link.</small>
+  <div class="card" style="margin-top:14px;">
+    <div class="card-body">
+      <h3 data-i18n="corp_how_t">How we support your team</h3>
+      <div class="meta" data-i18n="corp_how_b">
+        • Professional chauffeurs & premium vehicles<br>
+        • Airport pickups (YUL/YMX) with flight monitoring on request<br>
+        • Meet & greet for VIPs and visiting clients<br>
+        • City-to-city travel (Ottawa, Toronto, Québec City, New York)<br>
+        • 24/7 booking via WhatsApp, phone, or email<br>
+        • Consistent service standards for every trip
       </div>
     </div>
-    <div class="vrow" style="cursor:default">
-      <div class="vleft">
-        <b data-i18n="faq_q2">Can we stop on the way?</b>
-        <small data-i18n="faq_a2">Yes — add stops in Notes. We’ll confirm timing and any additional charges before payment.</small>
+  </div>
+
+  <div class="card" style="margin-top:14px;">
+    <div class="card-body">
+      <h3 data-i18n="corp_form_t">Request a corporate quote</h3>
+      <div class="meta" data-i18n="corp_form_sub">Tell us your monthly needs. We’ll reply with a preferred rate and package options.</div>
+
+      <div class="row2" style="margin-top:10px;">
+        <input id="co_company" placeholder="Company name" data-i18n-ph="ph_company"/>
+        <input id="co_contact" placeholder="Contact name" data-i18n-ph="ph_contact"/>
       </div>
-    </div>
-    <div class="vrow" style="cursor:default">
-      <div class="vleft">
-        <b data-i18n="faq_q3">Do you provide child seats?</b>
-        <small data-i18n="faq_a3">Available on request. Tell us the child’s age/weight and we’ll arrange the right seat.</small>
+      <div class="row2" style="margin-top:10px;">
+        <input id="co_email" placeholder="Email" data-i18n-ph="ph_email"/>
+        <input id="co_phone" placeholder="Phone" data-i18n-ph="ph_phone"/>
       </div>
+
+      <textarea id="co_details" style="margin-top:10px;" placeholder="Typical routes, number of trips per month, vehicle preference, billing requirements…" data-i18n-ph="ph_details"></textarea>
+
+      <div class="actions" style="margin-top:12px;">
+        <button class="btn btn-primary" type="button" onclick="sendCorporateEmail()" data-i18n="corp_send">Send corporate inquiry</button>
+        <a class="btn" href="mailto:info@monttremblantlimoservices.com?subject=Corporate%20Account%20Request" data-i18n="corp_email">Email us directly</a>
+      </div>
+
+      <div class="tinyhint" data-i18n="corp_hint" style="margin-top:10px;">We can set up preferred rates, monthly billing, and detailed invoices for your accounting team.</div>
     </div>
   </div>
 </section>
@@ -2282,7 +2361,7 @@ if (input.value.trim().length >= 2) doSearch();
   function renderTripSummary(){
     const when = `${state.date} at ${state.time}`;
     const route = state.mode === "hourly"
-      ? `${state.pickup} → Hourly (Ottawa area)`
+      ? `${state.pickup} → Hourly (Mont-Tremblant area)`
       : `${state.pickup} → ${state.dropoff}`;
 
     $("tripSummary").innerHTML = `
@@ -2369,7 +2448,7 @@ if (input.value.trim().length >= 2) doSearch();
     const chosen = getChosenVehicle();
     const when = `${state.date} at ${state.time}`;
     const route = state.mode === "hourly"
-      ? `${state.pickup} → Hourly (Ottawa area)`
+      ? `${state.pickup} → Hourly (Mont-Tremblant area)`
       : `${state.pickup} → ${state.dropoff}`;
 
     $("checkoutSummary").innerHTML = `
@@ -2422,7 +2501,7 @@ if (input.value.trim().length >= 2) doSearch();
       date: state.date,
       time: state.time,
       pickup: state.pickup,
-      dropoff: (state.mode === "hourly") ? "Ottawa (area)" : state.dropoff,
+      dropoff: (state.mode === "hourly") ? "Mont-Tremblant (area)" : state.dropoff,
       triptype,
       vehicle: chosen.name,
       estimate_text: estimateText,
@@ -2507,7 +2586,7 @@ if (input.value.trim().length >= 2) doSearch();
       date: state.date,
       time: state.time,
       pickup: state.pickup,
-      dropoff: (state.mode === "hourly") ? "Ottawa (area)" : state.dropoff,
+      dropoff: (state.mode === "hourly") ? "Mont-Tremblant (area)" : state.dropoff,
       triptype: (state.mode === "hourly") ? "hourly" : (state.transfer === "airport" ? "airport" : "point"),
       vehicle: chosen.name,
       vehicle_id: chosen.id,
@@ -3360,22 +3439,6 @@ function getQcCorridorBounds(){
   // --- Simple i18n (EN/FR) ---
   const I18N = {
     en: {
-      r_h2: "Montréal to Ottawa Chauffeur Service",
-      r_sub: "Door-to-door private transportation with premium SUVs and professional chauffeurs.",
-      r_card1_t: "Popular use cases",
-      r_card1_b: "Business travel • Family trips • Events • Hotel & resort transfers",
-      r_card2_t: "Vehicles",
-      r_card2_b: "Escalade • Suburban • Denali • QX60 • Tesla • Sprinter",
-      r_card3_t: "Airports",
-      r_card3_b: "YOW connections available on request",
-      faq_h2: "FAQ",
-      faq_q1: "How do I book a Montréal to Ottawa ride?",
-      faq_a1: "Use the booking form, WhatsApp, or email. We confirm availability and send a secure payment link.",
-      faq_q2: "Can we stop on the way?",
-      faq_a2: "Yes — add stops in Notes. We’ll confirm timing and any additional charges before payment.",
-      faq_q3: "Do you provide child seats?",
-      faq_a3: "Available on request. Tell us the child’s age/weight and we’ll arrange the right seat.",
-
       brand_name: "Mont Tremblant Limo",
 
       nav_fleet: "Our fleet",
@@ -3384,13 +3447,13 @@ function getQcCorridorBounds(){
       nav_contact: "Contact",
       nav_whatsapp: "WhatsApp",
 
-      hero_title: "Montréal ⇄ Mont‑Tremblant private transfers",
-      hero_sub: "Door-to-door black SUV and Sprinter transfers for ski trips, weekends, groups, and events.",
+      hero_title: "Luxury limo service in Montréal",
+      hero_sub: "Airport transfers, hourly chauffeur, corporate travel and events across Montréal and surrounding areas.",
 
       badge_247: "24/7 booking",
       badge_pro: "Professional chauffeurs",
       badge_premium: "Premium vehicles",
-      badge_cities: "Ottawa • Montréal • Ottawa",
+      badge_cities: "Mont-Tremblant • Montréal • Ottawa",
 
       tab_oneway: "One way",
       tab_hourly: "By the hour (min 1h)",
@@ -3446,7 +3509,7 @@ function getQcCorridorBounds(){
       btn_close: "Close",
 
       fleet_title: "Our Fleet",
-      fleet_sub_html: "Premium vehicles for Ottawa travel. <b>Minimum 1 hour (hourly)</b> applies to all vehicles.",
+      fleet_sub_html: "Premium vehicles for Mont-Tremblant travel. <b>Minimum 1 hour (hourly)</b> applies to all vehicles.",
       unit_hour: "hour",
       min_hours_html: "{n}-hour minimum",
 
@@ -3504,7 +3567,7 @@ function getQcCorridorBounds(){
       services_cta_quote: "Get a quote",
 
       footer_brand: "Mont Tremblant Limo Services",
-      footer_tagline: "Luxury chauffeur service in Ottawa",
+      footer_tagline: "Luxury chauffeur service in Mont-Tremblant",
       footer_contact: "Contact",
       footer_rights: "All rights reserved",
 
@@ -3514,22 +3577,6 @@ function getQcCorridorBounds(){
     },
 
     fr: {
-      r_h2: "Service de chauffeur de Montréal à Ottawa",
-      r_sub: "Transport privé porte-à-porte avec VUS haut de gamme et chauffeurs professionnels.",
-      r_card1_t: "Cas d’usage",
-      r_card1_b: "Voyage d’affaires • Famille • Événements • Transferts hôtels & resorts",
-      r_card2_t: "Véhicules",
-      r_card2_b: "Escalade • Suburban • Denali • QX60 • Tesla • Sprinter",
-      r_card3_t: "Aéroports",
-      r_card3_b: "Correspondances YOW sur demande",
-      faq_h2: "FAQ",
-      faq_q1: "Comment réserver un trajet Montréal → Ottawa ?",
-      faq_a1: "Utilisez le formulaire, WhatsApp ou courriel. Nous confirmons la disponibilité et envoyons un lien de paiement sécurisé.",
-      faq_q2: "Peut-on faire des arrêts en chemin ?",
-      faq_a2: "Oui — ajoutez-les dans Notes. Nous confirmerons le temps et les frais avant le paiement.",
-      faq_q3: "Fournissez-vous des sièges d’auto pour enfants ?",
-      faq_a3: "Disponibles sur demande. Indiquez l’âge/le poids et nous préparerons le bon siège.",
-
       brand_name: "Mont Tremblant Limo",
 
       nav_fleet: "Notre flotte",
@@ -3538,13 +3585,13 @@ function getQcCorridorBounds(){
       nav_contact: "Contact",
       nav_whatsapp: "WhatsApp",
 
-      hero_title: "Transferts privés Montréal ⇄ Mont‑Tremblant",
-      hero_sub: "Transferts porte-à-porte en VUS noir et Sprinter pour le ski, les week‑ends, les groupes et les événements.",
+      hero_title: "Service de limousine de luxe à Montréal",
+      hero_sub: "Transferts aéroport, chauffeur à l’heure, voyages corporatifs et événements à Montréal et alentours.",
 
       badge_247: "Réservation 24/7",
       badge_pro: "Chauffeurs professionnels",
       badge_premium: "Véhicules haut de gamme",
-      badge_cities: "Ottawa • Montréal • Ottawa",
+      badge_cities: "Mont-Tremblant • Montréal • Ottawa",
 
       tab_oneway: "Aller simple",
       tab_hourly: "À l’heure (min 1 h)",
@@ -3600,7 +3647,7 @@ function getQcCorridorBounds(){
       btn_close: "Fermer",
 
       fleet_title: "Notre flotte",
-      fleet_sub_html: "Véhicules haut de gamme pour Ottawa. <b>Minimum 1 heure (à l’heure)</b> s’applique à tous les véhicules.",
+      fleet_sub_html: "Véhicules haut de gamme pour Mont-Tremblant. <b>Minimum 1 heure (à l’heure)</b> s’applique à tous les véhicules.",
       unit_hour: "heure",
       min_hours_html: "Minimum {n} heures",
 
@@ -3614,7 +3661,7 @@ function getQcCorridorBounds(){
       contact_sendbtn: "Envoyer",
 
       footer_brand: "Mont Tremblant Limo Services",
-      footer_tagline: "Service de chauffeur de luxe à Ottawa",
+      footer_tagline: "Service de chauffeur de luxe à Mont-Tremblant",
       footer_contact: "Contact",
       footer_rights: "Tous droits réservés",
 
