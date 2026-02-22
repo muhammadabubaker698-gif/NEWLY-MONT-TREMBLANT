@@ -1475,6 +1475,36 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
   header .menu-toggle, header .drawer, header .nav-overlay{ display:none !important; }
 }
 
+
+/* ===== Header v4.1 (mobile alignment like reference) ===== */
+@media (max-width: 940px){
+  .container.header-top{
+    display:grid;
+    grid-template-columns: 44px 1fr auto;
+    align-items:center;
+    gap:10px;
+  }
+  .container.header-top .brand-link{
+    justify-self:center;
+  }
+  .container.header-top .header-right{
+    justify-self:end;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .container.header-top .header-right .top-pill{ padding: 10px 12px; }
+  .container.header-top .header-right .icon-pill{ width:auto; height:auto; border-radius:999px; }
+  /* hide whatsapp on mobile header (still available in bottom bar) */
+  .container.header-top .header-right .whatsapp-top{ display:none !important; }
+  /* hide call icon duplicate */
+  .container.header-top .header-right .call-icon{ display:none !important; }
+  /* show phone number on mobile header */
+  .container.header-top .top-left{ display:none !important; } /* old left phone */
+  .container.header-top .menu-toggle{ display:inline-flex !important; }
+  .brand-link .brand-name{ display:none; }
+}
+
 </style>
 <link href="https://maps.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://maps.gstatic.com" rel="preconnect"/>
@@ -1482,10 +1512,13 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
 </head>
 <body>
 
+
 <header>
   <div class="nav-overlay" aria-hidden="true"></div>
   <div class="container header-top">
-    <a class="top-pill top-left" href="tel:+14383203733">📞 <strong>+1 (438) 320-3733</strong></a>
+    <button class="menu-toggle icon-pill" type="button" aria-label="Menu" aria-expanded="false">
+      <i></i><i></i><i></i>
+    </button>
 
     <a class="brand-link" href="index.html" aria-label="Home">
       <div class="logo">MT</div>
@@ -1493,17 +1526,13 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
     </a>
 
     <div class="header-right">
-      <a class="top-pill" href="https://wa.me/14383203733" target="_blank" rel="noreferrer" data-i18n="nav_whatsapp">WhatsApp</a>
+      <a class="top-pill" href="tel:+14383203733">📞 <strong>+1 (438) 320-3733</strong></a>
       <div aria-label="Language switcher" class="lang-switch">
 <button aria-pressed="true" class="lang-btn active" data-lang="en" type="button">EN</button>
 <button aria-pressed="false" class="lang-btn" data-lang="fr" type="button">FR</button>
 </div>
-      <button class="menu-toggle icon-pill" type="button" aria-label="Menu" aria-expanded="false">
-        <i></i><i></i><i></i>
-      </button>
-      <a class="top-pill icon-pill" href="tel:+14383203733" aria-label="Call">
-        📞
-      </a>
+      <a class="top-pill whatsapp-top" href="https://wa.me/14383203733" target="_blank" rel="noreferrer" data-i18n="nav_whatsapp">WhatsApp</a>
+      <a class="top-pill icon-pill call-icon" href="tel:+14383203733" aria-label="Call">📞</a>
     </div>
   </div>
 
@@ -1512,7 +1541,7 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
     <div class="links">
       <a href="booking.html" data-i18n="nav_book">Book online</a>
         
-        <a href="corporate.html#corporate" data-i18n="nav_corporate">Corporate</a><a href="#fleet" data-i18n="nav_fleet">Our fleet</a>
+        <a href="corporate.html#corporate" data-i18n="nav_corporate">Corporate program</a><a href="#fleet" data-i18n="nav_fleet">Our fleet</a>
         <a href="services.html" data-i18n="nav_services">Services</a>
         <a href="#routes" data-i18n="nav_routes">Destinations</a>
         <a href="#airports" data-i18n="nav_airports">Airports</a>
@@ -1525,7 +1554,7 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
   <nav class="drawer" aria-label="Mobile menu">
     <a href="booking.html" data-i18n="nav_book">Book online</a>
         
-        <a href="corporate.html#corporate" data-i18n="nav_corporate">Corporate</a><a href="#fleet" data-i18n="nav_fleet">Our fleet</a>
+        <a href="corporate.html#corporate" data-i18n="nav_corporate">Corporate program</a><a href="#fleet" data-i18n="nav_fleet">Our fleet</a>
         <a href="services.html" data-i18n="nav_services">Services</a>
         <a href="#routes" data-i18n="nav_routes">Destinations</a>
         <a href="#airports" data-i18n="nav_airports">Airports</a>
@@ -1536,6 +1565,7 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
     <a href="https://wa.me/14383203733" target="_blank" rel="noreferrer">WhatsApp</a>
   </nav>
 </header>
+
 
 <div class="hero-wrap">
 <div class="hero-inner container">
@@ -1820,29 +1850,111 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
 </div>
 </section>
 
-<section id="corporate-preview" class="section">
-  <div class="card" style="padding:22px;">
-    <div style="display:flex;gap:18px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap">
-      <div style="max-width:760px">
-        <h2 style="margin:0 0 6px 0" data-i18n="home_corp_h2">Corporate transportation</h2>
-        <p class="subtitle" style="margin:0 0 10px 0" data-i18n="home_corp_sub">
-          In addition to our elite service, our business partners are privy to the following benefits:
-        </p>
-        <div class="meta" data-i18n-html="home_corp_bullets">
-          • Preferred corporate rates & volume pricing<br>
-          • Monthly packages with itemized invoices<br>
-          • VIP meet & greet + airport coordination (YUL/YMX)<br>
-          • Dedicated booking contact for your team
-        </div>
+<section id="corporate" class="section">
+  <h2 data-i18n="corp_h2">Corporate Transportation</h2>
+  <p class="subtitle" data-i18n="corp_sub">In addition to our elite service, our business partners are privy to the following benefits:</p>
+
+  <div class="grid3 reveal" style="margin-top:16px;">
+    <div class="card">
+      <div class="card-body">
+        <h3 data-i18n="corp_card1_t">Preferred rates</h3>
+        <div class="meta" data-i18n="corp_card1_b">Corporate pricing based on volume, routes, and service level — ideal for frequent travel.</div>
       </div>
-      <div class="actions" style="margin-top:6px">
-        <a class="btn btn-primary" href="corporate.html#corporate" data-i18n="home_corp_btn">Corporate program</a>
-        <a class="btn" href="mailto:info@monttremblantlimoservices.com?subject=Corporate%20Account%20Request" data-i18n="home_corp_email">Request preferred rates</a>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3 data-i18n="corp_card2_t">Monthly packages</h3>
+        <div class="meta" data-i18n="corp_card2_b">Flexible monthly packages for executives, teams, and visiting clients. Priority booking included.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3 data-i18n="corp_card3_t">Detailed invoicing</h3>
+        <div class="meta" data-i18n="corp_card3_b">Itemized invoices with trip details, receipts, and PO references — easy for accounting.</div>
       </div>
     </div>
   </div>
-</section>
 
+  <div class="card" style="margin-top:14px;">
+    <div class="card-body">
+      <h3 data-i18n="corp_how_t">How we support your team</h3>
+      <div class="meta" data-i18n="corp_how_b">
+        • Professional chauffeurs & premium vehicles<br>
+        • Airport pickups (YUL/YMX) with flight monitoring on request<br>
+        • Meet & greet for VIPs and visiting clients<br>
+        • City-to-city travel (Ottawa, Toronto, Québec City, New York)<br>
+        • 24/7 booking via WhatsApp, phone, or email<br>
+        • Consistent service standards for every trip
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px;">
+    <div class="card-body">
+      <h3 data-i18n="corp_form_t">Request a corporate quote</h3>
+      <div class="meta" data-i18n="corp_form_sub">Tell us your monthly needs. We’ll reply with a preferred rate and package options.</div>
+
+      <div class="row2" style="margin-top:10px;">
+        <input id="co_company" placeholder="Company name" data-i18n-ph="ph_company"/>
+        <input id="co_contact" placeholder="Contact name" data-i18n-ph="ph_contact"/>
+      </div>
+      <div class="row2" style="margin-top:10px;">
+        <input id="co_email" placeholder="Email" data-i18n-ph="ph_email"/>
+        <input id="co_phone" placeholder="Phone" data-i18n-ph="ph_phone"/>
+      </div>
+
+      <textarea id="co_details" style="margin-top:10px;" placeholder="Typical routes, number of trips per month, vehicle preference, billing requirements…" data-i18n-ph="ph_details"></textarea>
+
+      <div class="actions" style="margin-top:12px;">
+        <button class="btn btn-primary" type="button" onclick="sendCorporateEmail()" data-i18n="corp_send">Send corporate inquiry</button>
+        <a class="btn" href="mailto:info@monttremblantlimoservices.com?subject=Corporate%20Account%20Request" data-i18n="corp_email">Email us directly</a>
+      </div>
+
+      <div class="tinyhint" data-i18n="corp_hint" style="margin-top:10px;">We can set up preferred rates, monthly billing, and detailed invoices for your accounting team.</div>
+    </div>
+  </div>
+
+<div class="card" style="margin-top:14px;">
+  <div class="card-body">
+    <h3 data-i18n="corp_ind_t">Industries we serve</h3>
+    <div class="meta" data-i18n="corp_ind_b">
+      • Financial & banking institutions<br>
+      • Law firms & legal professionals<br>
+      • Corporate executives & VIP clients<br>
+      • Hotels, resorts & concierge partners<br>
+      • Event planners & conference organizers<br>
+      • Film & production crews<br>
+      • Healthcare & private clinics<br>
+      • Technology & consulting firms
+    </div>
+  </div>
+</div>
+
+<div class="card" style="margin-top:14px;">
+  <div class="card-body">
+    <h3 data-i18n="corp_onb_t">Corporate account onboarding</h3>
+    <div class="meta" data-i18n="corp_onb_b">
+      1. Contact us with your monthly transportation needs<br>
+      2. Receive a customized corporate pricing proposal<br>
+      3. Confirm billing structure and invoice preferences<br>
+      4. Assign your dedicated booking contact<br>
+      5. Start booking immediately with priority service
+    </div>
+  </div>
+</div>
+
+<div class="card" style="margin-top:14px;">
+  <div class="card-body">
+    <h3 data-i18n="corp_bro_t">Corporate brochure</h3>
+    <div class="meta" data-i18n="corp_bro_b">
+      Download our corporate transportation overview to share with your management or procurement team.
+    </div>
+    <div class="actions" style="margin-top:10px;">
+      <a class="btn btn-primary" href="corporate-brochure.pdf" download data-i18n="corp_bro_btn">Download brochure (PDF)</a>
+    </div>
+  </div>
+</div>
+</section>
 
 <section id="routes" class="section reveal">
   <h2 data-i18n="routes_title">Popular Routes</h2>

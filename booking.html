@@ -1475,6 +1475,36 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
   header .menu-toggle, header .drawer, header .nav-overlay{ display:none !important; }
 }
 
+
+/* ===== Header v4.1 (mobile alignment like reference) ===== */
+@media (max-width: 940px){
+  .container.header-top{
+    display:grid;
+    grid-template-columns: 44px 1fr auto;
+    align-items:center;
+    gap:10px;
+  }
+  .container.header-top .brand-link{
+    justify-self:center;
+  }
+  .container.header-top .header-right{
+    justify-self:end;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .container.header-top .header-right .top-pill{ padding: 10px 12px; }
+  .container.header-top .header-right .icon-pill{ width:auto; height:auto; border-radius:999px; }
+  /* hide whatsapp on mobile header (still available in bottom bar) */
+  .container.header-top .header-right .whatsapp-top{ display:none !important; }
+  /* hide call icon duplicate */
+  .container.header-top .header-right .call-icon{ display:none !important; }
+  /* show phone number on mobile header */
+  .container.header-top .top-left{ display:none !important; } /* old left phone */
+  .container.header-top .menu-toggle{ display:inline-flex !important; }
+  .brand-link .brand-name{ display:none; }
+}
+
 </style>
 <link href="https://maps.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://maps.gstatic.com" rel="preconnect"/>
@@ -1482,10 +1512,13 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
 </head>
 <body class="booking-only">
 
+
 <header>
   <div class="nav-overlay" aria-hidden="true"></div>
   <div class="container header-top">
-    <a class="top-pill top-left" href="tel:+14383203733">📞 <strong>+1 (438) 320-3733</strong></a>
+    <button class="menu-toggle icon-pill" type="button" aria-label="Menu" aria-expanded="false">
+      <i></i><i></i><i></i>
+    </button>
 
     <a class="brand-link" href="index.html" aria-label="Home">
       <div class="logo">MT</div>
@@ -1493,17 +1526,13 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
     </a>
 
     <div class="header-right">
-      <a class="top-pill" href="https://wa.me/14383203733" target="_blank" rel="noreferrer" data-i18n="nav_whatsapp">WhatsApp</a>
+      <a class="top-pill" href="tel:+14383203733">📞 <strong>+1 (438) 320-3733</strong></a>
       <div aria-label="Language switcher" class="lang-switch">
 <button aria-pressed="true" class="lang-btn active" data-lang="en" type="button">EN</button>
 <button aria-pressed="false" class="lang-btn" data-lang="fr" type="button">FR</button>
 </div>
-      <button class="menu-toggle icon-pill" type="button" aria-label="Menu" aria-expanded="false">
-        <i></i><i></i><i></i>
-      </button>
-      <a class="top-pill icon-pill" href="tel:+14383203733" aria-label="Call">
-        📞
-      </a>
+      <a class="top-pill whatsapp-top" href="https://wa.me/14383203733" target="_blank" rel="noreferrer" data-i18n="nav_whatsapp">WhatsApp</a>
+      <a class="top-pill icon-pill call-icon" href="tel:+14383203733" aria-label="Call">📞</a>
     </div>
   </div>
 
@@ -1512,7 +1541,7 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
     <div class="links">
       <a href="booking.html" data-i18n="nav_book">Book online</a>
         
-        <a href="corporate.html#corporate" data-i18n="nav_corporate">Corporate</a><a href="#fleet" data-i18n="nav_fleet">Our fleet</a>
+        <a href="corporate.html#corporate" data-i18n="nav_corporate">Corporate program</a><a href="#fleet" data-i18n="nav_fleet">Our fleet</a>
         <a href="services.html" data-i18n="nav_services">Services</a>
         <a href="#routes" data-i18n="nav_routes">Destinations</a>
         <a href="#airports" data-i18n="nav_airports">Airports</a>
@@ -1525,7 +1554,7 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
   <nav class="drawer" aria-label="Mobile menu">
     <a href="booking.html" data-i18n="nav_book">Book online</a>
         
-        <a href="corporate.html#corporate" data-i18n="nav_corporate">Corporate</a><a href="#fleet" data-i18n="nav_fleet">Our fleet</a>
+        <a href="corporate.html#corporate" data-i18n="nav_corporate">Corporate program</a><a href="#fleet" data-i18n="nav_fleet">Our fleet</a>
         <a href="services.html" data-i18n="nav_services">Services</a>
         <a href="#routes" data-i18n="nav_routes">Destinations</a>
         <a href="#airports" data-i18n="nav_airports">Airports</a>
@@ -1536,6 +1565,7 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
     <a href="https://wa.me/14383203733" target="_blank" rel="noreferrer">WhatsApp</a>
   </nav>
 </header>
+
 
 <div class="hero-wrap">
 <div class="hero-inner container">
