@@ -1395,6 +1395,57 @@ header{
 }
 .contact-bar a:hover{ transform: translateY(-1px); }
 
+
+/* ===== Executive header layout (desktop) ===== */
+@media (min-width: 941px){
+  header .nav{
+    display:grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items:center;
+    gap: 12px;
+  }
+  header .brand{
+    justify-self:start;
+  }
+  header .links{
+    justify-self:center;
+    position: static !important;
+    display:flex !important;
+    flex-direction: row !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    gap: 22px !important;
+  }
+  header .links a{
+    background: transparent !important;
+    border: none !important;
+    padding: 10px 4px !important;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1.1px;
+    color: rgba(11,18,32,.78);
+  }
+  header .links a:hover{ color: rgba(11,18,32,.95); }
+  header .header-actions{
+    justify-self:end;
+    display:flex;
+    gap:10px;
+    align-items:center;
+  }
+  header .header-actions .lang-switch{
+    order: 3;
+  }
+  header .header-actions .pill{
+    order: 1;
+  }
+  header .header-actions .btn{ order: 2; }
+  header .menu-toggle{ display:none !important; }
+  header .nav-overlay{ display:none !important; }
+}
+
 </style>
 <link href="https://maps.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://maps.gstatic.com" rel="preconnect"/>
@@ -1717,6 +1768,31 @@ header{
 </div>
 </div>
 </section>
+
+<section id="corporate-preview" class="section reveal">
+  <div class="card" style="padding:22px;">
+    <div style="display:flex;gap:18px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap">
+      <div style="max-width:720px">
+        <h2 style="margin:0 0 6px 0" data-i18n="home_corp_h2">Corporate transportation</h2>
+        <p class="subtitle" style="margin:0 0 10px 0" data-i18n="home_corp_sub">
+          In addition to our elite service, our business partners enjoy preferred rates, monthly packages, and detailed invoicing.
+        </p>
+        <div class="meta" data-i18n-html="home_corp_bullets">
+          • Preferred corporate rates & volume pricing<br>
+          • Monthly packages with itemized invoices<br>
+          • VIP meet & greet + airport coordination (YUL/YMX)<br>
+          • Dedicated booking contact for your team
+        </div>
+      </div>
+      <div class="actions" style="margin-top:6px">
+        <a class="btn btn-primary" href="corporate.html#corporate" data-i18n="home_corp_btn">View corporate program</a>
+        <a class="btn" href="mailto:info@monttremblantlimoservices.com?subject=Corporate%20Account%20Request" data-i18n="home_corp_email">Request preferred rates</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
 <section id="routes" class="section reveal">
   <h2 data-i18n="routes_title">Popular Routes</h2>
   <p class="subtitle" data-i18n="routes_sub">Door-to-door transfers across Montréal, Mont‑Tremblant, and the Laurentians. Airport pickups available.</p>
