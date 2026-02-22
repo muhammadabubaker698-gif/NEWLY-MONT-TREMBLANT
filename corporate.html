@@ -1674,6 +1674,77 @@ header{
 </div>
 </div>
 
+
+
+
+
+
+
+</section>
+<section id="corporate" class="section reveal">
+  <h2 data-i18n="corp_h2">Corporate Transportation</h2>
+  <p class="subtitle" data-i18n="corp_sub">Executive chauffeur service for companies in Montréal, surrounding areas, and Mont-Tremblant.</p>
+
+  <div class="grid3 reveal" style="margin-top:16px;">
+    <div class="card">
+      <div class="card-body">
+        <h3 data-i18n="corp_card1_t">Preferred rates</h3>
+        <div class="meta" data-i18n="corp_card1_b">Corporate pricing based on volume, routes, and service level — ideal for frequent travel.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3 data-i18n="corp_card2_t">Monthly packages</h3>
+        <div class="meta" data-i18n="corp_card2_b">Flexible monthly packages for executives, teams, and visiting clients. Priority booking included.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3 data-i18n="corp_card3_t">Detailed invoicing</h3>
+        <div class="meta" data-i18n="corp_card3_b">Itemized invoices with trip details, receipts, and PO references — easy for accounting.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px;">
+    <div class="card-body">
+      <h3 data-i18n="corp_how_t">How we support your team</h3>
+      <div class="meta" data-i18n="corp_how_b">
+        • Professional chauffeurs & premium vehicles<br>
+        • Airport pickups (YUL/YMX) with flight monitoring on request<br>
+        • Meet & greet for VIPs and visiting clients<br>
+        • City-to-city travel (Ottawa, Toronto, Québec City, New York)<br>
+        • 24/7 booking via WhatsApp, phone, or email<br>
+        • Consistent service standards for every trip
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px;">
+    <div class="card-body">
+      <h3 data-i18n="corp_form_t">Request a corporate quote</h3>
+      <div class="meta" data-i18n="corp_form_sub">Tell us your monthly needs. We’ll reply with a preferred rate and package options.</div>
+
+      <div class="row2" style="margin-top:10px;">
+        <input id="co_company" placeholder="Company name" data-i18n-ph="ph_company"/>
+        <input id="co_contact" placeholder="Contact name" data-i18n-ph="ph_contact"/>
+      </div>
+      <div class="row2" style="margin-top:10px;">
+        <input id="co_email" placeholder="Email" data-i18n-ph="ph_email"/>
+        <input id="co_phone" placeholder="Phone" data-i18n-ph="ph_phone"/>
+      </div>
+
+      <textarea id="co_details" style="margin-top:10px;" placeholder="Typical routes, number of trips per month, vehicle preference, billing requirements…" data-i18n-ph="ph_details"></textarea>
+
+      <div class="actions" style="margin-top:12px;">
+        <button class="btn btn-primary" type="button" onclick="sendCorporateEmail()" data-i18n="corp_send">Send corporate inquiry</button>
+        <a class="btn" href="mailto:info@monttremblantlimoservices.com?subject=Corporate%20Account%20Request" data-i18n="corp_email">Email us directly</a>
+      </div>
+
+      <div class="tinyhint" data-i18n="corp_hint" style="margin-top:10px;">We can set up preferred rates, monthly billing, and detailed invoices for your accounting team.</div>
+    </div>
+  </div>
+
 <div class="card" style="margin-top:14px;">
   <div class="card-body">
     <h3 data-i18n="corp_ind_t">Industries we serve</h3>
@@ -1714,8 +1785,8 @@ header{
     </div>
   </div>
 </div>
-
 </section>
+
 <section id="routes" class="section reveal">
   <h2 data-i18n="routes_title">Popular Routes</h2>
   <p class="subtitle" data-i18n="routes_sub">Door-to-door transfers across Montréal, Mont‑Tremblant, and the Laurentians. Airport pickups available.</p>
@@ -1861,70 +1932,7 @@ header{
 </div>
 </footer>
 
-<section id="corporate" class="section reveal">
-  <h2 data-i18n="corp_h2">Corporate Transportation</h2>
-  <p class="subtitle" data-i18n="corp_sub">Executive chauffeur service for companies in Montréal, surrounding areas, and Mont-Tremblant.</p>
 
-  <div class="grid3 reveal" style="margin-top:16px;">
-    <div class="card">
-      <div class="card-body">
-        <h3 data-i18n="corp_card1_t">Preferred rates</h3>
-        <div class="meta" data-i18n="corp_card1_b">Corporate pricing based on volume, routes, and service level — ideal for frequent travel.</div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-body">
-        <h3 data-i18n="corp_card2_t">Monthly packages</h3>
-        <div class="meta" data-i18n="corp_card2_b">Flexible monthly packages for executives, teams, and visiting clients. Priority booking included.</div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-body">
-        <h3 data-i18n="corp_card3_t">Detailed invoicing</h3>
-        <div class="meta" data-i18n="corp_card3_b">Itemized invoices with trip details, receipts, and PO references — easy for accounting.</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card" style="margin-top:14px;">
-    <div class="card-body">
-      <h3 data-i18n="corp_how_t">How we support your team</h3>
-      <div class="meta" data-i18n="corp_how_b">
-        • Professional chauffeurs & premium vehicles<br>
-        • Airport pickups (YUL/YMX) with flight monitoring on request<br>
-        • Meet & greet for VIPs and visiting clients<br>
-        • City-to-city travel (Ottawa, Toronto, Québec City, New York)<br>
-        • 24/7 booking via WhatsApp, phone, or email<br>
-        • Consistent service standards for every trip
-      </div>
-    </div>
-  </div>
-
-  <div class="card" style="margin-top:14px;">
-    <div class="card-body">
-      <h3 data-i18n="corp_form_t">Request a corporate quote</h3>
-      <div class="meta" data-i18n="corp_form_sub">Tell us your monthly needs. We’ll reply with a preferred rate and package options.</div>
-
-      <div class="row2" style="margin-top:10px;">
-        <input id="co_company" placeholder="Company name" data-i18n-ph="ph_company"/>
-        <input id="co_contact" placeholder="Contact name" data-i18n-ph="ph_contact"/>
-      </div>
-      <div class="row2" style="margin-top:10px;">
-        <input id="co_email" placeholder="Email" data-i18n-ph="ph_email"/>
-        <input id="co_phone" placeholder="Phone" data-i18n-ph="ph_phone"/>
-      </div>
-
-      <textarea id="co_details" style="margin-top:10px;" placeholder="Typical routes, number of trips per month, vehicle preference, billing requirements…" data-i18n-ph="ph_details"></textarea>
-
-      <div class="actions" style="margin-top:12px;">
-        <button class="btn btn-primary" type="button" onclick="sendCorporateEmail()" data-i18n="corp_send">Send corporate inquiry</button>
-        <a class="btn" href="mailto:info@monttremblantlimoservices.com?subject=Corporate%20Account%20Request" data-i18n="corp_email">Email us directly</a>
-      </div>
-
-      <div class="tinyhint" data-i18n="corp_hint" style="margin-top:10px;">We can set up preferred rates, monthly billing, and detailed invoices for your accounting team.</div>
-    </div>
-  </div>
-</section>
 
 </main>
 <a class="whatsapp-float" data-i18n="btn_whatsapp" href="https://wa.me/14383203733" rel="noreferrer" target="_blank">WhatsApp</a>
