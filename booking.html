@@ -100,7 +100,7 @@
       "name": "Can I book hourly service in Montréal?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes — choose “By the hour” (minimum 1 hour). Vehicle minimums may apply."
+        "text": "Yes — choose “By the hour” (minimum 3 hours). Vehicle minimums may apply."
       }
     },
     {
@@ -1643,9 +1643,9 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
 <aside aria-label="Search booking" class="booking-card" id="booking">
 <div class="tabs">
 <button aria-selected="true" class="tab active" data-i18n="tab_oneway" id="tabOneWay" type="button">One way</button>
-<button aria-selected="false" class="tab" data-i18n="tab_hourly" id="tabHourly" type="button">By the hour (min 1h)</button>
+<button aria-selected="false" class="tab" data-i18n="tab_hourly" id="tabHourly" type="button">By the hour (min 3h)</button>
 </div>
-<div class="tabhint" data-i18n-html="tab_hint_html">Need a chauffeur for events, shopping or a night out? Choose <b>By the hour</b> (minimum 1 hour).</div>
+<div class="tabhint" data-i18n-html="tab_hint_html">Need a chauffeur for events, shopping or a night out? Choose <b>By the hour</b> (minimum 3 hours).</div>
 <div class="book-body">
 <div aria-hidden="true" class="stepbar">
 <div class="stepdot"><i></i></div>
@@ -1847,6 +1847,7 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
 <a data-i18n="sticky_whatsapp" href="https://wa.me/14383203733" rel="noreferrer" target="_blank">WhatsApp</a>
 </div>
 <script>
+
   document.getElementById("year").textContent = new Date().getFullYear();
 
   const BUSINESS_WA = "14383203733";
@@ -1905,9 +1906,9 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
 
     const minPrice = Number(v.minPrice || 0);
 
-    // Hourly mode: bill selected hours (min 1 hour)
+    // Hourly mode: bill selected hours (min 3 hours)
     if (state.mode === "hourly"){
-      const h = Math.max(1, Number(state.hours || 1));
+      const h = Math.max(3, Number(state.hours || 3));
       return Math.round(Math.max(minPrice, v.hourly * h));
     }
 
@@ -1921,7 +1922,7 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
     return Math.round(Math.max(minPrice, total));
   }
 
-  function buildTimeOptions(stepMinutes = 5, selectId){
+  function buildTimeOptions(stepMinutes = 5, selectId, dateId = null){
     const timeEl = document.getElementById(selectId);
     if (!timeEl || timeEl.tagName !== "SELECT") return;
 
@@ -1946,13 +1947,37 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
       opt.textContent = label;
       timeEl.appendChild(opt);
     }
+    const leadMinutes = 120; // require at least 2 hours lead time for same-day pickups
     const now = new Date();
-    let mins = now.getHours() * 60 + now.getMinutes();
-    mins = Math.ceil(mins / stepMinutes) * stepMinutes;
-    if (mins >= 24*60) mins = 0;
-    const hh = Math.floor(mins / 60);
-    const mm = mins % 60;
-    timeEl.value = `${pad(hh)}:${pad(mm)}`;
+    const todayStr = now.toISOString().slice(0,10);
+    const dateEl = dateId ? document.getElementById(dateId) : null;
+    const selectedDate = (dateEl && dateEl.value) ? dateEl.value : todayStr;
+    const isToday = selectedDate === todayStr;
+
+    let minMins = 0;
+    if (isToday){
+      minMins = now.getHours() * 60 + now.getMinutes() + leadMinutes;
+      minMins = Math.ceil(minMins / stepMinutes) * stepMinutes;
+    }
+
+    let firstEnabled = null;
+    for (let i = 1; i < timeEl.options.length; i++){
+      const opt = timeEl.options[i];
+      const [oh, om] = opt.value.split(":").map(Number);
+      const optMins = (oh * 60) + om;
+      if (isToday && optMins < minMins){
+        opt.disabled = true;
+      } else {
+        opt.disabled = false;
+        if (!firstEnabled) firstEnabled = opt;
+      }
+    }
+
+    if (firstEnabled){
+      timeEl.value = firstEnabled.value;
+    } else {
+      timeEl.value = "";
+    }
   }
 
   function clearAutocompleteList(listEl){
@@ -2372,7 +2397,7 @@ if (input.value.trim().length >= 2) doSearch();
     const list = LOCAL_RATES.map(v=>{
       const total = calcVehicleTotal(v);
       const note = state.mode === "hourly"
-        ? `Total ${formatMoney(total)} for ${Math.max(1, Number(state.hours||1))} hours`
+        ? `Total ${formatMoney(total)} for ${Math.max(1, Number(state.hours || 3))} hours`
         : (state.transfer === "airport" ? "Airport estimate" : "Point-to-point estimate");
       return { ...v, total, note };
     });
@@ -2559,7 +2584,7 @@ if (input.value.trim().length >= 2) doSearch();
     state.selectedVehicleId = null;
     $("btnVehicleContinue").disabled = true;
 
-    const hours = Math.max(1, Number(state.hours || 1));
+    const hours = Math.max(1, Number(state.hours || 3));
     let preferredRow = null;
 
     state.computedVehicles.forEach(v=>{
@@ -2631,7 +2656,7 @@ if (input.value.trim().length >= 2) doSearch();
     $("checkoutTotal").textContent = chosen ? formatMoney(chosen.total) : "—";
     $("checkoutSub").textContent = chosen
       ? (state.mode === "hourly"
-          ? `Total ${formatMoney(chosen.total)} for ${Math.max(3, Number(state.hours||1))} hours`
+          ? `Total ${formatMoney(chosen.total)} for ${Math.max(3, Number(state.hours || 3))} hours`
           : chosen.note)
       : "";
 
@@ -2665,7 +2690,7 @@ if (input.value.trim().length >= 2) doSearch();
     const triptype = (state.mode === "hourly") ? "Hourly" : (state.transfer === "airport" ? "Airport transfer" : "Point-to-point");
 
     const estimateText = (state.mode === "hourly")
-      ? `Total ${formatMoney(chosen.total)} for ${Math.max(3, Number(state.hours||1))} hours`
+      ? `Total ${formatMoney(chosen.total)} for ${Math.max(3, Number(state.hours || 3))} hours`
       : `${formatMoney(chosen.total)} (${chosen.note})`;
 
     const payload = {
@@ -2715,7 +2740,7 @@ if (input.value.trim().length >= 2) doSearch();
     const phone = val("c_phone");
 
     // Hourly: min 1 hour
-    const hoursNum = Math.max(1, Number(state.hours || 1));
+    const hoursNum = Math.max(1, Number(state.hours || 3));
     const currency = getTripCurrency();
 
     // Build database booking payload (for /api/bookings)
@@ -2878,7 +2903,15 @@ if (input.value.trim().length >= 2) doSearch();
     }
 
     syncViewportHeight();
-    buildTimeOptions(5, "h_time");
+    buildTimeOptions(5, "h_time", "h_date");
+
+    const dateEl = document.getElementById("h_date");
+    if (dateEl){
+      const todayStr = new Date().toISOString().slice(0,10);
+      dateEl.min = todayStr;
+      if (!dateEl.value) dateEl.value = todayStr;
+      dateEl.addEventListener("change", ()=> buildTimeOptions(5, "h_time", "h_date"));
+    }
 
     // ✅ Works for both one-way + hourly (pickup) and one-way dropoff
     setupAutocomplete("h_pickup", "h_pickup_list", "h_pickup_lat", "h_pickup_lng");
@@ -2909,6 +2942,7 @@ if (input.value.trim().length >= 2) doSearch();
     if (location.hash === "#overlayVehicles") openOverlay("overlayVehicles", false);
     if (location.hash === "#overlayCheckout") openOverlay("overlayCheckout", false);
   });
+
 </script>
 <!--Start of Tawk.to Script-->
 <!--End of Tawk.to Script-->
@@ -3617,8 +3651,8 @@ function getQcCorridorBounds(){
       badge_cities: "Mont-Tremblant • Montréal • Ottawa",
 
       tab_oneway: "One way",
-      tab_hourly: "By the hour (min 1h)",
-      tab_hint_html: "Need a chauffeur for events, shopping or a night out? Choose <b>By the hour</b> (minimum 1 hour).",
+      tab_hourly: "By the hour (min 3h)",
+      tab_hint_html: "Need a chauffeur for events, shopping or a night out? Choose <b>By the hour</b> (minimum 3 hours).",
       step_1of3: "Step 1 of 3",
 
       ph_from: "From: address, airport, hotel…",
@@ -3865,7 +3899,7 @@ function getQcCorridorBounds(){
       faq_q1: "Offrez-vous des prises en charge à l’aéroport (YUL) ?",
       faq_a1: "Oui — transferts privés depuis Montréal–Trudeau (YUL). Partagez votre numéro de vol et les détails de ramassage.",
       faq_q2: "Puis-je réserver un service à l’heure à Montréal ?",
-      faq_a2: "Oui — choisissez « À l’heure » (minimum 1 heure). Des minimums par véhicule peuvent s’appliquer.",
+      faq_a2: "Oui — choisissez « À l’heure » (minimum 3 heures). Des minimums par véhicule peuvent s’appliquer.",
       faq_q3: "Desservez-vous Mont‑Tremblant toute l’année ?",
       faq_a3: "Oui — transferts et service chauffeur à Mont‑Tremblant toute l’année (saison de ski, été, événements).",
       faq_q4: "Comment puis-je payer ?",
@@ -3997,71 +4031,6 @@ function getQcCorridorBounds(){
 </script>
 
 <a class="float-book" href="booking.html" data-i18n="float_book" aria-label="Book online"><span class="mono">MT</span><span class="label" data-i18n="float_book">Book online</span></a>
-
-
-<script>
-(function () {
-  const LEAD_MINUTES = 120;
-
-  function pad(n){ return String(n).padStart(2,'0'); }
-  function dateStr(d){ return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
-  function timeStr(d){ return `${pad(d.getHours())}:${pad(d.getMinutes())}`; }
-
-  function pick(sel){ return document.querySelector(sel); }
-  function getDateEl(){
-    return pick('input[type="date"]#date') || pick('input[type="date"][name="date"]') || pick('input[type="date"]');
-  }
-  function getTimeEl(){
-    return pick('input[type="time"]#time') || pick('input[type="time"][name="time"]') || pick('input[type="time"]');
-  }
-
-  function enforceLeadTime(){
-    const dateEl = getDateEl();
-    const timeEl = getTimeEl();
-    if(!timeEl) return;
-
-    const now = new Date();
-    const min = new Date(now.getTime() + LEAD_MINUTES * 60 * 1000);
-
-    if(dateEl){
-      dateEl.min = dateStr(now);
-      if(!dateEl.value) dateEl.value = dateStr(now);
-
-      function update(){
-        const selectedDate = new Date(dateEl.value + "T00:00:00");
-        const isToday = selectedDate.toDateString() === now.toDateString();
-
-        if(isToday){
-          timeEl.min = timeStr(min);
-          if(!timeEl.value || timeEl.value < timeEl.min){
-            timeEl.value = timeEl.min;
-          }
-        } else {
-          timeEl.removeAttribute("min");
-          if(!timeEl.value) timeEl.value = "10:00";
-        }
-      }
-
-      dateEl.addEventListener("change", update);
-      timeEl.addEventListener("change", function(){
-        if(timeEl.min && timeEl.value < timeEl.min) timeEl.value = timeEl.min;
-      });
-      update();
-    } else {
-      // Best effort if no date input exists
-      timeEl.min = timeStr(min);
-      if(!timeEl.value || timeEl.value < timeEl.min){
-        timeEl.value = timeEl.min;
-      }
-      timeEl.addEventListener("change", function(){
-        if(timeEl.value < timeEl.min) timeEl.value = timeEl.min;
-      });
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", enforceLeadTime);
-})();
-</script>
 
 </body>
 </html>
