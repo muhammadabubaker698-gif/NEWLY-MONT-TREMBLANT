@@ -1505,6 +1505,22 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
   .brand-link .brand-name{ display:none; }
 }
 
+
+/* ===== Hamburger icon lines ===== */
+.menu-toggle{
+  border: 1px solid rgba(11,18,32,.10);
+  background: rgba(255,255,255,.90);
+  box-shadow: 0 14px 34px rgba(0,0,0,.06);
+}
+.menu-toggle i{
+  display:block;
+  width:18px;
+  height:2px;
+  background: rgba(11,18,32,.78);
+  border-radius: 2px;
+}
+.menu-toggle i + i{ margin-top:4px; }
+
 </style>
 <link href="https://maps.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://maps.gstatic.com" rel="preconnect"/>
@@ -1543,8 +1559,6 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
         
         <a href="corporate.html#corporate" data-i18n="nav_corporate">Corporate program</a><a href="#fleet" data-i18n="nav_fleet">Our fleet</a>
         <a href="services.html" data-i18n="nav_services">Services</a>
-        <a href="#routes" data-i18n="nav_routes">Destinations</a>
-        <a href="#airports" data-i18n="nav_airports">Airports</a>
         <a href="#faq" data-i18n="nav_faq">FAQ</a>
         <a href="#contact" data-i18n="nav_contact">Contact</a>
     </div>
@@ -1556,8 +1570,6 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
         
         <a href="corporate.html#corporate" data-i18n="nav_corporate">Corporate program</a><a href="#fleet" data-i18n="nav_fleet">Our fleet</a>
         <a href="services.html" data-i18n="nav_services">Services</a>
-        <a href="#routes" data-i18n="nav_routes">Destinations</a>
-        <a href="#airports" data-i18n="nav_airports">Airports</a>
         <a href="#faq" data-i18n="nav_faq">FAQ</a>
         <a href="#contact" data-i18n="nav_contact">Contact</a>
     <a href="tel:+14383203733">📞 +1 (438) 320-3733</a>
@@ -1954,31 +1966,6 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
     </div>
   </div>
 </div>
-</section>
-
-<section id="routes" class="section reveal">
-  <h2 data-i18n="routes_title">Popular Routes</h2>
-  <p class="subtitle" data-i18n="routes_sub">Door-to-door transfers across Montréal, Mont‑Tremblant, and the Laurentians. Airport pickups available.</p>
-
-  <div class="routes-grid">
-    <div class="route-card">
-      <h3 data-i18n="route1_title">Montréal ⇄ Mont‑Tremblant</h3>
-      <p data-i18n="route1_desc">Private SUV or Sprinter transfers for ski trips, weekends, and events.</p>
-      <a class="btn" href="montreal-to-tremblant.html" data-i18n="learn_more">Learn more</a>
-    </div>
-
-    <div class="route-card">
-      <h3 data-i18n="route2_title">YUL Airport Transfers</h3>
-      <p data-i18n="route2_desc">Montréal–Trudeau (YUL) pickups with flight tracking and curbside or meet & greet.</p>
-      <a class="btn" href="yul-airport-transfer.html" data-i18n="learn_more">Learn more</a>
-    </div>
-
-    <div class="route-card">
-      <h3 data-i18n="route3_title">Montréal City Chauffeur</h3>
-      <p data-i18n="route3_desc">Hourly chauffeur service for business meetings, restaurants, and nightlife.</p>
-      <a class="btn" href="montreal-limo-service.html" data-i18n="learn_more">Learn more</a>
-    </div>
-  </div>
 </section>
 
 <section id="airports" class="section reveal">
