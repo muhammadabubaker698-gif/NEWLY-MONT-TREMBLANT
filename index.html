@@ -7,12 +7,12 @@
 <title>Mont Tremblant Limo Services | Luxury Chauffeur</title>
 <meta content="Luxury chauffeur service in Mont-Tremblant. Escalade, Suburban, Denali, QX60, Tesla &amp; Sprinter. minimum 3 hours for hourly bookings. Vehicle minimum fares apply. Call or WhatsApp +1 (438) 320-3733." name="description"/>
 <link href="https://monttremblantlimoservices.com/" rel="canonical"/>
-<meta property="og:type" content="website" />
-<meta property="og:title" content="Mont Tremblant Limo Services | Montréal & Mont‑Tremblant Chauffeur" />
-<meta property="og:description" content="Luxury chauffeur service for Montréal, Mont‑Tremblant, and airport transfers (YUL/YMX). Premium SUVs and Sprinter. Book 24/7." />
-<meta property="og:url" content="https://monttremblantlimoservices.com/" />
-<meta property="og:image" content="https://monttremblantlimoservices.com/Tremblant.jpg" />
-<meta name="twitter:card" content="summary_large_image" />
+<meta content="website" property="og:type"/>
+<meta content="Mont Tremblant Limo Services | Montréal &amp; Mont‑Tremblant Chauffeur" property="og:title"/>
+<meta content="Luxury chauffeur service for Montréal, Mont‑Tremblant, and airport transfers (YUL/YMX). Premium SUVs and Sprinter. Book 24/7." property="og:description"/>
+<meta content="https://monttremblantlimoservices.com/" property="og:url"/>
+<meta content="https://monttremblantlimoservices.com/Tremblant.jpg" property="og:image"/>
+<meta content="summary_large_image" name="twitter:card"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -122,7 +122,6 @@
   ]
 }
 </script>
-
 <style>
     :root{
   --bg:#f6f7f9;
@@ -863,7 +862,6 @@
   .gmap{ height:200px; }
 }
 
-
 /* Google Places dropdown */
 .pac-container{z-index:999999 !important;}
 
@@ -1054,7 +1052,6 @@ body{ padding-bottom: 64px; }
   .routes-grid, .areas-grid{ grid-template-columns: 1fr; }
 }
 
-
 /* ===== Ultra Luxury Upgrade ===== */
 :root{
   --paper:#f6f7f9;
@@ -1221,7 +1218,6 @@ header{
   .float-book{ bottom: 104px; }
 }
 
-
 /* ===== Ultra Luxury v2 (Monogram + Private Aviation UI) ===== */
 
 /* Floating monogram button */
@@ -1309,7 +1305,6 @@ header{
   padding: 12px;
 }
 
-
 /* Booking readability (mobile) */
 .tabhint{
   padding: 12px 14px;
@@ -1322,7 +1317,6 @@ header{
   .booking-card{ padding: 14px !important; }
   .tabhint{ padding: 14px 16px; }
 }
-
 
 /* Bottom contact bar: gold buttons */
 .contact-bar{
@@ -1338,7 +1332,6 @@ header{
   box-shadow: 0 16px 34px rgba(181,138,43,.20);
 }
 .contact-bar a:hover{ transform: translateY(-1px); }
-
 
 /* hide big book button on top row on mobile */
 }
@@ -1383,7 +1376,6 @@ header{
 }
 
 /* Mobile drawer links style kept from earlier */
-
 
 /* ===== Header v4 (reference-style, clean desktop + proper mobile) ===== */
 header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.78); backdrop-filter: blur(18px); border-bottom: 1px solid rgba(11,18,32,.10); }
@@ -1478,7 +1470,6 @@ body.nav-open #drawerOverlay{display:block}
 @media (min-width: 941px){
   }
 
-
 /* ===== Header v4.1 (mobile alignment like reference) ===== */
 @media (max-width: 940px){
   .container.header-top{
@@ -1508,7 +1499,6 @@ body.nav-open #drawerOverlay{display:block}
   .brand-link .brand-name{ display:none; }
 }
 
-
 /* ===== Hamburger icon lines ===== */
 .menu-toggle{
   border: 1px solid rgba(11,18,32,.10);
@@ -1523,7 +1513,6 @@ body.nav-open #drawerOverlay{display:block}
   border-radius: 2px;
 }
 .menu-toggle i + i{ margin-top:4px; }
-
 
 /* ===== Mobile hamburger: centered 3 lines ===== */
 .menu-toggle{
@@ -1560,7 +1549,6 @@ body.nav-open #drawerOverlay{display:block}
   box-shadow: 0 18px 44px rgba(0,0,0,.14) !important;
 }
 
-
 /* Alias for floating-cta if present */
 .floating-cta{ }
 .floating-cta .badge{
@@ -1568,7 +1556,6 @@ body.nav-open #drawerOverlay{display:block}
   color: rgba(11,18,32,.92) !important;
   border: 1px solid rgba(11,18,32,.14) !important;
 }
-
 
 body.nav-open{overflow:hidden;}
 body.nav-open .nav-overlay{display:block;}
@@ -1589,65 +1576,97 @@ body.nav-open .nav-overlay{ display:block; }
   z-index: 9999;
 }
 
+
+/* MOBILE_NAV_OVERRIDES_V3 */
+.nav-overlay, .drawer { display: none; }
+
+@media (max-width: 940px) {
+  #drawerOverlay.nav-overlay{
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.35);
+    z-index: 9997;
+  }
+
+  #mobileDrawer.drawer{
+    display: block;
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    top: calc(72px + env(safe-area-inset-top));
+    background: rgba(255,255,255,0.98);
+    border: 1px solid rgba(15,23,42,0.12);
+    border-radius: 16px;
+    padding: 12px;
+    box-shadow: 0 18px 40px rgba(15,23,42,0.18);
+    transform: translateY(-10px);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 9998;
+    backdrop-filter: blur(10px);
+  }
+
+  body.nav-open #drawerOverlay{ display: block; }
+  body.nav-open #mobileDrawer{
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+@media (min-width: 941px) {
+  #drawerOverlay, #mobileDrawer { display: none !important; }
+}
 </style>
 <link href="https://maps.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://maps.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;family=Playfair+Display:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
 </head>
 <body>
-
-
 <header>
-  <div class="nav-overlay" aria-hidden="true"></div>
-  <div class="container header-top">
-    <button class="menu-toggle icon-pill" type="button" aria-label="Menu" aria-expanded="false">
-      <i></i><i></i><i></i>
-    </button>
-
-    <a class="brand-link" href="index.html" aria-label="Home">
-      <div class="logo">MT</div>
-      <div class="brand-name" data-i18n="brand_name">Mont Tremblant Limo</div>
-    </a>
-
-    <div class="header-right">
-      <a class="top-pill" href="tel:+14383203733">📞 <strong>+1 (438) 320-3733</strong></a>
-      <div aria-label="Language switcher" class="lang-switch">
+<div aria-hidden="true" class="nav-overlay"></div>
+<div class="container header-top">
+<button aria-expanded="false" aria-label="Menu" class="menu-toggle icon-pill" type="button">
+<i></i><i></i><i></i>
+</button>
+<a aria-label="Home" class="brand-link" href="index.html">
+<div class="logo">MT</div>
+<div class="brand-name" data-i18n="brand_name">Mont Tremblant Limo</div>
+</a>
+<div class="header-right">
+<a class="top-pill" href="tel:+14383203733">📞 <strong>+1 (438) 320-3733</strong></a>
+<div aria-label="Language switcher" class="lang-switch">
 <button aria-pressed="true" class="lang-btn active" data-lang="en" type="button">EN</button>
 <button aria-pressed="false" class="lang-btn" data-lang="fr" type="button">FR</button>
 </div>
-      <a class="top-pill whatsapp-top" href="https://wa.me/14383203733" target="_blank" rel="noreferrer" data-i18n="nav_whatsapp">WhatsApp</a>
-      <a class="top-pill icon-pill call-icon" href="tel:+14383203733" aria-label="Call">📞</a>
-    </div>
-  </div>
-
-  <div class="container header-nav">
-    <div style="width:42px"></div>
-    <div class="links">
-      <a href="booking.html" data-i18n="nav_book">Book online</a>
-        
-        <a href="corporate.html#corporate" data-i18n="nav_corporate">Corporate program</a><a href="#fleet" data-i18n="nav_fleet">Our fleet</a>
-        <a href="services.html" data-i18n="nav_services">Services</a>
-        <a href="#faq" data-i18n="nav_faq">FAQ</a>
-        <a href="#contact" data-i18n="nav_contact">Contact</a>
-    </div>
-    <div style="width:42px"></div>
-  </div>
-
-  <nav class="drawer" id="mobileDrawer" aria-hidden="true" aria-label="Mobile menu">
-    <a href="booking.html" data-i18n="nav_book">Book online</a>
-        
-        <a href="corporate.html#corporate" data-i18n="nav_corporate">Corporate program</a><a href="#fleet" data-i18n="nav_fleet">Our fleet</a>
-        <a href="services.html" data-i18n="nav_services">Services</a>
-        <a href="#faq" data-i18n="nav_faq">FAQ</a>
-        <a href="#contact" data-i18n="nav_contact">Contact</a>
-    <a href="tel:+14383203733">📞 +1 (438) 320-3733</a>
-    <a href="mailto:info@monttremblantlimoservices.com?subject=Booking%20Request">✉️ info@monttremblantlimoservices.com</a>
-    <a href="https://wa.me/14383203733" target="_blank" rel="noreferrer">WhatsApp</a>
-  </nav>
+<a class="top-pill whatsapp-top" data-i18n="nav_whatsapp" href="https://wa.me/14383203733" rel="noreferrer" target="_blank">WhatsApp</a>
+<a aria-label="Call" class="top-pill icon-pill call-icon" href="tel:+14383203733">📞</a>
+</div>
+</div>
+<div class="container header-nav">
+<div style="width:42px"></div>
+<div class="links">
+<a data-i18n="nav_book" href="booking.html">Book online</a>
+<a data-i18n="nav_corporate" href="corporate.html#corporate">Corporate program</a><a data-i18n="nav_fleet" href="#fleet">Our fleet</a>
+<a data-i18n="nav_services" href="services.html">Services</a>
+<a data-i18n="nav_faq" href="#faq">FAQ</a>
+<a data-i18n="nav_contact" href="#contact">Contact</a>
+</div>
+<div style="width:42px"></div>
+</div>
+<nav aria-hidden="true" aria-label="Mobile menu" class="drawer" id="mobileDrawer">
+<a data-i18n="nav_book" href="booking.html">Book online</a>
+<a data-i18n="nav_corporate" href="corporate.html#corporate">Corporate program</a><a data-i18n="nav_fleet" href="#fleet">Our fleet</a>
+<a data-i18n="nav_services" href="services.html">Services</a>
+<a data-i18n="nav_faq" href="#faq">FAQ</a>
+<a data-i18n="nav_contact" href="#contact">Contact</a>
+<a href="tel:+14383203733">📞 +1 (438) 320-3733</a>
+<a href="mailto:info@monttremblantlimoservices.com?subject=Booking%20Request">✉️ info@monttremblantlimoservices.com</a>
+<a href="https://wa.me/14383203733" rel="noreferrer" target="_blank">WhatsApp</a>
+</nav>
 </header>
-
-<div class="nav-overlay" id="drawerOverlay" aria-hidden="true"></div>
-
+<div aria-hidden="true" class="nav-overlay" id="drawerOverlay"></div>
 <div class="hero-wrap">
 <div class="hero-inner container">
 <div class="hero-left">
@@ -1746,7 +1765,7 @@ body.nav-open .nav-overlay{ display:block; }
 <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z" stroke="currentColor" stroke-width="2"></path>
 </svg>
 <select id="h_hours">
-<option value="3" selected>3 hours</option>
+<option selected="" value="3">3 hours</option>
 <option value="4">4 hours</option>
 <option value="5">5 hours</option>
 <option value="6">6 hours</option>
@@ -1928,184 +1947,164 @@ body.nav-open .nav-overlay{ display:block; }
 </div>
 </div>
 </section>
-
-<section id="corporate" class="section">
-  <h2 data-i18n="corp_h2">Corporate Transportation</h2>
-  <p class="subtitle" data-i18n="corp_sub">In addition to our elite service, our business partners are privy to the following benefits:</p>
-
-  <div class="grid3 reveal" style="margin-top:16px;">
-    <div class="card">
-      <div class="card-body">
-        <h3 data-i18n="corp_card1_t">Preferred rates</h3>
-        <div class="meta" data-i18n="corp_card1_b">Corporate pricing based on volume, routes, and service level — ideal for frequent travel.</div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-body">
-        <h3 data-i18n="corp_card2_t">Monthly packages</h3>
-        <div class="meta" data-i18n="corp_card2_b">Flexible monthly packages for executives, teams, and visiting clients. Priority booking included.</div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-body">
-        <h3 data-i18n="corp_card3_t">Detailed invoicing</h3>
-        <div class="meta" data-i18n="corp_card3_b">Itemized invoices with trip details, receipts, and PO references — easy for accounting.</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card" style="margin-top:14px;">
-    <div class="card-body">
-      <h3 data-i18n="corp_how_t">How we support your team</h3>
-      <div class="meta" data-i18n="corp_how_b">
-        • Professional chauffeurs & premium vehicles<br>
-        • Airport pickups (YUL/YMX) with flight monitoring on request<br>
-        • Meet & greet for VIPs and visiting clients<br>
-        • City-to-city travel (Ottawa, Toronto, Québec City, New York)<br>
-        • 24/7 booking via WhatsApp, phone, or email<br>
+<section class="section" id="corporate">
+<h2 data-i18n="corp_h2">Corporate Transportation</h2>
+<p class="subtitle" data-i18n="corp_sub">In addition to our elite service, our business partners are privy to the following benefits:</p>
+<div class="grid3 reveal" style="margin-top:16px;">
+<div class="card">
+<div class="card-body">
+<h3 data-i18n="corp_card1_t">Preferred rates</h3>
+<div class="meta" data-i18n="corp_card1_b">Corporate pricing based on volume, routes, and service level — ideal for frequent travel.</div>
+</div>
+</div>
+<div class="card">
+<div class="card-body">
+<h3 data-i18n="corp_card2_t">Monthly packages</h3>
+<div class="meta" data-i18n="corp_card2_b">Flexible monthly packages for executives, teams, and visiting clients. Priority booking included.</div>
+</div>
+</div>
+<div class="card">
+<div class="card-body">
+<h3 data-i18n="corp_card3_t">Detailed invoicing</h3>
+<div class="meta" data-i18n="corp_card3_b">Itemized invoices with trip details, receipts, and PO references — easy for accounting.</div>
+</div>
+</div>
+</div>
+<div class="card" style="margin-top:14px;">
+<div class="card-body">
+<h3 data-i18n="corp_how_t">How we support your team</h3>
+<div class="meta" data-i18n="corp_how_b">
+        • Professional chauffeurs &amp; premium vehicles<br/>
+        • Airport pickups (YUL/YMX) with flight monitoring on request<br/>
+        • Meet &amp; greet for VIPs and visiting clients<br/>
+        • City-to-city travel (Ottawa, Toronto, Québec City, New York)<br/>
+        • 24/7 booking via WhatsApp, phone, or email<br/>
         • Consistent service standards for every trip
       </div>
-    </div>
-  </div>
-
-  <div class="card" style="margin-top:14px;">
-    <div class="card-body">
-      <h3 data-i18n="corp_form_t">Request a corporate quote</h3>
-      <div class="meta" data-i18n="corp_form_sub">Tell us your monthly needs. We’ll reply with a preferred rate and package options.</div>
-
-      <div class="row2" style="margin-top:10px;">
-        <input id="co_company" placeholder="Company name" data-i18n-ph="ph_company"/>
-        <input id="co_contact" placeholder="Contact name" data-i18n-ph="ph_contact"/>
-      </div>
-      <div class="row2" style="margin-top:10px;">
-        <input id="co_email" placeholder="Email" data-i18n-ph="ph_email"/>
-        <input id="co_phone" placeholder="Phone" data-i18n-ph="ph_phone"/>
-      </div>
-
-      <textarea id="co_details" style="margin-top:10px;" placeholder="Typical routes, number of trips per month, vehicle preference, billing requirements…" data-i18n-ph="ph_details"></textarea>
-
-      <div class="actions" style="margin-top:12px;">
-        <button class="btn btn-primary" type="button" onclick="sendCorporateEmail()" data-i18n="corp_send">Send corporate inquiry</button>
-        <a class="btn" href="mailto:info@monttremblantlimoservices.com?subject=Corporate%20Account%20Request" data-i18n="corp_email">Email us directly</a>
-      </div>
-
-      <div class="tinyhint" data-i18n="corp_hint" style="margin-top:10px;">We can set up preferred rates, monthly billing, and detailed invoices for your accounting team.</div>
-    </div>
-  </div>
-
-<div class="card" style="margin-top:14px;">
-  <div class="card-body">
-    <h3 data-i18n="corp_ind_t">Industries we serve</h3>
-    <div class="meta" data-i18n="corp_ind_b">
-      • Financial & banking institutions<br>
-      • Law firms & legal professionals<br>
-      • Corporate executives & VIP clients<br>
-      • Hotels, resorts & concierge partners<br>
-      • Event planners & conference organizers<br>
-      • Film & production crews<br>
-      • Healthcare & private clinics<br>
-      • Technology & consulting firms
-    </div>
-  </div>
 </div>
-
+</div>
 <div class="card" style="margin-top:14px;">
-  <div class="card-body">
-    <h3 data-i18n="corp_onb_t">Corporate account onboarding</h3>
-    <div class="meta" data-i18n="corp_onb_b">
-      1. Contact us with your monthly transportation needs<br>
-      2. Receive a customized corporate pricing proposal<br>
-      3. Confirm billing structure and invoice preferences<br>
-      4. Assign your dedicated booking contact<br>
+<div class="card-body">
+<h3 data-i18n="corp_form_t">Request a corporate quote</h3>
+<div class="meta" data-i18n="corp_form_sub">Tell us your monthly needs. We’ll reply with a preferred rate and package options.</div>
+<div class="row2" style="margin-top:10px;">
+<input data-i18n-ph="ph_company" id="co_company" placeholder="Company name"/>
+<input data-i18n-ph="ph_contact" id="co_contact" placeholder="Contact name"/>
+</div>
+<div class="row2" style="margin-top:10px;">
+<input data-i18n-ph="ph_email" id="co_email" placeholder="Email"/>
+<input data-i18n-ph="ph_phone" id="co_phone" placeholder="Phone"/>
+</div>
+<textarea data-i18n-ph="ph_details" id="co_details" placeholder="Typical routes, number of trips per month, vehicle preference, billing requirements…" style="margin-top:10px;"></textarea>
+<div class="actions" style="margin-top:12px;">
+<button class="btn btn-primary" data-i18n="corp_send" onclick="sendCorporateEmail()" type="button">Send corporate inquiry</button>
+<a class="btn" data-i18n="corp_email" href="mailto:info@monttremblantlimoservices.com?subject=Corporate%20Account%20Request">Email us directly</a>
+</div>
+<div class="tinyhint" data-i18n="corp_hint" style="margin-top:10px;">We can set up preferred rates, monthly billing, and detailed invoices for your accounting team.</div>
+</div>
+</div>
+<div class="card" style="margin-top:14px;">
+<div class="card-body">
+<h3 data-i18n="corp_ind_t">Industries we serve</h3>
+<div class="meta" data-i18n="corp_ind_b">
+      • Financial &amp; banking institutions<br/>
+      • Law firms &amp; legal professionals<br/>
+      • Corporate executives &amp; VIP clients<br/>
+      • Hotels, resorts &amp; concierge partners<br/>
+      • Event planners &amp; conference organizers<br/>
+      • Film &amp; production crews<br/>
+      • Healthcare &amp; private clinics<br/>
+      • Technology &amp; consulting firms
+    </div>
+</div>
+</div>
+<div class="card" style="margin-top:14px;">
+<div class="card-body">
+<h3 data-i18n="corp_onb_t">Corporate account onboarding</h3>
+<div class="meta" data-i18n="corp_onb_b">
+      1. Contact us with your monthly transportation needs<br/>
+      2. Receive a customized corporate pricing proposal<br/>
+      3. Confirm billing structure and invoice preferences<br/>
+      4. Assign your dedicated booking contact<br/>
       5. Start booking immediately with priority service
     </div>
-  </div>
 </div>
-
+</div>
 <div class="card" style="margin-top:14px;">
-  <div class="card-body">
-    <h3 data-i18n="corp_bro_t">Corporate brochure</h3>
-    <div class="meta" data-i18n="corp_bro_b">
+<div class="card-body">
+<h3 data-i18n="corp_bro_t">Corporate brochure</h3>
+<div class="meta" data-i18n="corp_bro_b">
       Download our corporate transportation overview to share with your management or procurement team.
     </div>
-    <div class="actions" style="margin-top:10px;">
-      <a class="btn btn-primary" href="corporate-brochure.pdf" download data-i18n="corp_bro_btn">Download brochure (PDF)</a>
-    </div>
-  </div>
+<div class="actions" style="margin-top:10px;">
+<a class="btn btn-primary" data-i18n="corp_bro_btn" download="" href="corporate-brochure.pdf">Download brochure (PDF)</a>
+</div>
+</div>
 </div>
 </section>
-
-<section id="airports" class="section reveal">
-  <h2 data-i18n="airports_title">Airport Pickup Made Easy</h2>
-  <p class="subtitle" data-i18n="airports_sub">We serve Montréal–Trudeau (YUL), Mirabel (YMX), and surrounding airports on request.</p>
-
-  <div class="grid3 airports-grid">
-    <div class="card">
-      <div class="card-body">
-        <h3 data-i18n="air1_title">Flight tracking</h3>
-        <div class="meta" data-i18n="air1_desc">We monitor delays and adjust pickup time when possible.</div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-body">
-        <h3 data-i18n="air2_title">Meet & greet (optional)</h3>
-        <div class="meta" data-i18n="air2_desc">Add a name sign pickup inside the terminal if you prefer.</div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-body">
-        <h3 data-i18n="air3_title">Extra luggage & skis</h3>
-        <div class="meta" data-i18n="air3_desc">Tell us your luggage/ski bags and we’ll match the right vehicle.</div>
-      </div>
-    </div>
-  </div>
+<section class="section reveal" id="airports">
+<h2 data-i18n="airports_title">Airport Pickup Made Easy</h2>
+<p class="subtitle" data-i18n="airports_sub">We serve Montréal–Trudeau (YUL), Mirabel (YMX), and surrounding airports on request.</p>
+<div class="grid3 airports-grid">
+<div class="card">
+<div class="card-body">
+<h3 data-i18n="air1_title">Flight tracking</h3>
+<div class="meta" data-i18n="air1_desc">We monitor delays and adjust pickup time when possible.</div>
+</div>
+</div>
+<div class="card">
+<div class="card-body">
+<h3 data-i18n="air2_title">Meet &amp; greet (optional)</h3>
+<div class="meta" data-i18n="air2_desc">Add a name sign pickup inside the terminal if you prefer.</div>
+</div>
+</div>
+<div class="card">
+<div class="card-body">
+<h3 data-i18n="air3_title">Extra luggage &amp; skis</h3>
+<div class="meta" data-i18n="air3_desc">Tell us your luggage/ski bags and we’ll match the right vehicle.</div>
+</div>
+</div>
+</div>
 </section>
-
-<section id="service-areas" class="section reveal">
-  <h2 data-i18n="areas_title">Service Areas</h2>
-  <p class="subtitle" data-i18n="areas_sub">We operate in Montréal and surrounding areas, plus Mont‑Tremblant and long-distance trips.</p>
-
-  <div class="areas-grid">
-    <div class="area-card">
-      <h3 data-i18n="area1_title">Montréal & Surrounding</h3>
-      <p data-i18n="area1_desc">Montréal, Laval, Longueuil, Brossard, West Island, South Shore, North Shore.</p>
-    </div>
-    <div class="area-card">
-      <h3 data-i18n="area2_title">Mont‑Tremblant & Laurentians</h3>
-      <p data-i18n="area2_desc">Mont‑Tremblant, Saint‑Sauveur, Sainte‑Agathe, and nearby resorts.</p>
-    </div>
-    <div class="area-card">
-      <h3 data-i18n="area3_title">Airports & Intercity</h3>
-      <p data-i18n="area3_desc">YUL, YMX, Ottawa (YOW), Québec City (YQB) and more — request a quote.</p>
-    </div>
-  </div>
+<section class="section reveal" id="service-areas">
+<h2 data-i18n="areas_title">Service Areas</h2>
+<p class="subtitle" data-i18n="areas_sub">We operate in Montréal and surrounding areas, plus Mont‑Tremblant and long-distance trips.</p>
+<div class="areas-grid">
+<div class="area-card">
+<h3 data-i18n="area1_title">Montréal &amp; Surrounding</h3>
+<p data-i18n="area1_desc">Montréal, Laval, Longueuil, Brossard, West Island, South Shore, North Shore.</p>
+</div>
+<div class="area-card">
+<h3 data-i18n="area2_title">Mont‑Tremblant &amp; Laurentians</h3>
+<p data-i18n="area2_desc">Mont‑Tremblant, Saint‑Sauveur, Sainte‑Agathe, and nearby resorts.</p>
+</div>
+<div class="area-card">
+<h3 data-i18n="area3_title">Airports &amp; Intercity</h3>
+<p data-i18n="area3_desc">YUL, YMX, Ottawa (YOW), Québec City (YQB) and more — request a quote.</p>
+</div>
+</div>
 </section>
-
-<section id="faq" class="section reveal">
-  <h2 data-i18n="faq_title">FAQ</h2>
-  <div class="faq">
-    <details class="faq-item">
-      <summary data-i18n="faq_q1">Do you offer Montréal airport pickups (YUL)?</summary>
-      <div class="faq-a" data-i18n="faq_a1">Yes — we provide private airport transfers from Montréal–Trudeau (YUL). Share your flight number and pickup details.</div>
-    </details>
-
-    <details class="faq-item">
-      <summary data-i18n="faq_q2">Can I book hourly service in Montréal?</summary>
-      <div class="faq-a" data-i18n="faq_a2">Yes — choose “By the hour” (minimum 3 hours). Vehicle minimums may apply.</div>
-    </details>
-
-    <details class="faq-item">
-      <summary data-i18n="faq_q3">Do you serve Mont‑Tremblant year‑round?</summary>
-      <div class="faq-a" data-i18n="faq_a3">Yes — we offer transfers and hourly chauffeur service in Mont‑Tremblant all year (ski season, summer events, and more).</div>
-    </details>
-
-    <details class="faq-item">
-      <summary data-i18n="faq_q4">How do I pay?</summary>
-      <div class="faq-a" data-i18n="faq_a4">After you submit your request, we confirm availability and send a secure Stripe payment link.</div>
-    </details>
-  </div>
+<section class="section reveal" id="faq">
+<h2 data-i18n="faq_title">FAQ</h2>
+<div class="faq">
+<details class="faq-item">
+<summary data-i18n="faq_q1">Do you offer Montréal airport pickups (YUL)?</summary>
+<div class="faq-a" data-i18n="faq_a1">Yes — we provide private airport transfers from Montréal–Trudeau (YUL). Share your flight number and pickup details.</div>
+</details>
+<details class="faq-item">
+<summary data-i18n="faq_q2">Can I book hourly service in Montréal?</summary>
+<div class="faq-a" data-i18n="faq_a2">Yes — choose “By the hour” (minimum 3 hours). Vehicle minimums may apply.</div>
+</details>
+<details class="faq-item">
+<summary data-i18n="faq_q3">Do you serve Mont‑Tremblant year‑round?</summary>
+<div class="faq-a" data-i18n="faq_a3">Yes — we offer transfers and hourly chauffeur service in Mont‑Tremblant all year (ski season, summer events, and more).</div>
+</details>
+<details class="faq-item">
+<summary data-i18n="faq_q4">How do I pay?</summary>
+<div class="faq-a" data-i18n="faq_a4">After you submit your request, we confirm availability and send a secure Stripe payment link.</div>
+</details>
+</div>
 </section>
-
 <section class="section reveal" id="contact">
 <h2 data-i18n="contact_title">Contact Us</h2>
 <p class="subtitle" data-i18n="contact_sub">Questions, bookings, or custom trips — contact us anytime.</p>
@@ -2138,16 +2137,16 @@ body.nav-open .nav-overlay{ display:block; }
 <footer>
 <div class="container footer-grid">
 <div>
-<strong data-i18n="footer_brand">Mont Tremblant Limo Services</strong><br/>
+<strong data-i18n="footer_brand">Mont Tremblant Limo Services</strong><br>
 <span data-i18n="footer_tagline">Luxury chauffeur service in Mont-Tremblant</span>
-</div>
+</br></div>
 <div>
-<strong data-i18n="footer_contact">Contact</strong><br/>
+<strong data-i18n="footer_contact">Contact</strong><br>
 <a href="mailto:info@monttremblantlimoservices.com?subject=Booking%20Request">
           info@monttremblantlimoservices.com
-        </a><br/>
+        </a><br>
 <a href="tel:+14383203733">+1 (438) 320-3733</a>
-</div>
+</br></br></div>
 <div>
         © <span id="year"></span> <span data-i18n="footer_rights">All rights reserved</span>
 </div>
@@ -2585,7 +2584,6 @@ function setupAutocomplete(inputId, listId, latId, lngId){
         renderAutocompleteList(list, items, (it)=>pickGooglePlace(it, input, latId, lngId, (inputId.includes('pickup')||inputId.includes('from'))?'pickup':'dropoff'));
         return;
       }
-
 
       const current = ++token;
 
@@ -3428,7 +3426,6 @@ function updateRouteAndEstimate(){
   );
 }
 
-
 function ensureMap(){
   try{
     if (!window.google || !google.maps || typeof google.maps.Map !== "function") return null;
@@ -3505,8 +3502,6 @@ function findBookingInputs() {
   return { pickup, dropoff };
 }
 
-
-
 function getQcCorridorBounds(){
   // Broad bounds covering Canada + USA (bias only; not strict)
   const sw = new google.maps.LatLng(24.396308, -168.0); // southern US, west (incl. Alaska)
@@ -3517,8 +3512,6 @@ function getQcCorridorBounds(){
 function wireAutocomplete(){
   // Prevent double-wiring
   if (window.__placesWired) return;
-
-
 
   if (!window.google || !google.maps || !google.maps.places) return;
 
@@ -3603,7 +3596,6 @@ tuneAutocomplete(dropoffAC);
       if (el.dataset) delete el.dataset.placesPending;
     });
 
-
     // If the user typed before Places finished loading, nudging focus will cause suggestions to appear immediately.
     const nudge = (el) => {
       if (!el) return;
@@ -3631,7 +3623,6 @@ tuneAutocomplete(dropoffAC);
   ensureMap();
 }
 
-
 function restoreInputs() {
   try {
     const { pickup: _p, dropoff: _d } = findBookingInputs();
@@ -3650,7 +3641,6 @@ function restoreInputs() {
     });
   } catch (e) {}
 }
-
 
 function loadGoogleMapsScript() {
   const el = document.getElementById("gmap-loading");
@@ -4283,136 +4273,56 @@ function getQcCorridorBounds(){
     els.forEach(el=>io.observe(el));
   })();
 </script>
+<a aria-label="Book online" class="float-book" data-i18n="float_book" href="booking.html"><span class="mono">MT</span><span class="label" data-i18n="float_book">Book online</span></a>
 
-<a class="float-book" href="booking.html" data-i18n="float_book" aria-label="Book online"><span class="mono">MT</span><span class="label" data-i18n="float_book">Book online</span></a>
 
-
-<script>
-(function(){
-  const btn = document.querySelector('.menu-toggle');
+<script>// Mobile drawer nav — v3
+(() => {
+  const btn = document.getElementById('mobileMenuBtn');
   const drawer = document.getElementById('mobileDrawer');
   const overlay = document.getElementById('drawerOverlay');
-  if(!btn || !drawer || !overlay) return;
+
+  if (!btn || !drawer || !overlay) return;
 
   const open = () => {
     document.body.classList.add('nav-open');
-    drawer.setAttribute('aria-hidden','false');
-    overlay.setAttribute('aria-hidden','false');
+    btn.setAttribute('aria-expanded', 'true');
+    overlay.setAttribute('aria-hidden', 'false');
   };
+
   const close = () => {
     document.body.classList.remove('nav-open');
-    drawer.setAttribute('aria-hidden','true');
-    overlay.setAttribute('aria-hidden','true');
+    btn.setAttribute('aria-expanded', 'false');
+    overlay.setAttribute('aria-hidden', 'true');
   };
 
-  btn.addEventListener('click', (e)=>{ e.preventDefault();
-    document.body.classList.contains('nav-open') ? close() : open();
-  });
+  const toggle = () => {
+    if (document.body.classList.contains('nav-open')) close();
+    else open();
+  };
 
-  overlay.addEventListener('click', close);
+  btn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); toggle(); });
+  overlay.addEventListener('click', (e) => { e.preventDefault(); close(); });
 
-  drawer.addEventListener('click', (e)=>{
-    const a = e.target.closest('a');
-    if(!a) return;
-    const href = a.getAttribute('href') || '';
-    // If it's an in-page anchor, close after scrolling.
-    if(href.startsWith('#')){
-      close();
-    } else {
-      // normal navigation to another page
-      close();
-    }
-  });
-
-  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
-})();
-</script>
-
-
-<script>
-/* MOBILE_DRAWER_V2 */
-document.addEventListener('DOMContentLoaded', function () {
-  const btn = document.querySelector('header .menu-toggle, .menu-toggle');
-  const drawer = document.querySelector('header .drawer, nav.drawer, #mobileDrawer, .nav-drawer');
-  const overlay = document.querySelector('header .nav-overlay, .nav-overlay, #drawerOverlay');
-
-  if (!btn || !drawer) return;
-
-  // create overlay if missing
-  let ov = overlay;
-  if (!ov) {
-    ov = document.createElement('div');
-    ov.className = 'nav-overlay';
-    ov.setAttribute('aria-hidden','true');
-    document.body.appendChild(ov);
-  }
-
-  function openMenu() {
-    document.body.classList.add('nav-open');
-    btn.setAttribute('aria-expanded','true');
-    drawer.setAttribute('aria-hidden','false');
-    ov.setAttribute('aria-hidden','false');
-  }
-  function closeMenu() {
-    document.body.classList.remove('nav-open');
-    btn.setAttribute('aria-expanded','false');
-    drawer.setAttribute('aria-hidden','true');
-    ov.setAttribute('aria-hidden','true');
-  }
-  function isOpen() {
-    return document.body.classList.contains('nav-open');
-  }
-
-  btn.addEventListener('click', function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    isOpen() ? closeMenu() : openMenu();
-  });
-
-  // Click anywhere outside the drawer closes it (and overlay click too)
-  ov.addEventListener('click', closeMenu);
-  document.addEventListener('click', function(e){
-    if (!isOpen()) return;
+  // Close when clicking outside drawer and button
+  document.addEventListener('click', (e) => {
+    if (!document.body.classList.contains('nav-open')) return;
     const t = e.target;
     if (drawer.contains(t) || btn.contains(t)) return;
-    closeMenu();
+    close();
   });
 
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') closeMenu();
+  // Close on Esc
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') close();
   });
 
-  // Close on link click and navigate/scroll properly
-  drawer.querySelectorAll('a').forEach(function (a) {
-    a.addEventListener('click', function (e) {
-      const href = a.getAttribute('href') || '';
-      closeMenu();
+  // Close after link click
+  drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => close()));
 
-      // Smooth scroll for same-page anchors
-      if (href.includes('#')) {
-        const parts = href.split('#');
-        const path = (parts[0] || '').replace(/^\//,'');
-        const hash = parts[1] || '';
-        const samePage = (path === '' || path === window.location.pathname.split('/').pop());
-
-        if (samePage && hash) {
-          const target = document.getElementById(hash);
-          if (target) {
-            e.preventDefault();
-            const offset = 92;
-            const y = target.getBoundingClientRect().top + window.pageYOffset - offset;
-            window.scrollTo({ top: y, behavior: 'smooth' });
-          }
-        }
-      }
-    });
+  // If switching to desktop, ensure closed
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 940) close();
   });
-
-  // Initialize aria
-  if (!drawer.getAttribute('aria-hidden')) drawer.setAttribute('aria-hidden','true');
-  btn.setAttribute('aria-expanded', isOpen() ? 'true' : 'false');
-});
-</script>
-
-</body>
+})();</script></body>
 </html>
