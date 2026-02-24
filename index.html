@@ -190,7 +190,7 @@
     width: 38px; height: 38px;
     border-radius: 12px;
     background: #0b1220;
-    color:#ffffff;
+    color:#fff;
     display:grid;
     place-items:center;
     font-weight: 950;
@@ -1572,6 +1572,23 @@ body.nav-open #drawerOverlay{display:block}
 
 body.nav-open{overflow:hidden;}
 body.nav-open .nav-overlay{display:block;}
+
+/* ===== Mobile drawer overlay behavior (non-blocking + click-outside closes) ===== */
+.nav-overlay{
+  display:none;
+  position: fixed;
+  inset: 0;
+  background: rgba(11,18,32,.18);
+  backdrop-filter: blur(2px);
+  z-index: 9998;
+}
+body.nav-open .nav-overlay{ display:block; }
+
+/* Ensure drawer is above overlay */
+.drawer, nav.drawer, #mobileDrawer, .nav-drawer{
+  z-index: 9999;
+}
+
 </style>
 <link href="https://maps.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://maps.gstatic.com" rel="preconnect"/>
@@ -4309,6 +4326,92 @@ function getQcCorridorBounds(){
 
   document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
 })();
+</script>
+
+
+<script>
+/* MOBILE_DRAWER_V2 */
+document.addEventListener('DOMContentLoaded', function () {
+  const btn = document.querySelector('header .menu-toggle, .menu-toggle');
+  const drawer = document.querySelector('header .drawer, nav.drawer, #mobileDrawer, .nav-drawer');
+  const overlay = document.querySelector('header .nav-overlay, .nav-overlay, #drawerOverlay');
+
+  if (!btn || !drawer) return;
+
+  // create overlay if missing
+  let ov = overlay;
+  if (!ov) {
+    ov = document.createElement('div');
+    ov.className = 'nav-overlay';
+    ov.setAttribute('aria-hidden','true');
+    document.body.appendChild(ov);
+  }
+
+  function openMenu() {
+    document.body.classList.add('nav-open');
+    btn.setAttribute('aria-expanded','true');
+    drawer.setAttribute('aria-hidden','false');
+    ov.setAttribute('aria-hidden','false');
+  }
+  function closeMenu() {
+    document.body.classList.remove('nav-open');
+    btn.setAttribute('aria-expanded','false');
+    drawer.setAttribute('aria-hidden','true');
+    ov.setAttribute('aria-hidden','true');
+  }
+  function isOpen() {
+    return document.body.classList.contains('nav-open');
+  }
+
+  btn.addEventListener('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    isOpen() ? closeMenu() : openMenu();
+  });
+
+  // Click anywhere outside the drawer closes it (and overlay click too)
+  ov.addEventListener('click', closeMenu);
+  document.addEventListener('click', function(e){
+    if (!isOpen()) return;
+    const t = e.target;
+    if (drawer.contains(t) || btn.contains(t)) return;
+    closeMenu();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeMenu();
+  });
+
+  // Close on link click and navigate/scroll properly
+  drawer.querySelectorAll('a').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      const href = a.getAttribute('href') || '';
+      closeMenu();
+
+      // Smooth scroll for same-page anchors
+      if (href.includes('#')) {
+        const parts = href.split('#');
+        const path = (parts[0] || '').replace(/^\//,'');
+        const hash = parts[1] || '';
+        const samePage = (path === '' || path === window.location.pathname.split('/').pop());
+
+        if (samePage && hash) {
+          const target = document.getElementById(hash);
+          if (target) {
+            e.preventDefault();
+            const offset = 92;
+            const y = target.getBoundingClientRect().top + window.pageYOffset - offset;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+          }
+        }
+      }
+    });
+  });
+
+  // Initialize aria
+  if (!drawer.getAttribute('aria-hidden')) drawer.setAttribute('aria-hidden','true');
+  btn.setAttribute('aria-expanded', isOpen() ? 'true' : 'false');
+});
 </script>
 
 </body>
