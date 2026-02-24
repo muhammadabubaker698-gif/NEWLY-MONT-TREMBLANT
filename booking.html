@@ -1605,7 +1605,12 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
 }
 
 @media (min-width: 941px) {
-  #drawerOverlay, #mobileDrawer { display: none !important; }
+}
+
+/* Force-hide hamburger on desktop */
+@media (min-width: 941px){
+  header .menu-toggle{display:none !important;}
+  #drawerOverlay,#mobileDrawer{display:none !important;}
 }
 </style>
 <link href="https://maps.googleapis.com" rel="preconnect"/>

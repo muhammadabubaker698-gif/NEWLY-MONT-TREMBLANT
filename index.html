@@ -1616,7 +1616,12 @@ body.nav-open .nav-overlay{ display:block; }
 }
 
 @media (min-width: 941px) {
-  #drawerOverlay, #mobileDrawer { display: none !important; }
+}
+
+/* Force-hide hamburger on desktop */
+@media (min-width: 941px){
+  header .menu-toggle{display:none !important;}
+  #drawerOverlay,#mobileDrawer{display:none !important;}
 }
 </style>
 <link href="https://maps.googleapis.com" rel="preconnect"/>
