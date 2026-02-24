@@ -1521,6 +1521,51 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
 }
 .menu-toggle i + i{ margin-top:4px; }
 
+
+/* ===== Mobile hamburger: centered 3 lines ===== */
+.menu-toggle{
+  width:44px;
+  height:44px;
+  display:flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap:4px;
+}
+.menu-toggle i{
+  margin:0 !important;
+}
+.menu-toggle i + i{ margin-top:0 !important; }
+
+/* ===== Floating Book Online: remove black badge, more corporate ===== */
+.floating-book .badge,
+.floating-book .logo-badge,
+.floating-book .mt-badge{
+  background: rgba(255,255,255,.92) !important;
+  color: rgba(11,18,32,.92) !important;
+  border: 1px solid rgba(11,18,32,.14) !important;
+  box-shadow: 0 12px 28px rgba(0,0,0,.10) !important;
+}
+.floating-book .badge{
+  width:42px !important;
+  height:42px !important;
+  border-radius: 999px !important;
+  font-weight: 950 !important;
+}
+.floating-book{
+  border: 1px solid rgba(11,18,32,.14) !important;
+  box-shadow: 0 18px 44px rgba(0,0,0,.14) !important;
+}
+
+
+/* Alias for floating-cta if present */
+.floating-cta{ }
+.floating-cta .badge{
+  background: rgba(255,255,255,.92) !important;
+  color: rgba(11,18,32,.92) !important;
+  border: 1px solid rgba(11,18,32,.14) !important;
+}
+
 </style>
 <link href="https://maps.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://maps.gstatic.com" rel="preconnect"/>
