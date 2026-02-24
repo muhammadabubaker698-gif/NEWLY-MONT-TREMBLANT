@@ -1592,6 +1592,30 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
   border: 1px solid rgba(11,18,32,.14) !important;
 }
 
+
+/* ===== Logo MT contrast ===== */
+.logo{
+  color: #fff !important;
+  background: #0b1220 !important;
+}
+
+/* ===== Drawer visibility toggle ===== */
+header .nav-overlay{ display:none; position: fixed; inset:0; background: rgba(11,18,32,.28); backdrop-filter: blur(2px); z-index:9998; }
+header .drawer{
+  display:none;
+  position: fixed;
+  left: 12px; right: 12px;
+  top: 72px;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.94);
+  border: 1px solid rgba(11,18,32,.10);
+  box-shadow: 0 28px 70px rgba(0,0,0,.12);
+  z-index: 9999;
+}
+body.nav-open header .nav-overlay{ display:block; }
+body.nav-open header .drawer{ display:block; }
+
 </style>
 <link href="https://maps.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://maps.gstatic.com" rel="preconnect"/>
@@ -4132,6 +4156,32 @@ function getQcCorridorBounds(){
 </script>
 
 <a class="float-book" href="booking.html" data-i18n="float_book" aria-label="Book online"><span class="mono">MT</span><span class="label" data-i18n="float_book">Book online</span></a>
+
+
+<script>
+/* Header drawer (mobile) */
+(function(){
+  const btn = document.querySelector("header .menu-toggle");
+  const overlay = document.querySelector("header .nav-overlay");
+  const drawer = document.querySelector("header .drawer");
+  if(!btn || !overlay || !drawer) return;
+
+  function closeNav(){
+    document.body.classList.remove("nav-open");
+    btn.setAttribute("aria-expanded","false");
+  }
+  function openNav(){
+    document.body.classList.add("nav-open");
+    btn.setAttribute("aria-expanded","true");
+  }
+
+  btn.addEventListener("click", function(){
+    document.body.classList.contains("nav-open") ? closeNav() : openNav();
+  });
+  overlay.addEventListener("click", closeNav);
+  drawer.querySelectorAll("a").forEach(a=>a.addEventListener("click", closeNav));
+})();
+</script>
 
 </body>
 </html>
