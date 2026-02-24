@@ -1612,6 +1612,12 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
   header .menu-toggle{display:none !important;}
   #drawerOverlay,#mobileDrawer{display:none !important;}
 }
+
+/* Ensure hamburger only shows on mobile */
+@media (min-width: 941px){
+  header .menu-toggle{ display: none !important; }
+}
+
 </style>
 <link href="https://maps.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://maps.gstatic.com" rel="preconnect"/>
@@ -1619,9 +1625,9 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
 </head>
 <body class="booking-only">
 <header>
-<div aria-hidden="true" class="nav-overlay"></div>
+<div id="drawerOverlay" aria-hidden="true" class="nav-overlay"></div>
 <div class="container header-top">
-<button aria-expanded="false" aria-label="Menu" class="menu-toggle icon-pill" type="button">
+<button id="mobileMenuBtn" aria-expanded="false" aria-label="Menu" class="menu-toggle icon-pill" type="button">
 <i></i><i></i><i></i>
 </button>
 <a aria-label="Home" class="brand-link" href="index.html">
