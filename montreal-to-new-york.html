@@ -1566,30 +1566,6 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
   border: 1px solid rgba(11,18,32,.14) !important;
 }
 
-
-/* ===== Logo MT contrast ===== */
-.logo{
-  color: #fff !important;
-  background: #0b1220 !important;
-}
-
-/* ===== Drawer visibility toggle ===== */
-header .nav-overlay{ display:none; position: fixed; inset:0; background: rgba(11,18,32,.28); backdrop-filter: blur(2px); z-index:9998; }
-header .drawer{
-  display:none;
-  position: fixed;
-  left: 12px; right: 12px;
-  top: 72px;
-  padding: 14px;
-  border-radius: 18px;
-  background: rgba(255,255,255,.94);
-  border: 1px solid rgba(11,18,32,.10);
-  box-shadow: 0 28px 70px rgba(0,0,0,.12);
-  z-index: 9999;
-}
-body.nav-open header .nav-overlay{ display:block; }
-body.nav-open header .drawer{ display:block; }
-
 </style>
 <link href="https://maps.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://maps.gstatic.com" rel="preconnect"/>
@@ -1869,6 +1845,222 @@ body.nav-open header .drawer{ display:block; }
 </div>
 </div>
 <main class="container">
+<section class="section reveal" id="fleet">
+<h2 data-i18n="fleet_title">Our Fleet</h2>
+<p class="subtitle" data-i18n-html="fleet_sub_html">Premium vehicles for New York travel. <b>Minimum 1 hour (hourly)</b> applies to all vehicles.</p>
+<div class="grid3 reveal">
+<div class="card">
+<div class="card-media"><img alt="2026 Cadillac Escalade ESV black" src="/escalade.jpg"/></div>
+<div class="card-body">
+<h3>2026 Cadillac Escalade ESV</h3>
+<div class="meta">Ultra-luxury • VIP airport transfers • ski trips</div>
+<div class="price">$150 / <span data-i18n="unit_hour">hour</span></div>
+<div class="min" data-hours="3" data-i18n-html="min_hours_html">3-hour minimum</div>
+<div class="actions actions-reserve">
+<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_point" data-mode="one_way" data-vehicle="escalade" href="booking.html">Reserve Point A to Point B</a>
+<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_hourly" data-mode="hourly" data-vehicle="escalade" href="booking.html">Reserve by hour</a>
+<a class="btn btn-whatsapp" data-i18n="btn_whatsapp" href="https://wa.me/14383203733" rel="noreferrer" target="_blank">WhatsApp</a>
+</div>
+</div>
+</div>
+<div class="card">
+<div class="card-media"><img alt="2025 Chevrolet Suburban black" src="/suburban.jpg"/></div>
+<div class="card-body">
+<h3>2025 Chevrolet Suburban</h3>
+<div class="meta">Spacious • luggage friendly • long rides</div>
+<div class="price">$100 / <span data-i18n="unit_hour">hour</span></div>
+<div class="min" data-hours="3" data-i18n-html="min_hours_html">3-hour minimum</div>
+<div class="actions actions-reserve">
+<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_point" data-mode="one_way" data-vehicle="suburban" href="booking.html">Reserve Point A to Point B</a>
+<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_hourly" data-mode="hourly" data-vehicle="suburban" href="booking.html">Reserve by hour</a>
+<a class="btn btn-whatsapp" data-i18n="btn_whatsapp" href="https://wa.me/14383203733" rel="noreferrer" target="_blank">WhatsApp</a>
+</div>
+</div>
+</div>
+<div class="card">
+<div class="card-media"><img alt="2026 GMC Yukon Denali black" src="/denali.jpg"/></div>
+<div class="card-body">
+<h3>2026 GMC Yukon Denali</h3>
+<div class="meta">Premium comfort • smooth ride • executive travel</div>
+<div class="price">$100 / <span data-i18n="unit_hour">hour</span></div>
+<div class="min" data-hours="3" data-i18n-html="min_hours_html">3-hour minimum</div>
+<div class="actions actions-reserve">
+<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_point" data-mode="one_way" data-vehicle="denali" href="booking.html">Reserve Point A to Point B</a>
+<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_hourly" data-mode="hourly" data-vehicle="denali" href="booking.html">Reserve by hour</a>
+<a class="btn btn-whatsapp" data-i18n="btn_whatsapp" href="https://wa.me/14383203733" rel="noreferrer" target="_blank">WhatsApp</a>
+</div>
+</div>
+</div>
+<div class="card">
+<div class="card-media"><img alt="2024 Infiniti QX60 black" src="/qx60.jpg"/></div>
+<div class="card-body">
+<h3>2024 Infiniti QX60</h3>
+<div class="meta">Comfort + value • airport transfers • city rides</div>
+<div class="price">$75 / <span data-i18n="unit_hour">hour</span></div>
+<div class="min" data-hours="3" data-i18n-html="min_hours_html">3-hour minimum</div>
+<div class="actions actions-reserve">
+<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_point" data-mode="one_way" data-vehicle="qx60" href="booking.html">Reserve Point A to Point B</a>
+<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_hourly" data-mode="hourly" data-vehicle="qx60" href="booking.html">Reserve by hour</a>
+<a class="btn btn-whatsapp" data-i18n="btn_whatsapp" href="https://wa.me/14383203733" rel="noreferrer" target="_blank">WhatsApp</a>
+</div>
+</div>
+</div>
+<div class="card">
+<div class="card-media"><img alt="2023 Tesla Model Y black" src="/tesla.jpg"/></div>
+<div class="card-body">
+<h3>2023 Tesla Model Y</h3>
+<div class="meta">Quiet • modern • eco-friendly</div>
+<div class="price">$75 / <span data-i18n="unit_hour">hour</span></div>
+<div class="min" data-hours="3" data-i18n-html="min_hours_html">3-hour minimum</div>
+<div class="actions actions-reserve">
+<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_point" data-mode="one_way" data-vehicle="tesla" href="booking.html">Reserve Point A to Point B</a>
+<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_hourly" data-mode="hourly" data-vehicle="tesla" href="booking.html">Reserve by hour</a>
+<a class="btn btn-whatsapp" data-i18n="btn_whatsapp" href="https://wa.me/14383203733" rel="noreferrer" target="_blank">WhatsApp</a>
+</div>
+</div>
+</div>
+<div class="card">
+<div class="card-media"><img alt="Black Mercedes Sprinter van" src="/sprinter.jpg"/></div>
+<div class="card-body">
+<h3>Mercedes Sprinter (Group Van)</h3>
+<div class="meta">Groups • events • ski luggage</div>
+<div class="price">$299 / <span data-i18n="unit_hour">hour</span></div>
+<div class="min" data-hours="3" data-i18n-html="min_hours_html">3-hour minimum</div>
+<div class="actions actions-reserve">
+<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_point" data-mode="one_way" data-vehicle="sprinter" href="booking.html">Reserve Point A to Point B</a>
+<a class="btn btn-primary reserve-btn" data-i18n="btn_reserve_hourly" data-mode="hourly" data-vehicle="sprinter" href="booking.html">Reserve by hour</a>
+<a class="btn btn-whatsapp" data-i18n="btn_whatsapp" href="https://wa.me/14383203733" rel="noreferrer" target="_blank">WhatsApp</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="routes" class="section reveal">
+  <h2 data-i18n="routes_title">Popular Routes</h2>
+  <p class="subtitle" data-i18n="routes_sub">Door-to-door transfers across Montréal, Mont‑Tremblant, and the Laurentians. Airport pickups available.</p>
+
+  <div class="routes-grid">
+    <div class="route-card">
+      <h3 data-i18n="route1_title">Montréal ⇄ Mont‑Tremblant</h3>
+      <p data-i18n="route1_desc">Private SUV or Sprinter transfers for ski trips, weekends, and events.</p>
+      <a class="btn" href="montreal-to-tremblant.html" data-i18n="learn_more">Learn more</a>
+    </div>
+
+    <div class="route-card">
+      <h3 data-i18n="route2_title">YUL Airport Transfers</h3>
+      <p data-i18n="route2_desc">Montréal–Trudeau (YUL) pickups with flight tracking and curbside or meet & greet.</p>
+      <a class="btn" href="yul-airport-transfer.html" data-i18n="learn_more">Learn more</a>
+    </div>
+
+    <div class="route-card">
+      <h3 data-i18n="route3_title">Montréal City Chauffeur</h3>
+      <p data-i18n="route3_desc">Hourly chauffeur service for business meetings, restaurants, and nightlife.</p>
+      <a class="btn" href="montreal-limo-service.html" data-i18n="learn_more">Learn more</a>
+    </div>
+  </div>
+</section>
+
+<section id="airports" class="section reveal">
+  <h2 data-i18n="airports_title">Airport Pickup Made Easy</h2>
+  <p class="subtitle" data-i18n="airports_sub">We serve Montréal–Trudeau (YUL), Mirabel (YMX), and surrounding airports on request.</p>
+
+  <div class="grid3 airports-grid">
+    <div class="card">
+      <div class="card-body">
+        <h3 data-i18n="air1_title">Flight tracking</h3>
+        <div class="meta" data-i18n="air1_desc">We monitor delays and adjust pickup time when possible.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3 data-i18n="air2_title">Meet & greet (optional)</h3>
+        <div class="meta" data-i18n="air2_desc">Add a name sign pickup inside the terminal if you prefer.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3 data-i18n="air3_title">Extra luggage & skis</h3>
+        <div class="meta" data-i18n="air3_desc">Tell us your luggage/ski bags and we’ll match the right vehicle.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="service-areas" class="section reveal">
+  <h2 data-i18n="areas_title">Service Areas</h2>
+  <p class="subtitle" data-i18n="areas_sub">We operate in Montréal and surrounding areas, plus Mont‑Tremblant and long-distance trips.</p>
+
+  <div class="areas-grid">
+    <div class="area-card">
+      <h3 data-i18n="area1_title">Montréal & Surrounding</h3>
+      <p data-i18n="area1_desc">Montréal, Laval, Longueuil, Brossard, West Island, South Shore, North Shore.</p>
+    </div>
+    <div class="area-card">
+      <h3 data-i18n="area2_title">Mont‑Tremblant & Laurentians</h3>
+      <p data-i18n="area2_desc">Mont‑Tremblant, Saint‑Sauveur, Sainte‑Agathe, and nearby resorts.</p>
+    </div>
+    <div class="area-card">
+      <h3 data-i18n="area3_title">Airports & Intercity</h3>
+      <p data-i18n="area3_desc">YUL, YMX, Ottawa (YOW), Québec City (YQB) and more — request a quote.</p>
+    </div>
+  </div>
+</section>
+
+<section id="faq" class="section reveal">
+  <h2 data-i18n="faq_title">FAQ</h2>
+  <div class="faq">
+    <details class="faq-item">
+      <summary data-i18n="faq_q1">Do you offer Montréal airport pickups (YUL)?</summary>
+      <div class="faq-a" data-i18n="faq_a1">Yes — we provide private airport transfers from Montréal–Trudeau (YUL). Share your flight number and pickup details.</div>
+    </details>
+
+    <details class="faq-item">
+      <summary data-i18n="faq_q2">Can I book hourly service in Montréal?</summary>
+      <div class="faq-a" data-i18n="faq_a2">Yes — choose “By the hour” (minimum 1 hour). Vehicle minimums may apply.</div>
+    </details>
+
+    <details class="faq-item">
+      <summary data-i18n="faq_q3">Do you serve Mont‑Tremblant year‑round?</summary>
+      <div class="faq-a" data-i18n="faq_a3">Yes — we offer transfers and hourly chauffeur service in Mont‑Tremblant all year (ski season, summer events, and more).</div>
+    </details>
+
+    <details class="faq-item">
+      <summary data-i18n="faq_q4">How do I pay?</summary>
+      <div class="faq-a" data-i18n="faq_a4">After you submit your request, we confirm availability and send a secure Stripe payment link.</div>
+    </details>
+  </div>
+</section>
+
+<section class="section reveal" id="contact">
+<h2 data-i18n="contact_title">Contact Us</h2>
+<p class="subtitle" data-i18n="contact_sub">Questions, bookings, or custom trips — contact us anytime.</p>
+<div class="contact-grid">
+<div class="contact-card">
+<h3 data-i18n="contact_getintouch">Get in touch</h3>
+<p>
+<svg height="18" style="vertical-align:middle;margin-right:6px" viewbox="0 0 24 24" width="18">
+<path d="M4 4h16v16H4z" fill="none" stroke="currentColor" stroke-width="2"></path>
+<path d="M4 6l8 7 8-7" fill="none" stroke="currentColor" stroke-width="2"></path>
+</svg>
+<a href="mailto:info@monttremblantlimoservices.com?subject=Booking%20Request&amp;body=Hello%20Mont%20Tremblant%20Limo%20Services,%0D%0A%0D%0AI%20would%20like%20to%20book%20a%20ride.%0D%0A%0D%0APickup:%0D%0ADropoff:%0D%0ADate:%0D%0ATime:%0D%0APassengers:%0D%0A%0D%0AThank%20you.">
+            info@monttremblantlimoservices.com
+          </a>
+</p>
+<p>📞 <a href="tel:+14383203733">+1 (438) 320-3733</a></p>
+<p data-i18n="contact_avail">Available 24/7</p>
+</div>
+<div class="contact-card">
+<h3 data-i18n="contact_sendmsg">Send us a message</h3>
+<input data-i18n-placeholder="ph_name" id="cf_name" placeholder="Your name"/>
+<input data-i18n-placeholder="ph_email" id="cf_email" placeholder="Your email"/>
+<textarea data-i18n-placeholder="ph_message" id="cf_message" placeholder="Your message"></textarea>
+<button class="btn btn-primary" data-i18n="contact_sendbtn" onclick="sendContactEmail()" type="button">Send Message</button>
+</div>
+</div>
+<div aria-label="Google Map preview" class="contact-map">
+<iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Mont%20Tremblant%20Quebec&amp;output=embed"></iframe>
+</div>
+</section>
 <footer>
 <div class="container footer-grid">
 <div>
@@ -4128,32 +4320,6 @@ function getQcCorridorBounds(){
 </script>
 
 <a class="float-book" href="booking.html" data-i18n="float_book" aria-label="Book online"><span class="mono">MT</span><span class="label" data-i18n="float_book">Book online</span></a>
-
-
-<script>
-/* Header drawer (mobile) */
-(function(){
-  const btn = document.querySelector("header .menu-toggle");
-  const overlay = document.querySelector("header .nav-overlay");
-  const drawer = document.querySelector("header .drawer");
-  if(!btn || !overlay || !drawer) return;
-
-  function closeNav(){
-    document.body.classList.remove("nav-open");
-    btn.setAttribute("aria-expanded","false");
-  }
-  function openNav(){
-    document.body.classList.add("nav-open");
-    btn.setAttribute("aria-expanded","true");
-  }
-
-  btn.addEventListener("click", function(){
-    document.body.classList.contains("nav-open") ? closeNav() : openNav();
-  });
-  overlay.addEventListener("click", closeNav);
-  drawer.querySelectorAll("a").forEach(a=>a.addEventListener("click", closeNav));
-})();
-</script>
 
 </body>
 </html>
