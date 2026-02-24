@@ -23,7 +23,7 @@
   "name": "Mont Tremblant Limo Services",
   "url": "https://monttremblantlimoservices.com/montreal-limo-service.html",
   "telephone": "+1-438-320-3733",
-  "description": "Luxury chauffeur service in Mont-Tremblant. Premium vehicles for airport transfers, hourly bookings, ski trips, corporate travel, and special events. Minimum 1 hour for hourly bookings. Vehicle minimum fares apply.",
+  "description": "Luxury chauffeur service in Mont-Tremblant. Premium vehicles for airport transfers, hourly bookings, ski trips, corporate travel, and special events. minimum 3 hours for hourly bookings. Vehicle minimum fares apply.",
   "areaServed": [
     {
       "@type": "City",
@@ -147,7 +147,7 @@ Thank you.`;
       "name": "Can I book hourly service in Montréal?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes — choose “By the hour” (minimum 1 hour). Vehicle minimums may apply."
+        "text": "Yes — choose “By the hour” (minimum 3 hours). Vehicle minimums may apply."
       }
     },
     {
@@ -1690,9 +1690,9 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
 <aside aria-label="Search booking" class="booking-card" id="booking">
 <div class="tabs">
 <button aria-selected="true" class="tab active" data-i18n="tab_oneway" id="tabOneWay" type="button">One way</button>
-<button aria-selected="false" class="tab" data-i18n="tab_hourly" id="tabHourly" type="button">By the hour (min 1h)</button>
+<button aria-selected="false" class="tab" data-i18n="tab_hourly" id="tabHourly" type="button">By the hour (min 3h)</button>
 </div>
-<div class="tabhint" data-i18n-html="tab_hint_html">Need a chauffeur for events, shopping or a night out? Choose <b>By the hour</b> (minimum 1 hour).</div>
+<div class="tabhint" data-i18n-html="tab_hint_html">Need a chauffeur for events, shopping or a night out? Choose <b>By the hour</b> (minimum 3 hours).</div>
 <div class="book-body">
 <div aria-hidden="true" class="stepbar">
 <div class="stepdot"><i></i></div>
@@ -1773,9 +1773,7 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
 <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z" stroke="currentColor" stroke-width="2"></path>
 </svg>
 <select id="h_hours">
-<option value="1">1 hour</option>
-<option value="2">2 hours</option>
-<option value="3">3 hours</option>
+<option value="3" selected>3 hours</option>
 <option value="4">4 hours</option>
 <option value="5">5 hours</option>
 <option value="6">6 hours</option>
@@ -1869,7 +1867,7 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
 <main class="container">
 <section class="section reveal" id="fleet">
 <h2 data-i18n="fleet_title">Our Fleet</h2>
-<p class="subtitle" data-i18n-html="fleet_sub_html">Premium vehicles for Mont-Tremblant travel. <b>Minimum 1 hour (hourly)</b> applies to all vehicles.</p>
+<p class="subtitle" data-i18n-html="fleet_sub_html">Premium vehicles for Mont-Tremblant travel. <b>minimum 3 hours (hourly)</b> applies to all vehicles.</p>
 <div class="grid3 reveal">
 <div class="card">
 <div class="card-media"><img alt="2026 Cadillac Escalade ESV black" src="/escalade.jpg"/></div>
@@ -2151,7 +2149,7 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
 
     <details class="faq-item">
       <summary data-i18n="faq_q2">Can I book hourly service in Montréal?</summary>
-      <div class="faq-a" data-i18n="faq_a2">Yes — choose “By the hour” (minimum 1 hour). Vehicle minimums may apply.</div>
+      <div class="faq-a" data-i18n="faq_a2">Yes — choose “By the hour” (minimum 3 hours). Vehicle minimums may apply.</div>
     </details>
 
     <details class="faq-item">
@@ -2193,7 +2191,6 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
 </div>
 </div>
 <div aria-label="Google Map preview" class="contact-map">
-<iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Mont%20Tremblant%20Quebec&amp;output=embed"></iframe>
 </div>
 </section>
 <footer>
@@ -2283,9 +2280,9 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
 
     const minPrice = Number(v.minPrice || 0);
 
-    // Hourly mode: bill selected hours (min 1 hour)
+    // Hourly mode: bill selected hours (minimum 3 hours)
     if (state.mode === "hourly"){
-      const h = Math.max(1, Number(state.hours || 1));
+      const h = Math.max(3, Number(state.hours || 1));
       return Math.round(Math.max(minPrice, v.hourly * h));
     }
 
@@ -2299,7 +2296,7 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
     return Math.round(Math.max(minPrice, total));
   }
 
-  function buildTimeOptions(stepMinutes = 5, selectId){
+  function buildTimeOptions(stepMinutes = 5, selectId, dateId, leadMinutes = 120){
     const timeEl = document.getElementById(selectId);
     if (!timeEl || timeEl.tagName !== "SELECT") return;
 
@@ -2312,6 +2309,16 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
     timeEl.appendChild(ph);
 
     const pad = (n)=> String(n).padStart(2,"0");
+    const now = new Date();
+    const todayStr = now.toISOString().slice(0,10);
+    const dateEl = dateId ? document.getElementById(dateId) : null;
+    const selectedDate = (dateEl && dateEl.value) ? dateEl.value : todayStr;
+    let minAllowed = 0;
+    if (selectedDate === todayStr){
+      minAllowed = (now.getHours() * 60 + now.getMinutes()) + Number(leadMinutes || 0);
+      minAllowed = Math.ceil(minAllowed / stepMinutes) * stepMinutes;
+    }
+
     for (let minutes = 0; minutes < 24 * 60; minutes += stepMinutes){
       const hh = Math.floor(minutes / 60);
       const mm = minutes % 60;
@@ -2322,16 +2329,23 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
       const opt = document.createElement("option");
       opt.value = value;
       opt.textContent = label;
+      opt.disabled = (minutes < minAllowed);
       timeEl.appendChild(opt);
+}
+    let mins = Math.max(0, minAllowed);
+    if (mins >= 24*60){
+      // If lead time pushes past midnight, move to next day
+      if (dateEl){
+        const d = new Date(selectedDate + "T00:00:00");
+        d.setDate(d.getDate() + 1);
+        dateEl.value = d.toISOString().slice(0,10);
+      }
+      mins = 0;
     }
-    const now = new Date();
-    let mins = now.getHours() * 60 + now.getMinutes();
-    mins = Math.ceil(mins / stepMinutes) * stepMinutes;
-    if (mins >= 24*60) mins = 0;
     const hh = Math.floor(mins / 60);
     const mm = mins % 60;
     timeEl.value = `${pad(hh)}:${pad(mm)}`;
-  }
+}
 
   function clearAutocompleteList(listEl){
     if (!listEl) return;
@@ -2750,7 +2764,7 @@ if (input.value.trim().length >= 2) doSearch();
     const list = LOCAL_RATES.map(v=>{
       const total = calcVehicleTotal(v);
       const note = state.mode === "hourly"
-        ? `Total ${formatMoney(total)} for ${Math.max(1, Number(state.hours||1))} hours`
+        ? `Total ${formatMoney(total)} for ${Math.max(3, Number(state.hours||1))} hours`
         : (state.transfer === "airport" ? "Airport estimate" : "Point-to-point estimate");
       return { ...v, total, note };
     });
@@ -2937,7 +2951,7 @@ if (input.value.trim().length >= 2) doSearch();
     state.selectedVehicleId = null;
     $("btnVehicleContinue").disabled = true;
 
-    const hours = Math.max(1, Number(state.hours || 1));
+    const hours = Math.max(3, Number(state.hours || 1));
     let preferredRow = null;
 
     state.computedVehicles.forEach(v=>{
@@ -3092,8 +3106,8 @@ if (input.value.trim().length >= 2) doSearch();
 
     const phone = val("c_phone");
 
-    // Hourly: min 1 hour
-    const hoursNum = Math.max(1, Number(state.hours || 1));
+    // Hourly: minimum 3 hours
+    const hoursNum = Math.max(3, Number(state.hours || 1));
     const currency = getTripCurrency();
 
     // Build database booking payload (for /api/bookings)
@@ -3256,9 +3270,12 @@ if (input.value.trim().length >= 2) doSearch();
     }
 
     syncViewportHeight();
-    buildTimeOptions(5, "h_time");
-
-    // ✅ Works for both one-way + hourly (pickup) and one-way dropoff
+    buildTimeOptions(5, "h_time", "h_date", 120);
+  const __hDateEl = document.getElementById("h_date");
+  if (__hDateEl){
+    __hDateEl.addEventListener("change", ()=> buildTimeOptions(5, "h_time", "h_date", 120));
+  }
+// ✅ Works for both one-way + hourly (pickup) and one-way dropoff
     setupAutocomplete("h_pickup", "h_pickup_list", "h_pickup_lat", "h_pickup_lng");
     setupAutocomplete("h_dropoff", "h_dropoff_list", "h_dropoff_lat", "h_dropoff_lng");
 
@@ -3995,8 +4012,8 @@ function getQcCorridorBounds(){
       badge_cities: "Mont-Tremblant • Montréal • Ottawa",
 
       tab_oneway: "One way",
-      tab_hourly: "By the hour (min 1h)",
-      tab_hint_html: "Need a chauffeur for events, shopping or a night out? Choose <b>By the hour</b> (minimum 1 hour).",
+      tab_hourly: "By the hour (min 3h)",
+      tab_hint_html: "Need a chauffeur for events, shopping or a night out? Choose <b>By the hour</b> (minimum 3 hours).",
       step_1of3: "Step 1 of 3",
 
       ph_from: "From: address, airport, hotel…",
@@ -4048,7 +4065,7 @@ function getQcCorridorBounds(){
       btn_close: "Close",
 
       fleet_title: "Our Fleet",
-      fleet_sub_html: "Premium vehicles for Mont-Tremblant travel. <b>Minimum 1 hour (hourly)</b> applies to all vehicles.",
+      fleet_sub_html: "Premium vehicles for Mont-Tremblant travel. <b>minimum 3 hours (hourly)</b> applies to all vehicles.",
       unit_hour: "hour",
       min_hours_html: "{n}-hour minimum",
 
