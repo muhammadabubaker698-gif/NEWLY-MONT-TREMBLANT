@@ -5,7 +5,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
 <title>Book Online | Mont Tremblant Limo Services</title>
-<meta content="Luxury chauffeur service in Mont-Tremblant. Escalade, Suburban, Denali, QX60, Tesla &amp; Sprinter. minimum 3 hours for hourly bookings. Vehicle minimum fares apply. Call or WhatsApp +1 (438) 320-3733." name="description"/>
+<meta content="Luxury chauffeur service in Mont-Tremblant. Escalade, Suburban, Denali, QX60, Tesla &amp; Sprinter. Minimum 1 hour for hourly bookings. Vehicle minimum fares apply. Call or WhatsApp +1 (438) 320-3733." name="description"/>
 <link href="https://monttremblantlimoservices.com/" rel="canonical"/>
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Mont Tremblant Limo Services | Montréal & Mont‑Tremblant Chauffeur" />
@@ -23,7 +23,7 @@
   "name": "Mont Tremblant Limo Services",
   "url": "https://monttremblantlimoservices.com/",
   "telephone": "+1-438-320-3733",
-  "description": "Luxury chauffeur service in Mont-Tremblant. Premium vehicles for airport transfers, hourly bookings, ski trips, corporate travel, and special events. minimum 3 hours for hourly bookings. Vehicle minimum fares apply.",
+  "description": "Luxury chauffeur service in Mont-Tremblant. Premium vehicles for airport transfers, hourly bookings, ski trips, corporate travel, and special events. Minimum 1 hour for hourly bookings. Vehicle minimum fares apply.",
   "areaServed": [
     {
       "@type": "City",
@@ -100,7 +100,7 @@
       "name": "Can I book hourly service in Montréal?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes — choose “By the hour” (minimum 3 hours). Vehicle minimums may apply."
+        "text": "Yes — choose “By the hour” (minimum 1 hour). Vehicle minimums may apply."
       }
     },
     {
@@ -1566,19 +1566,6 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
   border: 1px solid rgba(11,18,32,.14) !important;
 }
 
-
-/* Fix MT visibility */
-.logo{ color:#ffffff !important; }
-.logo{ text-shadow: 0 1px 0 rgba(0,0,0,.35); }
-
-
-/* Drawer open state */
-.drawer{ transform: translateX(-110%); transition: transform .25s ease; }
-.drawer.open{ transform: translateX(0); }
-.nav-overlay{ opacity:0; pointer-events:none; transition: opacity .2s ease; }
-.nav-overlay.open{ opacity:1; pointer-events:auto; }
-body.nav-open{ overflow:hidden; }
-
 </style>
 <link href="https://maps.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://maps.gstatic.com" rel="preconnect"/>
@@ -1656,9 +1643,9 @@ body.nav-open{ overflow:hidden; }
 <aside aria-label="Search booking" class="booking-card" id="booking">
 <div class="tabs">
 <button aria-selected="true" class="tab active" data-i18n="tab_oneway" id="tabOneWay" type="button">One way</button>
-<button aria-selected="false" class="tab" data-i18n="tab_hourly" id="tabHourly" type="button">By the hour (min 3h)</button>
+<button aria-selected="false" class="tab" data-i18n="tab_hourly" id="tabHourly" type="button">By the hour (min 1h)</button>
 </div>
-<div class="tabhint" data-i18n-html="tab_hint_html">Need a chauffeur for events, shopping or a night out? Choose <b>By the hour</b> (minimum 3 hours).</div>
+<div class="tabhint" data-i18n-html="tab_hint_html">Need a chauffeur for events, shopping or a night out? Choose <b>By the hour</b> (minimum 1 hour).</div>
 <div class="book-body">
 <div aria-hidden="true" class="stepbar">
 <div class="stepdot"><i></i></div>
@@ -3630,8 +3617,8 @@ function getQcCorridorBounds(){
       badge_cities: "Mont-Tremblant • Montréal • Ottawa",
 
       tab_oneway: "One way",
-      tab_hourly: "By the hour (min 3h)",
-      tab_hint_html: "Need a chauffeur for events, shopping or a night out? Choose <b>By the hour</b> (minimum 3 hours).",
+      tab_hourly: "By the hour (min 1h)",
+      tab_hint_html: "Need a chauffeur for events, shopping or a night out? Choose <b>By the hour</b> (minimum 1 hour).",
       step_1of3: "Step 1 of 3",
 
       ph_from: "From: address, airport, hotel…",
@@ -3683,7 +3670,7 @@ function getQcCorridorBounds(){
       btn_close: "Close",
 
       fleet_title: "Our Fleet",
-      fleet_sub_html: "Premium vehicles for Mont-Tremblant travel. <b>minimum 3 hours (hourly)</b> applies to all vehicles.",
+      fleet_sub_html: "Premium vehicles for Mont-Tremblant travel. <b>Minimum 1 hour (hourly)</b> applies to all vehicles.",
       unit_hour: "hour",
       min_hours_html: "{n}-hour minimum",
 
@@ -4011,215 +3998,68 @@ function getQcCorridorBounds(){
 
 <a class="float-book" href="booking.html" data-i18n="float_book" aria-label="Book online"><span class="mono">MT</span><span class="label" data-i18n="float_book">Book online</span></a>
 
-<script>
-
-/* Mobile drawer (hamburger) */
-(function(){
-  const btn = document.querySelector('.menu-toggle');
-  const drawer = document.querySelector('.drawer');
-  const overlay = document.querySelector('.nav-overlay');
-  if(!btn || !drawer || !overlay) return;
-
-  function openNav(){
-    drawer.classList.add('open');
-    overlay.classList.add('open');
-    btn.setAttribute('aria-expanded','true');
-    document.body.classList.add('nav-open');
-  }
-  function closeNav(){
-    drawer.classList.remove('open');
-    overlay.classList.remove('open');
-    btn.setAttribute('aria-expanded','false');
-    document.body.classList.remove('nav-open');
-  }
-  btn.addEventListener('click', function(e){
-    e.preventDefault();
-    const isOpen = drawer.classList.contains('open');
-    if(isOpen) closeNav(); else openNav();
-  });
-  overlay.addEventListener('click', closeNav);
-
-  // close after selecting a link; smooth scroll for in-page anchors
-  drawer.querySelectorAll('a').forEach(a=>{
-    a.addEventListener('click', (e)=>{
-      const href = a.getAttribute('href') || '';
-      if(href.startsWith('#')){
-        e.preventDefault();
-        closeNav();
-        const target = document.querySelector(href);
-        if(target){
-          target.scrollIntoView({behavior:'smooth', block:'start'});
-        } else {
-          location.hash = href;
-        }
-      } else {
-        // normal navigation, but close drawer for better UX
-        closeNav();
-      }
-    });
-  });
-
-  // close on ESC
-  document.addEventListener('keydown', (e)=>{
-    if(e.key === 'Escape') closeNav();
-  });
-})();
-
-</script>
 
 <script>
-(function(){
-  const MIN_HOURLY_HOURS = 3;
-  const LEAD_TIME_MINUTES = 120;
+(function () {
+  const LEAD_MINUTES = 120;
 
   function pad(n){ return String(n).padStart(2,'0'); }
-  function toTimeStr(d){ return pad(d.getHours()) + ":" + pad(d.getMinutes()); }
-  function toDateStr(d){ return d.getFullYear() + "-" + pad(d.getMonth()+1) + "-" + pad(d.getDate()); }
+  function dateStr(d){ return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
+  function timeStr(d){ return `${pad(d.getHours())}:${pad(d.getMinutes())}`; }
 
-  function getEls(){
-    return {
-      modeHourly: document.querySelector('[data-mode="hourly"], #mode-hourly, input[name="mode"][value="hourly"]'),
-      modeOneWay: document.querySelector('[data-mode="oneway"], #mode-oneway, input[name="mode"][value="oneway"]'),
-      hours: document.querySelector('#hours, select[name="hours"], input[name="hours"]'),
-      time: document.querySelector('input[type="time"]#time, input[type="time"][name="time"], input[type="time"]'),
-      date: document.querySelector('input[type="date"]#date, input[type="date"][name="date"], input[type="date"]'),
-      form: document.querySelector('form#booking-form, form[action^="mailto:"], form')
-    };
+  function pick(sel){ return document.querySelector(sel); }
+  function getDateEl(){
+    return pick('input[type="date"]#date') || pick('input[type="date"][name="date"]') || pick('input[type="date"]');
   }
-
-  function isHourlySelected(){
-    const hourlyBtn = document.querySelector('.seg button[aria-selected="true"][data-value="hourly"], .seg button.active[data-value="hourly"]');
-    if(hourlyBtn) return true;
-    const hourlyRadio = document.querySelector('input[name="tripType"]:checked, input[name="mode"]:checked');
-    if(hourlyRadio && /hour/i.test(hourlyRadio.value)) return true;
-    const tab = document.querySelector('[data-tab].active');
-    if(tab && /hour/i.test(tab.dataset.tab)) return true;
-    return false;
-  }
-
-  function enforceMinHours(){
-    const {hours} = getEls();
-    if(!hours) return;
-    if(isHourlySelected()){
-      if(hours.tagName === "SELECT"){
-        // ensure options include >=3
-        const vals = [...hours.options].map(o=>parseInt(o.value,10)).filter(v=>!isNaN(v));
-        if(vals.length){
-          const minVal = Math.min(...vals);
-          if(minVal < MIN_HOURLY_HOURS){
-            // disable too-small options
-            [...hours.options].forEach(o=>{
-              const v = parseInt(o.value,10);
-              if(!isNaN(v) && v < MIN_HOURLY_HOURS) o.disabled = true;
-            });
-          }
-        }
-        if(parseInt(hours.value||"0",10) < MIN_HOURLY_HOURS){
-          // pick first enabled option >=3
-          const opt = [...hours.options].find(o=>!o.disabled && parseInt(o.value,10) >= MIN_HOURLY_HOURS);
-          if(opt) hours.value = opt.value;
-        }
-      }else{
-        hours.min = String(MIN_HOURLY_HOURS);
-        if(parseFloat(hours.value || "0") < MIN_HOURLY_HOURS){
-          hours.value = String(MIN_HOURLY_HOURS);
-        }
-      }
-    }else{
-      // don't force for one-way
-      if(hours.tagName !== "SELECT"){
-        hours.removeAttribute("min");
-      }
-    }
+  function getTimeEl(){
+    return pick('input[type="time"]#time') || pick('input[type="time"][name="time"]') || pick('input[type="time"]');
   }
 
   function enforceLeadTime(){
-    const {time, date} = getEls();
-    if(!time) return;
+    const dateEl = getDateEl();
+    const timeEl = getTimeEl();
+    if(!timeEl) return;
 
     const now = new Date();
-    const min = new Date(now.getTime() + LEAD_TIME_MINUTES*60*1000);
+    const min = new Date(now.getTime() + LEAD_MINUTES * 60 * 1000);
 
-    // If there's a date input, set min date to today
-    if(date){
-      date.min = toDateStr(now);
-      if(!date.value){
-        date.value = toDateStr(now);
-      }
-      // If selected date is today, min time is lead time; otherwise, no min time.
-      function updateMinTime(){
-        const selected = date.value ? new Date(date.value + "T00:00:00") : null;
-        const isToday = selected && selected.toDateString() === now.toDateString();
+    if(dateEl){
+      dateEl.min = dateStr(now);
+      if(!dateEl.value) dateEl.value = dateStr(now);
+
+      function update(){
+        const selectedDate = new Date(dateEl.value + "T00:00:00");
+        const isToday = selectedDate.toDateString() === now.toDateString();
+
         if(isToday){
-          time.min = toTimeStr(min);
-          if(!time.value || time.value < time.min){
-            time.value = time.min;
+          timeEl.min = timeStr(min);
+          if(!timeEl.value || timeEl.value < timeEl.min){
+            timeEl.value = timeEl.min;
           }
-        }else{
-          time.removeAttribute("min");
-          if(!time.value){
-            time.value = "10:00";
-          }
+        } else {
+          timeEl.removeAttribute("min");
+          if(!timeEl.value) timeEl.value = "10:00";
         }
       }
-      date.addEventListener("change", updateMinTime);
-      updateMinTime();
-    }else{
-      // No date field; just enforce time >= now+2h (best effort).
-      time.min = toTimeStr(min);
-      if(!time.value || time.value < time.min){
-        time.value = time.min;
+
+      dateEl.addEventListener("change", update);
+      timeEl.addEventListener("change", function(){
+        if(timeEl.min && timeEl.value < timeEl.min) timeEl.value = timeEl.min;
+      });
+      update();
+    } else {
+      // Best effort if no date input exists
+      timeEl.min = timeStr(min);
+      if(!timeEl.value || timeEl.value < timeEl.min){
+        timeEl.value = timeEl.min;
       }
+      timeEl.addEventListener("change", function(){
+        if(timeEl.value < timeEl.min) timeEl.value = timeEl.min;
+      });
     }
-
-    time.addEventListener("change", function(){
-      if(time.min && time.value < time.min){
-        time.value = time.min;
-      }
-    });
   }
 
-  function ensureBookingEmail(){
-    const {form} = getEls();
-    if(!form) return;
-
-    // If form already posts somewhere (server), keep it.
-    const action = form.getAttribute("action") || "";
-    // If it's a mailto form or empty, set to your email so you get the booking
-    if(!action || action.startsWith("mailto:")){
-      form.setAttribute("action", "mailto:info@monttremblantlimoservices.com");
-      form.setAttribute("method", "POST");
-      form.setAttribute("enctype", "text/plain");
-    }
-
-    // Also ensure any direct email links point to this email
-    document.querySelectorAll('a[href^="mailto:"]').forEach(a=>{
-      a.href = a.href.replace(/^mailto:[^?]+/i, "mailto:info@monttremblantlimoservices.com");
-    });
-  }
-
-  function bindModeClicks(){
-    // common segmented controls / buttons
-    document.querySelectorAll('button, a').forEach(el=>{
-      const txt = (el.textContent||"").toLowerCase();
-      if(txt.includes("by the hour") || (el.dataset && /hour/i.test(el.dataset.value||""))){
-        el.addEventListener("click", ()=>setTimeout(enforceMinHours, 0));
-      }
-      if(txt.includes("one way") || (el.dataset && /one/i.test(el.dataset.value||""))){
-        el.addEventListener("click", ()=>setTimeout(enforceMinHours, 0));
-      }
-    });
-    document.querySelectorAll('input[name="tripType"], input[name="mode"]').forEach(r=>{
-      r.addEventListener("change", enforceMinHours);
-    });
-  }
-
-  window.addEventListener("DOMContentLoaded", function(){
-    enforceMinHours();
-    enforceLeadTime();
-    ensureBookingEmail();
-    bindModeClicks();
-  });
+  document.addEventListener("DOMContentLoaded", enforceLeadTime);
 })();
 </script>
 
