@@ -1623,12 +1623,11 @@ body.nav-open .nav-overlay{ display:block; }
   header .menu-toggle{display:none !important;}
   #drawerOverlay,#mobileDrawer{display:none !important;}
 }
-
-/* Ensure hamburger only shows on mobile */
-@media (min-width: 941px){
-  header .menu-toggle{ display: none !important; }
-}
-
+  /* Desktop: hamburger not needed (top nav is visible) */
+  @media (min-width: 941px){
+    .menu-toggle{ display:none !important; }
+    .nav-overlay, .nav-drawer{ display:none !important; }
+  }
 </style>
 <link href="https://maps.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://maps.gstatic.com" rel="preconnect"/>
@@ -1636,9 +1635,9 @@ body.nav-open .nav-overlay{ display:block; }
 </head>
 <body>
 <header>
-<div id="drawerOverlay" aria-hidden="true" class="nav-overlay"></div>
+<div aria-hidden="true" class="nav-overlay"></div>
 <div class="container header-top">
-<button id="mobileMenuBtn" aria-expanded="false" aria-label="Menu" class="menu-toggle icon-pill" type="button">
+<button aria-expanded="false" aria-label="Menu" class="menu-toggle icon-pill" type="button">
 <i></i><i></i><i></i>
 </button>
 <a aria-label="Home" class="brand-link" href="index.html">
