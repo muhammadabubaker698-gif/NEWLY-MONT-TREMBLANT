@@ -1,94 +1,66 @@
-// api/create-checkout-session.js
-const Stripe = require("stripe");
+import Stripe from 'stripe';
 
-function getEnv(name) {
-  const v = process.env[name];
-  if (!v) throw new Error(`Missing env var: ${name}`);
-  return v;
-}
-
-module.exports = async (req, res) => {
-  if (req.method !== "POST") {
-    return res.status(405).send("Method Not Allowed");
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    res.status(405).json({ error: 'Method not allowed' });
+    return;
   }
 
+  const secret = process.env.STRIPE_SECRET_KEY;
+  if (!secret) {
+    res.status(500).json({ error: 'Missing STRIPE_SECRET_KEY in environment variables' });
+    return;
+  }
+
+  const stripe = new Stripe(secret, { apiVersion: '2024-06-20' });
+
   try {
-    const stripe = new Stripe(getEnv("STRIPE_SECRET_KEY"));
+    const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
+    const amount = Number(body.amount);
+    const currency = (body.currency || 'cad').toLowerCase();
+    const bookingId = body.bookingId || '';
+    const customerEmail = body.customerEmail || body.email || '';
 
-    // Vercel sometimes gives string body
-    const body = typeof req.body === "string"
-      ? JSON.parse(req.body)
-      : req.body || {};
-
-    // ✅ Support BOTH booking id names
-    const bookingId = body.bookingId || body.booking_id;
-
-    // ✅ Accept ANY price field your frontend sends
-    const amount =
-      body.amount ??
-      body.pay_now ??
-      body.pay_now_cad ??
-      body.estimate_total ??
-      body.estimate_total_cad ??
-      body.price_estimate ??
-      null;
-
-    // Default CAD
-    const currency = (body.currency || "CAD").toString().toLowerCase();
-
-    if (!bookingId) {
-      return res.status(400).json({ error: "Missing booking id" });
+    // Basic sanity checks (prevents weird values)
+    if (!Number.isFinite(amount) || amount <= 0) {
+      res.status(400).json({ error: 'Invalid amount' });
+      return;
+    }
+    // Cap to something reasonable to prevent abuse; adjust as needed
+    if (amount > 20000) {
+      res.status(400).json({ error: 'Amount too large' });
+      return;
     }
 
-    if (!amount || Number(amount) <= 0) {
-      return res.status(400).json({ error: "Invalid amount" });
-    }
-
-    // Convert dollars → cents
-    const unitAmount = Math.round(Number(amount) * 100);
+    const origin = req.headers.origin || `https://${req.headers.host}`;
 
     const session = await stripe.checkout.sessions.create({
-      mode: "payment",
-      payment_method_types: ["card"],
-
+      mode: 'payment',
+      payment_method_types: ['card'],
+      customer_email: customerEmail || undefined,
       line_items: [
         {
           price_data: {
             currency,
+            unit_amount: Math.round(amount * 100),
             product_data: {
-              name: "Mont Tremblant Limo Booking",
+              name: 'Mont Tremblant Limo — Booking Deposit',
+              description: bookingId ? `Booking ID: ${bookingId}` : undefined,
             },
-            unit_amount: unitAmount,
           },
           quantity: 1,
         },
       ],
-
-      // VERY IMPORTANT for webhook booking match
-      client_reference_id: bookingId,
+      success_url: `${origin}/booking.html?payment=success&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/booking.html?payment=cancelled`,
       metadata: {
-        booking_id: bookingId,
-        bookingId: bookingId,
+        bookingId,
       },
-
-      success_url:
-        "https://monttremblantlimoservices.com/?paid=1&bookingId=" +
-        encodeURIComponent(bookingId),
-
-      cancel_url:
-        "https://monttremblantlimoservices.com/?canceled=1&bookingId=" +
-        encodeURIComponent(bookingId),
     });
 
-    return res.status(200).json({
-      url: session.url,
-      id: session.id,
-    });
-
+    res.status(200).json({ url: session.url });
   } catch (err) {
-    console.error("Stripe session error:", err);
-    return res.status(500).json({
-      error: err.message || "Stripe session failed",
-    });
+    console.error('Stripe session error:', err);
+    res.status(500).json({ error: err?.message || 'Failed to create Stripe session' });
   }
-};
+}
