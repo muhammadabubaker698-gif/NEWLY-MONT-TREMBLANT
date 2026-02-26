@@ -34,6 +34,10 @@ function getEnv(name) {
   return v;
 }
 
+function getEnvOptional(name) {
+  return process.env[name] || "";
+}
+
 function money(n, currency = "CAD") {
   const rounded = Math.round(Number(n) || 0);
   return `${currency}$${rounded}`;
@@ -110,11 +114,10 @@ module.exports = async (req, res) => {
       getEnv("SUPABASE_SERVICE_ROLE_KEY")
     );
 
-    const resend = new Resend(getEnv("RESEND_API_KEY"));
-
     const body = await readJsonBody(req);
     const b = BookingSchema.parse(body);
 
+    // 1) Save booking in DB (THIS MUST WORK)
     const { data: inserted, error } = await supabase
       .from("bookings")
       .insert([b])
@@ -125,43 +128,48 @@ module.exports = async (req, res) => {
 
     const bookingId = inserted.id;
 
-    // ⭐ PROFESSIONAL SENDER
-    const from = "Mont Tremblant Limo <bookings@monttremblantlimoservices.com>";
+    // 2) Email sending (THIS MUST NEVER BLOCK STRIPE)
+    let emailWarning = null;
 
-    // ⭐ REPLIES GO TO YOUR GMAIL
-    const replyTo = "muhammadabubaker698@gmail.com";
+    try {
+      const resendKey = getEnvOptional("RESEND_API_KEY");
+      if (!resendKey) throw new Error("Missing RESEND_API_KEY");
 
-    const adminTo = process.env.ADMIN_NOTIFY_EMAIL;
+      const resend = new Resend(resendKey);
 
-    // =========================
-    // CUSTOMER EMAIL
-    // =========================
-    await resend.emails.send({
-      from,
-      to: b.customer_email,
-      reply_to: replyTo,
-      bcc: adminTo || undefined,
-      subject: "We received your booking request",
-      html: customerEmailHtml(b, bookingId),
-    });
+      const from =
+        process.env.RESEND_FROM ||
+        "Mont Tremblant Limo <bookings@monttremblantlimoservices.com>";
 
-    // =========================
-    // ADMIN EMAIL
-    // =========================
-    if (adminTo) {
+      const replyTo =
+        process.env.REPLY_TO_EMAIL || "muhammadabubaker698@gmail.com";
+
+      const adminTo = process.env.ADMIN_NOTIFY_EMAIL;
+
       await resend.emails.send({
         from,
-        to: adminTo,
+        to: b.customer_email,
         reply_to: replyTo,
-        subject: `New booking: ${bookingId}`,
-        html: adminEmailHtml(b, bookingId),
+        bcc: adminTo || undefined,
+        subject: "We received your booking request",
+        html: customerEmailHtml(b, bookingId),
       });
-    } else {
-      console.warn("ADMIN_NOTIFY_EMAIL missing");
+
+      if (adminTo) {
+        await resend.emails.send({
+          from,
+          to: adminTo,
+          reply_to: replyTo,
+          subject: `New booking: ${bookingId}`,
+          html: adminEmailHtml(b, bookingId),
+        });
+      }
+    } catch (err) {
+      console.error("RESEND FAILED (booking saved, continuing):", err);
+      emailWarning = err?.message || "Email send failed";
     }
 
-    return res.status(200).json({ ok: true, id: bookingId });
-
+    return res.status(200).json({ ok: true, id: bookingId, emailWarning });
   } catch (e) {
     console.error("BOOKINGS ERROR:", e);
     return res.status(400).json({
