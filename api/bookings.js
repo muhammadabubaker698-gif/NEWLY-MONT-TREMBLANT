@@ -1,14 +1,13 @@
-// /api/bookings.js  (Vercel Node Serverless - CommonJS)
+// /api/bookings.js (Vercel Serverless - CommonJS)
 
 const { createClient } = require("@supabase/supabase-js");
 const { Resend } = require("resend");
 
 function readBody(req) {
   if (req.body && typeof req.body === "object") return Promise.resolve(req.body);
-
   return new Promise((resolve, reject) => {
     let data = "";
-    req.on("data", (chunk) => (data += chunk));
+    req.on("data", (c) => (data += c));
     req.on("end", () => {
       try {
         resolve(JSON.parse(data || "{}"));
@@ -40,7 +39,7 @@ module.exports = async (req, res) => {
 
     const body = await readBody(req);
 
-    // ✅ Save booking FIRST
+    // 1) Save booking (must succeed)
     const { data, error } = await supabase
       .from("bookings")
       .insert([body])
@@ -49,7 +48,6 @@ module.exports = async (req, res) => {
 
     if (error) {
       console.error("Supabase insert error:", error);
-      // Return exact error so you can see it on frontend too
       return res.status(400).json({
         ok: false,
         error: error.message,
@@ -59,12 +57,10 @@ module.exports = async (req, res) => {
 
     const bookingId = data.id;
 
-    // ✅ Email second (never block)
-    let emailWarning = null;
+    // 2) Email (never block Stripe)
     try {
       const resendKey = process.env.RESEND_API_KEY;
       if (!resendKey) throw new Error("Missing RESEND_API_KEY");
-
       const resend = new Resend(resendKey);
 
       const from =
@@ -79,26 +75,18 @@ module.exports = async (req, res) => {
       await resend.emails.send({
         from,
         to: body.customer_email,
-        replyTo, // ✅ correct Resend field name
+        replyTo,
         subject: "We received your booking request",
         html: `<p>Thanks! Your booking ID is <b>${bookingId}</b>.</p>`,
         bcc: adminTo || undefined,
       });
     } catch (e) {
-      console.error("Resend failed (booking saved):", e);
-      emailWarning = e?.message || "Email failed";
+      console.error("Resend failed (booking saved, continuing):", e);
     }
 
-    return res.status(200).json({
-      ok: true,
-      id: bookingId,
-      emailWarning,
-    });
+    return res.status(200).json({ ok: true, id: bookingId });
   } catch (e) {
     console.error("BOOKINGS API CRASH:", e);
-    return res.status(500).json({
-      ok: false,
-      error: e?.message || "Server error",
-    });
+    return res.status(500).json({ ok: false, error: e.message || "Server error" });
   }
 };
