@@ -125,40 +125,38 @@ module.exports = async (req, res) => {
 
     const bookingId = inserted.id;
 
-    // ⭐ PROFESSIONAL SENDER
-    const from = process.env.RESEND_FROM || "Mont Tremblant Limo <bookings@monttremblantlimoservices.com>";
+    // IMPORTANT: make sure RESEND_FROM is set in Vercel to a verified sender like:
+    // Mont Tremblant Limo <info@monttremblantlimoservices.com>
+    const from =
+      process.env.RESEND_FROM ||
+      "Mont Tremblant Limo <info@monttremblantlimoservices.com>";
 
-    // ⭐ REPLIES GO TO (your inbox)
-    const replyTo = process.env.REPLY_TO_EMAIL || "muhammadabubaker698@gmail.com";
+    // Replies go to your inbox
+    const replyTo =
+      process.env.REPLY_TO_EMAIL || "muhammadabubaker698@gmail.com";
 
     const adminTo = process.env.ADMIN_NOTIFY_EMAIL;
 
-    // =========================
-    // EMAILS (do NOT block Stripe / checkout)
-    // =========================
+    // ✅ Never fail the booking request if email fails
     let emailWarning = null;
     try {
-      // CUSTOMER EMAIL
       await resend.emails.send({
         from,
         to: b.customer_email,
-        reply_to: replyTo,
+        replyTo,
         bcc: adminTo || undefined,
         subject: "We received your booking request",
         html: customerEmailHtml(b, bookingId),
       });
 
-      // ADMIN EMAIL
       if (adminTo) {
         await resend.emails.send({
           from,
           to: adminTo,
-          reply_to: replyTo,
+          replyTo,
           subject: `New booking: ${bookingId}`,
           html: adminEmailHtml(b, bookingId),
         });
-      } else {
-        console.warn("ADMIN_NOTIFY_EMAIL missing");
       }
     } catch (err) {
       console.error("RESEND FAILED (booking saved, continuing):", err);
@@ -166,7 +164,6 @@ module.exports = async (req, res) => {
     }
 
     return res.status(200).json({ ok: true, id: bookingId, emailWarning });
-
   } catch (e) {
     console.error("BOOKINGS ERROR:", e);
     return res.status(400).json({
