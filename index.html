@@ -1578,7 +1578,7 @@ body.nav-open .nav-overlay{ display:block; }
 
 
 /* MOBILE_NAV_OVERRIDES_V3 */
-.nav-overlay, .drawer { display: none; }
+/* (fixed) Don't globally hide; we hide via opacity/transform and only show on mobile */
 
 @media (max-width: 940px) {
   #drawerOverlay.nav-overlay{
@@ -1635,9 +1635,8 @@ body.nav-open .nav-overlay{ display:block; }
 </head>
 <body>
 <header>
-<div aria-hidden="true" class="nav-overlay" id="drawerOverlay"></div>
 <div class="container header-top">
-<button id="mobileMenuBtn" aria-expanded="false" aria-label="Menu" class="menu-toggle icon-pill" type="button">
+<button aria-expanded="false" aria-label="Menu" class="menu-toggle icon-pill" type="button" id="mobileMenuBtn">
 <i></i><i></i><i></i>
 </button>
 <a aria-label="Home" class="brand-link" href="index.html">
@@ -1676,6 +1675,7 @@ body.nav-open .nav-overlay{ display:block; }
 <a href="https://wa.me/14383203733" rel="noreferrer" target="_blank">WhatsApp</a>
 </nav>
 </header>
+<div aria-hidden="true" class="nav-overlay" id="drawerOverlay"></div>
 <div class="hero-wrap">
 <div class="hero-inner container">
 <div class="hero-left">
@@ -4285,11 +4285,12 @@ function getQcCorridorBounds(){
 <a aria-label="Book online" class="float-book" data-i18n="float_book" href="booking.html"><span class="mono">MT</span><span class="label" data-i18n="float_book">Book online</span></a>
 
 
-<script>// Mobile drawer nav — v3
+<script>
+// Mobile drawer nav — v4 (fixed IDs + reliable open/close + scroll to anchors)
 (() => {
-  const btn = document.getElementById('mobileMenuBtn');
-  const drawer = document.getElementById('mobileDrawer');
-  const overlay = document.getElementById('drawerOverlay');
+  const btn = document.getElementById('mobileMenuBtn') || document.querySelector('header .menu-toggle');
+  const drawer = document.getElementById('mobileDrawer') || document.querySelector('nav.drawer');
+  const overlay = document.getElementById('drawerOverlay') || document.querySelector('.nav-overlay#drawerOverlay');
 
   if (!btn || !drawer || !overlay) return;
 
@@ -4311,6 +4312,7 @@ function getQcCorridorBounds(){
   };
 
   btn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); toggle(); });
+
   overlay.addEventListener('click', (e) => { e.preventDefault(); close(); });
 
   // Close when clicking outside drawer and button
@@ -4326,12 +4328,26 @@ function getQcCorridorBounds(){
     if (e.key === 'Escape') close();
   });
 
-  // Close after link click
-  drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => close()));
+  // Smooth scroll for in-page anchors, then close drawer
+  drawer.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const hash = a.getAttribute('href');
+      if (!hash || hash === "#") return;
+      const target = document.querySelector(hash);
+      if (!target) return;
+      e.preventDefault();
+      close();
+      setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+    });
+  });
+
+  // Close after normal link click (booking.html / services.html, etc.)
+  drawer.querySelectorAll('a:not([href^="#"])').forEach(a => a.addEventListener('click', () => close()));
 
   // If switching to desktop, ensure closed
   window.addEventListener('resize', () => {
     if (window.innerWidth > 940) close();
   });
-})();</script></body>
+})();
+</script></body>
 </html>
