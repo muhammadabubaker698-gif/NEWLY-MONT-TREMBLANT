@@ -1,63 +1,42 @@
-// api/bookings.js
+import { createClient } from '@supabase/supabase-js'
+
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+)
+
 export default async function handler(req, res) {
 
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' })
   }
 
   try {
 
-    const SUPABASE_URL = process.env.SUPABASE_URL;
-    const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const booking = req.body
 
-    if (!SUPABASE_URL || !SUPABASE_KEY) {
-      return res.status(500).json({
-        error: "Missing Supabase environment variables"
-      });
-    }
+    const { data, error } = await supabase
+      .from('bookings')
+      .insert([booking])
+      .select()
+      .single()
 
-    const booking = req.body;
-
-    const response = await fetch(
-      `${SUPABASE_URL}/rest/v1/bookings`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "apikey": SUPABASE_KEY,
-          "Authorization": `Bearer ${SUPABASE_KEY}`,
-          "Prefer": "return=minimal"
-        },
-        body: JSON.stringify({
-          name: booking.name || "",
-          email: booking.email || "",
-          phone: booking.phone || "",
-          pickup: booking.pickup || "",
-          dropoff: booking.dropoff || "",
-          date: booking.date || "",
-          time: booking.time || "",
-          vehicle: booking.vehicle || "",
-          price: booking.price || 0
-        })
-      }
-    );
-
-    if (!response.ok) {
-      const text = await response.text();
-      return res.status(500).json({
-        error: text
-      });
+    if (error) {
+      console.error(error)
+      return res.status(500).json({ error: error.message })
     }
 
     return res.status(200).json({
-      success: true
-    });
+      success: true,
+      booking: data
+    })
 
   } catch (err) {
 
+    console.error(err)
+
     return res.status(500).json({
       error: err.message
-    });
-
+    })
   }
 }
