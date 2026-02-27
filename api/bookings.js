@@ -1,100 +1,108 @@
-// /api/bookings.js  (ESM)
-// Creates a booking record in Supabase and returns bookingId.
-import { createClient } from '@supabase/supabase-js';
+// /api/bookings.js (Vercel Serverless Function)
+// ESM module syntax (works when your project uses "type": "module")
 
-function getEnv(name) {
+import { createClient } from "@supabase/supabase-js";
+import { z } from "zod";
+
+function env(name) {
   const v = process.env[name];
   if (!v) throw new Error(`Missing env var: ${name}`);
   return v;
 }
 
-function parseJsonBody(req) {
-  // Vercel may already parse JSON into req.body.
-  if (req.body && typeof req.body === 'object') return req.body;
-  if (typeof req.body === 'string') {
-    try { return JSON.parse(req.body); } catch { /* fallthrough */ }
-  }
-  return null;
+const BookingSchema = z.object({
+  mode: z.enum(["one_way", "hourly"]),
+
+  pickup_text: z.string().min(3),
+  dropoff_text: z.string().optional().nullable(),
+
+  pickup_lat: z.number().optional().nullable(),
+  pickup_lng: z.number().optional().nullable(),
+  dropoff_lat: z.number().optional().nullable(),
+  dropoff_lng: z.number().optional().nullable(),
+
+  pickup_airport: z.string().optional().nullable(),
+  dropoff_airport: z.string().optional().nullable(),
+
+  pickup_datetime: z.string().min(5), // ISO string from client
+  hours: z.number().int().positive().optional().nullable(),
+
+  vehicle_key: z.string().min(1),
+
+  estimate_cents: z.number().int().nonnegative(),
+  currency: z.string().default("cad"),
+
+  customer_name: z.string().min(1),
+  customer_email: z.string().email(),
+  customer_phone: z.string().min(6),
+
+  passengers: z.number().int().nonnegative().optional().nullable(),
+  luggage: z.number().int().nonnegative().optional().nullable(),
+  notes: z.string().optional().nullable(),
+});
+
+function json(res, code, body) {
+  res.statusCode = code;
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
+  res.end(JSON.stringify(body));
 }
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+  // CORS (safe default)
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  if (req.method === "OPTIONS") return json(res, 200, { ok: true });
+
+  if (req.method !== "POST") return json(res, 405, { error: "Method not allowed" });
 
   try {
-    const body = parseJsonBody(req);
-    if (!body) return res.status(400).json({ error: 'Invalid JSON body' });
+    const supabase = createClient(env("SUPABASE_URL"), env("SUPABASE_SERVICE_ROLE_KEY"), {
+      auth: { persistSession: false },
+    });
 
-    const supabase = createClient(
-      getEnv('SUPABASE_URL'),
-      // Use service-role key so inserts work without RLS policies.
-      getEnv('SUPABASE_SERVICE_ROLE_KEY'),
-      {
-        auth: {
-          persistSession: false,
-          autoRefreshToken: false,
-          detectSessionInUrl: false,
-        },
-      }
-    );
+    // Vercel usually parses JSON body automatically. Still guard it.
+    const rawBody = req.body ?? {};
+    const parsed = BookingSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return json(res, 400, {
+        error: "Invalid booking payload",
+        details: parsed.error.issues,
+      });
+    }
 
-    // IMPORTANT: Insert as many fields as possible (matches most schemas).
-    // If your table has extra NOT NULL columns, add them here.
-    const insertRow = {
-      mode: body.mode ?? null,
-      pickup_text: body.pickup_text ?? null,
-      dropoff_text: body.dropoff_text ?? null,
-      pickup_datetime: body.pickup_datetime ?? null,
-      hours: body.hours ?? null,
-      vehicle_key: body.vehicle_key ?? null,
+    const b = parsed.data;
 
-      customer_name: body.customer_name ?? null,
-      customer_email: body.customer_email ?? null,
-      customer_phone: body.customer_phone ?? null,
-      passengers: body.passengers ?? null,
-      luggage: body.luggage ?? null,
-      notes: body.notes ?? null,
-
-      // optional geo / ids
-      pickup_lat: body.pickup_lat ?? null,
-      pickup_lng: body.pickup_lng ?? null,
-      dropoff_lat: body.dropoff_lat ?? null,
-      dropoff_lng: body.dropoff_lng ?? null,
-      pickup_place_id: body.pickup_place_id ?? null,
-      dropoff_place_id: body.dropoff_place_id ?? null,
-
-      // pricing
-      amount_cad: body.amount_cad ?? body.amount ?? null,
-      currency: body.currency ?? 'cad',
-
-      payment_status: body.payment_status ?? 'unpaid',
-    };
-
+    // Insert and return the new booking id
     const { data, error } = await supabase
-      .from('bookings')
-      .insert(insertRow)
-      .select('id')
+      .from("bookings")
+      .insert([
+        {
+          ...b,
+          // store as timestamptz (Supabase/Postgres will parse ISO)
+          pickup_datetime: b.pickup_datetime,
+          payment_status: "unpaid",
+        },
+      ])
+      .select("id")
       .single();
 
     if (error) {
-      console.error('SUPABASE INSERT ERROR:', error);
-      return res.status(500).json({
-        ok: false,
-        error: {
+      // IMPORTANT: return the real DB error to the browser (so you can debug quickly)
+      return json(res, 500, {
+        error: "Supabase insert failed",
+        supabase: {
           message: error.message,
-          details: error.details ?? null,
-          hint: error.hint ?? null,
-          code: error.code ?? null,
+          details: error.details,
+          hint: error.hint,
+          code: error.code,
         },
       });
     }
 
-    const bookingId = data?.id ?? null;
-    return res.status(200).json({ ok: true, bookingId });
-  } catch (err) {
-    console.error('API /bookings FAILED:', err);
-    return res.status(500).json({ ok: false, error: { message: err?.message || String(err) } });
+    return json(res, 200, { ok: true, id: data.id });
+  } catch (e) {
+    console.error("/api/bookings fatal:", e);
+    return json(res, 500, { error: "Server error", message: String(e?.message || e) });
   }
 }
