@@ -26,7 +26,6 @@ export default async function handler(req, res) {
         notes: body.notes || null,
         pickup_address: body.pickup_address || null,
         dropoff_address: body.dropoff_address || null,
-        price: body.price || null,
         payment_status: 'unpaid'
       }])
       .select()
@@ -43,7 +42,13 @@ export default async function handler(req, res) {
     });
 
   } catch (err) {
+
     console.error(err);
-    return res.status(500).json({ error: err.message });
+
+    return res.status(500).json({
+      error: err.message
+    });
+
   }
+
 }
