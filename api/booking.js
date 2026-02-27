@@ -1,3 +1,3 @@
-// api/booking.js  (ESM)
-// Keep old endpoint working by forwarding to /api/bookings
-export { default } from "./bookings.js";
+// /api/booking.js
+// Backwards-compatible alias: some pages call /api/booking (singular).
+module.exports = require("./bookings");

@@ -1,81 +1,57 @@
-// api/create-checkout-session.js (ESM)
-// No dependencies. Uses native fetch to Stripe API.
-// Required env var on Vercel:
-//   STRIPE_SECRET_KEY
-// Recommended:
-//   SITE_URL   e.g. https://monttremblantlimoservices.com
+// /api/create-checkout-session.js  (ESM)
+// Creates a Stripe Checkout Session for a booking.
+import Stripe from 'stripe';
+
+function getEnv(name) {
+  const v = process.env[name];
+  if (!v) throw new Error(`Missing env var: ${name}`);
+  return v;
+}
 
 export default async function handler(req, res) {
-  res.setHeader("Content-Type", "application/json");
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Headers", "content-type");
-  res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
-
-  if (req.method === "OPTIONS") return res.status(204).end();
-  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST');
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
 
   try {
-    const secret = process.env.STRIPE_SECRET_KEY;
-    if (!secret) return res.status(500).json({ error: "Missing STRIPE_SECRET_KEY" });
+    const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    const bookingId = body?.bookingId || body?.booking_id;
+    const amountCad = Number(body?.amount_cad ?? body?.amount ?? 0);
 
-    const site =
-      process.env.SITE_URL ||
-      req.headers?.origin ||
-      `https://${req.headers?.host}` ||
-      "https://monttremblantlimoservices.com";
-
-    const body = (req.body && typeof req.body === "object") ? req.body : {};
-
-    const amount =
-      Number(body.amount) ||
-      Number(body.pay_now) ||
-      Number(body.pay_now_cad) ||
-      Number(body.estimate_total) ||
-      Number(body.estimate_total_cad) ||
-      0;
-
-    if (!Number.isFinite(amount) || amount <= 0) {
-      return res.status(400).json({ error: "Invalid amount" });
+    if (!bookingId) return res.status(400).json({ error: 'Missing bookingId' });
+    if (!Number.isFinite(amountCad) || amountCad <= 0) {
+      return res.status(400).json({ error: 'Invalid amount' });
     }
 
-    const currency = String(body.currency || "cad").toLowerCase();
-    const bookingId = String(body.booking_id || body.bookingId || "");
-    const customerEmail = String(body.customer_email || body.customerEmail || body.email || "");
+    const stripe = new Stripe(getEnv('STRIPE_SECRET_KEY'));
 
-    const unitAmount = Math.round(amount * 100);
+    const siteUrl = process.env.SITE_URL || 'https://monttremblantlimoservices.com';
 
-    const payload = new URLSearchParams();
-    payload.append("mode", "payment");
-    payload.append("success_url", `${site}/booking.html?payment=success&session_id={CHECKOUT_SESSION_ID}`);
-    payload.append("cancel_url", `${site}/booking.html?payment=cancelled`);
-
-    if (customerEmail) payload.append("customer_email", customerEmail);
-
-    payload.append("line_items[0][quantity]", "1");
-    payload.append("line_items[0][price_data][currency]", currency);
-    payload.append("line_items[0][price_data][unit_amount]", String(unitAmount));
-    payload.append("line_items[0][price_data][product_data][name]", "Mont Tremblant Limo — Booking Payment");
-    if (bookingId) payload.append("metadata[booking_id]", bookingId);
-
-    const r = await fetch("https://api.stripe.com/v1/checkout/sessions", {
-      method: "POST",
-      headers: {
-        "Authorization": "Bearer " + secret,
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: payload.toString(),
+    const session = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: 'cad',
+            product_data: {
+              name: 'Mont Tremblant Limo — Booking Payment',
+            },
+            unit_amount: Math.round(amountCad * 100),
+          },
+          quantity: 1,
+        },
+      ],
+      success_url: `${siteUrl}/booking-success.html?bookingId=${encodeURIComponent(bookingId)}`,
+      cancel_url: `${siteUrl}/booking-cancelled.html?bookingId=${encodeURIComponent(bookingId)}`,
+      metadata: { booking_id: String(bookingId) },
+      client_reference_id: String(bookingId),
     });
 
-    const text = await r.text();
-    let data = null;
-    try { data = JSON.parse(text); } catch (_) {}
-
-    if (!r.ok) {
-      return res.status(400).json({ error: "Stripe create session failed", status: r.status, details: data || text });
-    }
-
-    return res.status(200).json({ id: data.id, url: data.url });
-  } catch (e) {
-    return res.status(500).json({ error: e?.message || "Server error" });
+    return res.status(200).json({ url: session.url, id: session.id });
+  } catch (err) {
+    console.error('CREATE CHECKOUT SESSION ERROR:', err);
+    return res.status(500).json({ error: err?.message || String(err) });
   }
 }
