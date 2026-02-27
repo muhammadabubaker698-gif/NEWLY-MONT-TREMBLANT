@@ -2784,23 +2784,23 @@ if (input.value.trim().length >= 2) doSearch();
       statusEl.textContent = "Saving your booking…";
 
       // 1) Save booking + send emails
-      // Vercel Serverless Function: /api/booking
+      // 1) Save booking + send emails
+      // Vercel Serverless Function: /api/bookings (plural)
       const saveRes = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type":"application/json" },
         body: JSON.stringify(dbBooking)
       });
 
-      // Read as text first (Vercel sometimes returns HTML on crashes)
-      const saveRaw = await saveRes.text();
+      // Try to read JSON, but if the function crashes Vercel may return HTML.
       let saveData = {};
-      try { saveData = JSON.parse(saveRaw || "{}"); } catch(_) { saveData = { raw: saveRaw }; }
+      const saveText = await saveRes.text().catch(()=> "");
+      try { saveData = JSON.parse(saveText || "{}"); } catch { saveData = {}; }
 
       if (!saveRes.ok || !saveData?.ok) {
-        const msg = saveData?.error || saveData?.message || (saveRaw ? String(saveRaw).slice(0, 200) : "Unable to save booking.");
+        const msg = saveData?.error || saveData?.message || (saveText ? saveText.slice(0, 180) : "") || "Unable to save booking."; 
         throw new Error(msg);
       }
-
       checkoutBooking.booking_id = saveData.id;
 
       // 2) Start Stripe checkout (if endpoint exists)
