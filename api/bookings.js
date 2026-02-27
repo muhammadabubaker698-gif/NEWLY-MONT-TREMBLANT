@@ -13,26 +13,39 @@ export default async function handler(req, res) {
       process.env.SUPABASE_SERVICE_ROLE_KEY
     );
 
-    const body = req.body;
+    const {
+      name,
+      email,
+      phone,
+      pickup_location,
+      dropoff_location,
+      vehicle,
+      price,
+      passengers,
+      luggage,
+      notes
+    } = req.body;
 
     const { data, error } = await supabase
       .from('bookings')
       .insert([{
-        name: body.name,
-        phone: body.phone,
-        email: body.email,
-        passengers: body.passengers || null,
-        luggage: body.luggage || null,
-        notes: body.notes || null,
-        pickup_address: body.pickup_address || null,
-        dropoff_address: body.dropoff_address || null,
+        name,
+        email,
+        phone,
+        pickup_location,
+        dropoff_location,
+        vehicle,
+        price,
+        passengers,
+        luggage,
+        notes,
         payment_status: 'unpaid'
       }])
       .select()
       .single();
 
     if (error) {
-      console.error(error);
+      console.error("Supabase insert error:", error);
       return res.status(500).json({ error: error.message });
     }
 
@@ -42,13 +55,7 @@ export default async function handler(req, res) {
     });
 
   } catch (err) {
-
-    console.error(err);
-
-    return res.status(500).json({
-      error: err.message
-    });
-
+    console.error("API crash:", err);
+    return res.status(500).json({ error: err.message });
   }
-
 }
