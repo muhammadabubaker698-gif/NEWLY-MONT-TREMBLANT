@@ -1,96 +1,128 @@
-// /api/bookings.js
-// Works in both ESM + CommonJS environments because it uses only fetch.
-// It inserts into Supabase via REST and returns { ok: true, id, booking }.
+// api/bookings.js (Vercel Serverless Function - ESM)
+// IMPORTANT: Your project appears to be running in ESM ("type": "module").
+// This file uses ESM syntax and `export default`.
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+import { createClient } from "@supabase/supabase-js";
+import { Resend } from "resend";
 
-function json(res, status, data) {
+function json(res, status, body) {
   res.statusCode = status;
   res.setHeader("Content-Type", "application/json; charset=utf-8");
-  res.end(JSON.stringify(data));
+  // CORS (safe defaults)
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.end(JSON.stringify(body));
+}
+
+async function readJson(req) {
+  return await new Promise((resolve, reject) => {
+    let raw = "";
+    req.on("data", (chunk) => (raw += chunk));
+    req.on("end", () => {
+      try {
+        resolve(raw ? JSON.parse(raw) : {});
+      } catch (e) {
+        reject(e);
+      }
+    });
+  });
 }
 
 export default async function handler(req, res) {
   try {
-    if (req.method !== "POST") {
-      res.setHeader("Allow", "POST");
-      return json(res, 405, { error: "Method not allowed" });
-    }
+    if (req.method === "OPTIONS") return json(res, 200, { ok: true });
+    if (req.method !== "POST") return json(res, 405, { error: "Method not allowed" });
 
-    if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
+    const SUPABASE_URL = process.env.SUPABASE_URL;
+    const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const RESEND_API_KEY = process.env.RESEND_API_KEY;
+    const RESEND_FROM = process.env.RESEND_FROM;
+    const ADMIN_NOTIFY_EMAIL = process.env.ADMIN_NOTIFY_EMAIL || RESEND_FROM;
+
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
       return json(res, 500, {
-        error: "Missing env vars",
-        missing: {
-          SUPABASE_URL: !SUPABASE_URL,
-          SUPABASE_SERVICE_ROLE_KEY: !SERVICE_ROLE_KEY,
-        },
+        error: "Server misconfigured",
+        details: { message: "Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY" },
       });
     }
 
-    const body = typeof req.body === "string" ? JSON.parse(req.body) : (req.body || {});
-    // Keep payload flexible. Only send what you have.
-    const payload = {
-      name: body.name ?? body.full_name ?? null,
-      email: body.email ?? null,
-      phone: body.phone ?? null,
+    const body = await readJson(req);
 
-      pickup_text: body.pickup_text ?? body.pickup ?? null,
-      dropoff_text: body.dropoff_text ?? body.dropoff ?? null,
+    // Minimal validation (keep it permissive to avoid breaking)
+    const required = ["name", "phone", "email", "pickup_text"];
+    for (const k of required) {
+      if (!body?.[k] || String(body[k]).trim().length < 2) {
+        return json(res, 400, { error: `Missing field: ${k}` });
+      }
+    }
 
-      pickup_airport: body.pickup_airport ?? null,
-      dropoff_airport: body.dropoff_airport ?? null,
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
 
+    // IMPORTANT: Table is `public.bookings` in your screenshots, so we insert into "bookings".
+    // If your table name is different, change it here.
+    const insertRow = {
+      // core
+      name: String(body.name).trim(),
+      phone: String(body.phone).trim(),
+      email: String(body.email).trim(),
+      mode: body.mode || "one_way",
+
+      // route
+      pickup_text: body.pickup_text ?? null,
+      dropoff_text: body.dropoff_text ?? null,
+      pickup_lat: body.pickup_lat ?? null,
+      pickup_lng: body.pickup_lng ?? null,
+      dropoff_lat: body.dropoff_lat ?? null,
+      dropoff_lng: body.dropoff_lng ?? null,
+
+      // booking details
+      pickup_date: body.pickup_date ?? null,
+      pickup_time: body.pickup_time ?? null,
       passengers: body.passengers ?? null,
       luggage: body.luggage ?? null,
       notes: body.notes ?? null,
 
-      mode: body.mode ?? "one_way",
-      vehicle: body.vehicle ?? null,
+      // price
+      estimate_cad: body.estimate_cad ?? body.estimate ?? null,
 
-      date: body.date ?? null,
-      time: body.time ?? null,
-
-      price: body.price ?? body.amount ?? null,
-      currency: body.currency ?? "CAD",
-
+      // stripe linkage (optional)
+      stripe_session_id: body.stripe_session_id ?? null,
       status: body.status ?? "pending",
-      source: body.source ?? "website",
+      created_at: new Date().toISOString(),
     };
 
-    // Remove null/undefined keys to avoid column mismatch errors
-    Object.keys(payload).forEach((k) => (payload[k] == null ? delete payload[k] : null));
+    const { data, error } = await supabase
+      .from("bookings")
+      .insert([insertRow])
+      .select("id")
+      .single();
 
-    const url = `${SUPABASE_URL.replace(/\/$/, "")}/rest/v1/bookings?select=id`;
-    const r = await fetch(url, {
-      method: "POST",
-      headers: {
-        apikey: SERVICE_ROLE_KEY,
-        Authorization: `Bearer ${SERVICE_ROLE_KEY}`,
-        "Content-Type": "application/json",
-        Prefer: "return=representation",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    const text = await r.text();
-    let data;
-    try { data = text ? JSON.parse(text) : null; } catch { data = text; }
-
-    if (!r.ok) {
-      return json(res, 500, {
-        error: "Supabase insert failed",
-        status: r.status,
-        details: data,
-      });
+    if (error) {
+      // Return full Supabase error so booking.html can show it
+      return json(res, 500, { error: "Supabase insert failed", details: error });
     }
 
-    // Supabase returns an array of inserted rows (because return=representation)
-    const row = Array.isArray(data) ? data[0] : data;
-    const id = row?.id ?? null;
+    // Send email notification (non-fatal)
+    let emailWarning = null;
+    try {
+      if (RESEND_API_KEY && RESEND_FROM && ADMIN_NOTIFY_EMAIL) {
+        const resend = new Resend(RESEND_API_KEY);
+        await resend.emails.send({
+          from: RESEND_FROM,
+          to: [ADMIN_NOTIFY_EMAIL],
+          subject: "New booking received",
+          text: `Booking ID: ${data?.id}\nName: ${insertRow.name}\nPhone: ${insertRow.phone}\nEmail: ${insertRow.email}\nPickup: ${insertRow.pickup_text}\nDropoff: ${insertRow.dropoff_text ?? ""}\nEstimate: ${insertRow.estimate_cad ?? ""}\n`,
+        });
+      }
+    } catch (e) {
+      emailWarning = String(e?.message || e);
+    }
 
-    return json(res, 200, { ok: true, id, booking: row ?? null });
+    return json(res, 200, { ok: true, bookingId: data?.id, emailWarning });
   } catch (e) {
-    return json(res, 500, { error: "Server error", message: e?.message || String(e) });
+    return json(res, 500, { error: "Server error", details: { message: String(e?.message || e), stack: e?.stack } });
   }
 }
