@@ -1634,6 +1634,152 @@ body.nav-open .nav-overlay{ display:block; }
 <link href="https://maps.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://maps.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   EXECUTIVE THEME — Royalmount-style design language (preview)
+   White + ink + muted antique gold. Serif display headings,
+   pill buttons, soft rounded cards, generous spacing.
+   Content, fleet, prices and booking flow are unchanged.
+   ============================================================ */
+:root{
+  --gold:#C5A253;
+  --gold-dark:#B08D3E;
+  --gold-tint:#F8F1DE;
+  --gold-tint2:#FBF6E8;
+  --ink:#111827;
+  --body-c:#5B6675;
+  --line2:#E5E7EB;
+  --gradA:#C5A253;
+  --gradB:#C5A253;
+  --goldA:#C5A253;
+  --goldB:#C5A253;
+  --paper:#ffffff;
+  --bg:#ffffff;
+  --radius:20px;
+}
+body{ background:#ffffff; color:var(--body-c); }
+header{
+  background:#ffffff;
+  border-bottom:1px solid #E8EAED;
+  box-shadow:0 6px 24px rgba(15,23,42,.05);
+  backdrop-filter:none;
+}
+
+/* Sticky header, Royalmount-style: nav stays on top while scrolling.
+   overflow-x:clip replaces overflow-x:hidden on html/body — hidden
+   creates a scroll container that breaks position:sticky in Safari. */
+html, body{ overflow-x:clip !important; }
+header{ position:sticky; top:0; z-index:10000; }
+.container{ max-width:1240px; }
+.links a{ font-size:14.5px; font-weight:500; color:var(--ink); }
+.top-pill{ border-color:var(--line2); font-weight:600; }
+
+/* Sections: airy spacing, centered serif titles with gold rule */
+.section{ margin-top:92px; }
+.section h2{
+  font-size:clamp(32px,3.4vw,44px);
+  font-weight:700;
+  color:var(--ink);
+  text-align:center;
+  position:relative;
+  padding-top:24px;
+  letter-spacing:-.2px;
+}
+.section h2::before{
+  content:"";
+  position:absolute;
+  top:0; left:50%;
+  transform:translateX(-50%);
+  width:46px; height:3px;
+  border-radius:2px;
+  background:var(--gold);
+}
+.subtitle{
+  color:var(--body-c);
+  font-weight:400;
+  font-size:16.5px;
+  text-align:center;
+  margin-left:auto; margin-right:auto;
+}
+
+/* Hero */
+.hero-title{
+  font-size:clamp(40px,4.6vw,62px);
+  font-weight:700;
+  color:var(--ink);
+  line-height:1.08;
+}
+.hero-sub{ color:var(--body-c); font-weight:400; font-size:18px; }
+.badge{
+  background:var(--gold-tint);
+  border:1px solid #EDDFBB;
+  color:#7A5E1F;
+  font-weight:600;
+  box-shadow:none;
+}
+
+/* Buttons: solid muted gold pills, white text */
+.btn{ border-radius:999px; font-weight:600; }
+.btn-primary{
+  background:var(--gold);
+  color:#ffffff;
+  box-shadow:0 16px 36px rgba(197,162,83,.32);
+}
+.btn-primary:hover{
+  background:var(--gold-dark);
+  box-shadow:0 20px 44px rgba(176,141,62,.36);
+}
+.booking-card .tab.active{
+  background:var(--gold-tint);
+  border-color:var(--gold);
+  color:var(--ink);
+}
+
+/* Cards: softer, rounder, gentle lift */
+.card{
+  border-radius:20px;
+  border:1px solid var(--line2);
+  box-shadow:0 18px 44px rgba(15,23,42,.07);
+  transition:transform .25s ease, box-shadow .25s ease;
+}
+.card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 26px 54px rgba(15,23,42,.10);
+}
+.card-body h3{
+  font-family:"Playfair Display", ui-serif, Georgia, serif;
+  font-size:19px;
+  color:var(--ink);
+}
+.meta{ color:var(--body-c); font-weight:400; }
+.price{
+  font-family:"Playfair Display", ui-serif, Georgia, serif;
+  font-size:22px;
+  font-weight:700;
+  color:#111827;
+}
+.min{ color:#8A94A6; font-weight:600; }
+
+/* Booking card + form fields */
+.booking-card{
+  border-radius:20px;
+  background:rgba(255,255,255,.92);
+  border:1px solid var(--line2);
+}
+.field, input, select, textarea{
+  background:#ffffff;
+  border-color:var(--line2);
+  border-radius:12px;
+}
+
+footer{
+  background:#F2F4F7;
+  border-top:1px solid var(--line2);
+  color:var(--body-c);
+  padding:44px 0;
+  font-weight:400;
+}
+</style>
 </head>
 <body>
 
