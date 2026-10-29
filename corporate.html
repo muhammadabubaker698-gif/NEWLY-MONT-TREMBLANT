@@ -23,7 +23,7 @@
   "name": "Mont Tremblant Limo Services",
   "url": "https://monttremblantlimoservices.com/montreal-limo-service.html",
   "telephone": "+1-514-224-8252",
-  "description": "Luxury chauffeur service in Mont-Tremblant. Premium vehicles for airport transfers, hourly bookings, ski trips, corporate travel, and special events. Minimum 1 hour for hourly bookings. Vehicle minimum fares apply.",
+  "description": "Luxury chauffeur service in Mont-Tremblant. Premium vehicles for airport transfers, hourly bookings, ski trips, corporate travel, and special events. Minimum 3 hours for hourly bookings. Vehicle minimum fares apply.",
   "areaServed": [
     {
       "@type": "City",
@@ -147,7 +147,7 @@ Thank you.`;
       "name": "Can I book hourly service in Montréal?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes — choose “By the hour” (minimum 1 hour). Vehicle minimums may apply."
+        "text": "Yes — choose “By the hour” (minimum 3 hours). Vehicle minimums may apply."
       }
     },
     {
@@ -1707,9 +1707,9 @@ body.nav-open .nav-overlay{ display:block; }
 <aside aria-label="Search booking" class="booking-card" id="booking">
 <div class="tabs">
 <button aria-selected="true" class="tab active" data-i18n="tab_oneway" id="tabOneWay" type="button">One way</button>
-<button aria-selected="false" class="tab" data-i18n="tab_hourly" id="tabHourly" type="button">By the hour (min 1h)</button>
+<button aria-selected="false" class="tab" data-i18n="tab_hourly" id="tabHourly" type="button">By the hour (min 3h)</button>
 </div>
-<div class="tabhint" data-i18n-html="tab_hint_html">Need a chauffeur for events, shopping or a night out? Choose <b>By the hour</b> (minimum 1 hour).</div>
+<div class="tabhint" data-i18n-html="tab_hint_html">Need a chauffeur for events, shopping or a night out? Choose <b>By the hour</b> (minimum 3 hours).</div>
 <div class="book-body">
 <div aria-hidden="true" class="stepbar">
 <div class="stepdot"><i></i></div>
@@ -1790,9 +1790,7 @@ body.nav-open .nav-overlay{ display:block; }
 <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z" stroke="currentColor" stroke-width="2"></path>
 </svg>
 <select id="h_hours">
-<option value="1">1 hour</option>
-<option value="2">2 hours</option>
-<option value="3">3 hours</option>
+<option value="3" selected>3 hours</option>
 <option value="4">4 hours</option>
 <option value="5">5 hours</option>
 <option value="6">6 hours</option>
@@ -1886,7 +1884,7 @@ body.nav-open .nav-overlay{ display:block; }
 <main class="container">
 <section class="section reveal" id="fleet">
 <h2 data-i18n="fleet_title">Our Fleet</h2>
-<p class="subtitle" data-i18n-html="fleet_sub_html">Premium vehicles for Mont-Tremblant travel. <b>Minimum 1 hour (hourly)</b> applies to all vehicles.</p>
+<p class="subtitle" data-i18n-html="fleet_sub_html">Premium vehicles for Mont-Tremblant travel. <b>minimum 3 hours (hourly)</b> applies to all vehicles.</p>
 <div class="grid3 reveal">
 <div class="card">
 <div class="card-media"><img alt="2026 Cadillac Escalade ESV black" src="/escalade.jpg"/></div>
@@ -2168,7 +2166,7 @@ body.nav-open .nav-overlay{ display:block; }
 
     <details class="faq-item">
       <summary data-i18n="faq_q2">Can I book hourly service in Montréal?</summary>
-      <div class="faq-a" data-i18n="faq_a2">Yes — choose “By the hour” (minimum 1 hour). Vehicle minimums may apply.</div>
+      <div class="faq-a" data-i18n="faq_a2">Yes — choose “By the hour” (minimum 3 hours). Vehicle minimums may apply.</div>
     </details>
 
     <details class="faq-item">
@@ -2265,7 +2263,7 @@ body.nav-open .nav-overlay{ display:block; }
     date: "",
     time: "",
     transfer: "point",
-    hours: 1,
+    hours: 3,
     preferredVehicleId: null,
     selectedVehicleId: null,
     computedVehicles: [],
@@ -2300,9 +2298,9 @@ body.nav-open .nav-overlay{ display:block; }
 
     const minPrice = Number(v.minPrice || 0);
 
-    // Hourly mode: bill selected hours (min 1 hour)
+    // Hourly mode: bill selected hours (minimum 3 hours)
     if (state.mode === "hourly"){
-      const h = Math.max(1, Number(state.hours || 1));
+      const h = Math.max(3, Number(state.hours || 1));
       return Math.round(Math.max(minPrice, v.hourly * h));
     }
 
@@ -2767,7 +2765,7 @@ if (input.value.trim().length >= 2) doSearch();
     const list = LOCAL_RATES.map(v=>{
       const total = calcVehicleTotal(v);
       const note = state.mode === "hourly"
-        ? `Total ${formatMoney(total)} for ${Math.max(1, Number(state.hours||1))} hours`
+        ? `Total ${formatMoney(total)} for ${Math.max(3, Number(state.hours||1))} hours`
         : (state.transfer === "airport" ? "Airport estimate" : "Point-to-point estimate");
       return { ...v, total, note };
     });
@@ -2954,7 +2952,7 @@ if (input.value.trim().length >= 2) doSearch();
     state.selectedVehicleId = null;
     $("btnVehicleContinue").disabled = true;
 
-    const hours = Math.max(1, Number(state.hours || 1));
+    const hours = Math.max(3, Number(state.hours || 1));
     let preferredRow = null;
 
     state.computedVehicles.forEach(v=>{
@@ -3109,8 +3107,8 @@ if (input.value.trim().length >= 2) doSearch();
 
     const phone = val("c_phone");
 
-    // Hourly: min 1 hour
-    const hoursNum = Math.max(1, Number(state.hours || 1));
+    // Hourly: minimum 3 hours
+    const hoursNum = Math.max(3, Number(state.hours || 1));
     const currency = getTripCurrency();
 
     // Build database booking payload (for /api/bookings)
@@ -3244,7 +3242,7 @@ if (input.value.trim().length >= 2) doSearch();
     state.date = $("h_date").value;
     state.time = val("h_time");
     state.transfer = val("h_transfer") || "point";
-    state.hours = Math.max(1, Number(val("h_hours") || 1));
+    state.hours = Math.max(3, Number(val("h_hours") || 1));
 
     // capture coords (if user picked from suggestions)
     state.pickup_lat = val("h_pickup_lat");
@@ -4012,8 +4010,8 @@ function getQcCorridorBounds(){
       badge_cities: "Mont-Tremblant • Montréal • Ottawa",
 
       tab_oneway: "One way",
-      tab_hourly: "By the hour (min 1h)",
-      tab_hint_html: "Need a chauffeur for events, shopping or a night out? Choose <b>By the hour</b> (minimum 1 hour).",
+      tab_hourly: "By the hour (min 3h)",
+      tab_hint_html: "Need a chauffeur for events, shopping or a night out? Choose <b>By the hour</b> (minimum 3 hours).",
       step_1of3: "Step 1 of 3",
 
       ph_from: "From: address, airport, hotel…",
@@ -4065,7 +4063,7 @@ function getQcCorridorBounds(){
       btn_close: "Close",
 
       fleet_title: "Our Fleet",
-      fleet_sub_html: "Premium vehicles for Mont-Tremblant travel. <b>Minimum 1 hour (hourly)</b> applies to all vehicles.",
+      fleet_sub_html: "Premium vehicles for Mont-Tremblant travel. <b>minimum 3 hours (hourly)</b> applies to all vehicles.",
       unit_hour: "hour",
       min_hours_html: "{n}-hour minimum",
 
@@ -4150,8 +4148,8 @@ function getQcCorridorBounds(){
       badge_cities: "Mont-Tremblant • Montréal • Ottawa",
 
       tab_oneway: "Aller simple",
-      tab_hourly: "À l’heure (min 1 h)",
-      tab_hint_html: "Besoin d’un chauffeur pour un événement, du magasinage ou une sortie? Choisissez <b>À l’heure</b> (minimum 1 h).",
+      tab_hourly: "À l’heure (min 3 h)",
+      tab_hint_html: "Besoin d’un chauffeur pour un événement, du magasinage ou une sortie? Choisissez <b>À l’heure</b> (minimum 3 h).",
       step_1of3: "Étape 1 sur 3",
 
       ph_from: "De : adresse, aéroport, hôtel…",
@@ -4203,7 +4201,7 @@ function getQcCorridorBounds(){
       btn_close: "Fermer",
 
       fleet_title: "Notre flotte",
-      fleet_sub_html: "Véhicules haut de gamme pour Mont-Tremblant. <b>Minimum 1 heure (à l’heure)</b> s’applique à tous les véhicules.",
+      fleet_sub_html: "Véhicules haut de gamme pour Mont-Tremblant. <b>Minimum 3 heures (à l’heure)</b> s’applique à tous les véhicules.",
       unit_hour: "heure",
       min_hours_html: "Minimum {n} heures",
 
@@ -4260,7 +4258,7 @@ function getQcCorridorBounds(){
       faq_q1: "Offrez-vous des prises en charge à l’aéroport (YUL) ?",
       faq_a1: "Oui — transferts privés depuis Montréal–Trudeau (YUL). Partagez votre numéro de vol et les détails de ramassage.",
       faq_q2: "Puis-je réserver un service à l’heure à Montréal ?",
-      faq_a2: "Oui — choisissez « À l’heure » (minimum 1 heure). Des minimums par véhicule peuvent s’appliquer.",
+      faq_a2: "Oui — choisissez « À l’heure » (minimum 3 heures). Des minimums par véhicule peuvent s’appliquer.",
       faq_q3: "Desservez-vous Mont‑Tremblant toute l’année ?",
       faq_a3: "Oui — transferts et service chauffeur à Mont‑Tremblant toute l’année (saison de ski, été, événements).",
       faq_q4: "Comment puis-je payer ?",

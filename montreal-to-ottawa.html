@@ -2158,7 +2158,7 @@ header{ position: sticky; top:0; z-index: 10000; background: rgba(255,255,255,.7
     date: "",
     time: "",
     transfer: "point",
-    hours: 1,
+    hours: 3,
     preferredVehicleId: null,
     selectedVehicleId: null,
     computedVehicles: [],
@@ -3154,7 +3154,7 @@ if (input.value.trim().length >= 2) doSearch();
     state.date = $("h_date").value;
     state.time = val("h_time");
     state.transfer = val("h_transfer") || "point";
-    state.hours = Math.max(1, Number(val("h_hours") || 1));
+    state.hours = Math.max(3, Number(val("h_hours") || 1));
 
     // capture coords (if user picked from suggestions)
     state.pickup_lat = val("h_pickup_lat");
@@ -4095,8 +4095,8 @@ function getQcCorridorBounds(){
       badge_cities: "Ottawa • Montréal • Ottawa",
 
       tab_oneway: "Aller simple",
-      tab_hourly: "À l’heure (min 1 h)",
-      tab_hint_html: "Besoin d’un chauffeur pour un événement, du magasinage ou une sortie? Choisissez <b>À l’heure</b> (minimum 1 h).",
+      tab_hourly: "À l’heure (min 3 h)",
+      tab_hint_html: "Besoin d’un chauffeur pour un événement, du magasinage ou une sortie? Choisissez <b>À l’heure</b> (minimum 3 h).",
       step_1of3: "Étape 1 sur 3",
 
       ph_from: "De : adresse, aéroport, hôtel…",
@@ -4148,7 +4148,7 @@ function getQcCorridorBounds(){
       btn_close: "Fermer",
 
       fleet_title: "Notre flotte",
-      fleet_sub_html: "Véhicules haut de gamme pour Ottawa. <b>Minimum 1 heure (à l’heure)</b> s’applique à tous les véhicules.",
+      fleet_sub_html: "Véhicules haut de gamme pour Ottawa. <b>Minimum 3 heures (à l’heure)</b> s’applique à tous les véhicules.",
       unit_hour: "heure",
       min_hours_html: "Minimum {n} heures",
 
@@ -4205,7 +4205,7 @@ function getQcCorridorBounds(){
       faq_q1: "Offrez-vous des prises en charge à l’aéroport (YUL) ?",
       faq_a1: "Oui — transferts privés depuis Montréal–Trudeau (YUL). Partagez votre numéro de vol et les détails de ramassage.",
       faq_q2: "Puis-je réserver un service à l’heure à Montréal ?",
-      faq_a2: "Oui — choisissez « À l’heure » (minimum 1 heure). Des minimums par véhicule peuvent s’appliquer.",
+      faq_a2: "Oui — choisissez « À l’heure » (minimum 3 heures). Des minimums par véhicule peuvent s’appliquer.",
       faq_q3: "Desservez-vous Mont‑Tremblant toute l’année ?",
       faq_a3: "Oui — transferts et service chauffeur à Mont‑Tremblant toute l’année (saison de ski, été, événements).",
       faq_q4: "Comment puis-je payer ?",
